@@ -9,7 +9,7 @@
     "KONSTANTALAR": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'}};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram})});}\nif(out.length===0)out.push({json:{telegram:K.telegram}});\nreturn out;"
+      "kod": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}}};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar}});\nreturn out;"
     },
     "Telegram Kirish Filtri": {
       "turi": "code",
@@ -366,5 +366,5 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-22T23:40:56.088Z"
+  "vaqt": "2026-09-22T23:50:56.080Z"
 }
