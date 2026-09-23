@@ -4,7 +4,10 @@
       "turi": "telegram",
       "text": "",
       "chatId": "",
-      "thread": null
+      "thread": null,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "KONSTANTALAR": {
       "turi": "code",
@@ -16,11 +19,69 @@
       "mode": "runOnceForAllItems",
       "kod": "var K={};try{K=$('KONSTANTALAR').first().json.telegram||{};}catch(e){}\nvar u=$input.first().json;\nif(u.callback_query){var dd=String(u.callback_query.data||'');var p=dd.split(':');return [{json:{tur:'callback',amal:p[0]||'',job_id:p[1]||'',chatId:String(u.callback_query.message.chat.id),message_id:u.callback_query.message.message_id,thread_id:u.callback_query.message.message_thread_id||null,callback_id:u.callback_query.id}}];}\nvar m=u.message;if(!m||!m.text)return [];\nvar txt=(m.text||'').trim();if(txt.indexOf('/kod')===0)return [];if(txt.indexOf('/op')===0)return [];\nvar chatId=String(m.chat.id);var thread=m.message_thread_id||null;\nvar grp=String(K.guruh_id||'');var umumiy=(K.threads&&K.threads.umumiy)||1;var dmOk=(K.dm_ruxsat!==false);\nvar isGroup=(grp&&chatId===grp);\nif(isGroup){if((thread||umumiy)!==umumiy)return [];}else{if(!dmOk)return [];thread=null;}\nreturn [{json:{tur:'mavzu',text:String(m.text).trim(),chatId:chatId,thread_id:thread,message_id:m.message_id}}];"
     },
+    "Marshrut": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "tur-cb",
+            "leftValue": "={{ $json.tur }}",
+            "rightValue": "callback",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
     "Telegram - Callback javob": {
       "turi": "telegram",
       "text": "",
       "chatId": "",
-      "thread": null
+      "thread": null,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "Callback amal?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "amal-rej",
+            "leftValue": "={{ $('Telegram Kirish Filtri').item.json.amal }}",
+            "rightValue": "reject",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Rad etildi (jurnal)": {
+      "turi": "unknown"
+    },
+    "Nashr kutilmoqda (TODO)": {
+      "turi": "unknown"
+    },
+    "Extract From Telegram": {
+      "turi": "unknown"
     },
     "Mavzu va Avatar Aniqlash": {
       "turi": "code",
@@ -32,6 +93,38 @@
       "mode": "runOnceForEachItem",
       "kod": "var K={};\ntry{K=$('KONSTANTALAR').item.json;}catch(e){}\nvar A=K.analitika||{};\nvar m='yt_long';\ntry{m=$json.mahsulot_turi||'yt_long';}catch(e){}\nvar ilgak=(A.ilgak&&A.ilgak[m])||{vaqt_s:3,qoida:'raqam yoki savol'};\nvar ritm=(A.ritm&&A.ritm[m])||{};\nvar cta=(A.cta&&A.cta[m])||'';\nvar uzun=(A.uzunlik_qoida&&A.uzunlik_qoida[m])||{};\nvar maq=(A.maqsadlar&&A.maqsadlar[m])||{};\nvar variant='full';\ntry{var mh=(K.mahsulotlar&&K.mahsulotlar[m])||{};variant=mh.variant||'full';}catch(e){}\nvar L=[];\nL.push('');\nL.push('## ANALITIKA QOIDALARI - '+m.toUpperCase());\nL.push('');\nif(ilgak.vaqt_s>0){\nL.push('ILGAK: birinchi '+ilgak.vaqt_s+' soniyada. '+ilgak.qoida);\nL.push('Kirish, salomlashish, tanishtirish - TAQIQ.');\n}else{\nL.push('ILGAK: '+ilgak.qoida);\n}\nif(uzun.min){\nL.push('UZUNLIK: '+uzun.min+'-'+uzun.max+(m==='carousel'?' slayd':(m==='tg_post'?' belgi':' soniya')));\nif(uzun.sabab){L.push('Sabab: '+uzun.sabab);}\n}\nif(ritm.sahna_s){L.push('RITM: har '+ritm.sahna_s+' soniyada sahna almashadi.');}\nif(ritm.qayta_ilgak_s){L.push('Har '+ritm.qayta_ilgak_s+' soniyada qayta ilgaklash.');}\nif(ritm.slayd){L.push('SLAYD: '+ritm.slayd+' ta.');}\nif(cta){L.push('YAKUNIY CTA: '+cta);}\nL.push('');\nL.push('ILGAK FORMULALARI - shulardan birini tanlang:');\nvar f=A.ilgak_formulalari||[];\nfor(var i=0;i<f.length;i++){L.push('- '+f[i].nom+': '+f[i].misol);}\nL.push('');\nL.push('QATIY TAQIQLAR:');\nL.push('- Clickbait va mubolaga');\nL.push('- Manbasiz raqam');\nL.push('- Kafolat, tez boyish vadasi');\nL.push('- #fyp, #viral kabi xeshteglar');\nif(variant==='metasafe'){\nL.push('');\nL.push('METASAFE - bu mahsulot Meta yoki TikTok uchun.');\nL.push('Quyidagi sozlar TAQIQ:');\nvar mt=A.metasafe_taqiq||[];\nL.push(mt.join(', '));\nL.push('Mahsulot nomi va narx aytilmaydi.');\n}\nL.push('');\nL.push('MANBA: har statistik raqam uchun MANBA(LAR) qatori MAJBURIY.');\nL.push('Format: Muallif - Yil - Nashr');\nL.push('Manba yoq - raqam ham ishlatilmaydi.');\nL.push('');\nvar qoida=L.join(String.fromCharCode(10));\nreturn{json:Object.assign({},$json,{analitika_qoida:qoida,mahsulot_turi:m,variant:variant,maqsadlar:maq})};"
     },
+    "Motion Buyrug'i?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": false,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "c-motion",
+            "leftValue": "={{ $(\"Extract From Telegram\").item.json.text }}",
+            "rightValue": "/motion",
+            "operator": {
+              "type": "string",
+              "operation": "startsWith"
+            }
+          },
+          {
+            "id": "c-grafik",
+            "leftValue": "={{ $(\"Extract From Telegram\").item.json.text }}",
+            "rightValue": "/grafik",
+            "operator": {
+              "type": "string",
+              "operation": "startsWith"
+            }
+          }
+        ],
+        "combinator": "or"
+      }
+    },
     "Extract Motion Data": {
       "turi": "code",
       "mode": "runOnceForEachItem",
@@ -41,31 +134,66 @@
       "turi": "telegram",
       "text": "⏳ *Grafik va ovoz tayyorlanmoqda...*\n\nMa'lumotlar tahlil qilinmoqda. 1-2 daqiqa kuting.",
       "chatId": "={{ $json.chatId }}",
-      "thread": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
+      "thread": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "Claude - Motion Tahlil": {
       "turi": "ai",
-      "model": "",
+      "model": "claude-sonnet-4-6",
       "maxTokens": 3000,
-      "system": ""
+      "system": "",
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
     },
     "Parse Motion Response": {
       "turi": "code",
       "mode": "runOnceForEachItem",
       "kod": "var raw=$json.merged_response||($json.content&&$json.content[0]?$json.content[0].text:'');\nvar chatId='';try{chatId=$('Extract Motion Data').item.json.chatId||$json.chatId||'';}catch(e){}\nvar _s=raw.indexOf('{');var _e=raw.lastIndexOf('}');\nvar parsed={};\ntry{parsed=JSON.parse((_s!==-1&&_e>_s)?raw.substring(_s,_e+1):raw);}catch(e){\n  return{json:{xato:true,tur:'PARSE_FAIL',xabar:'Claude javobi JSON emas.',raw_boshi:String(raw).slice(0,200),chatId:chatId}};\n}\nreturn{json:{\n  manba:parsed.manba||'',\n  narration:parsed.narration||'',\n  sarlavha:parsed.sarlavha||'',\n  xulosa:parsed.xulosa||'',\n  sahnalar:Array.isArray(parsed.sahnalar)?parsed.sahnalar:[],\n  chatId:chatId\n}};"
     },
+    "Parse Xato? (Motion)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "pm-xato",
+            "leftValue": "={{ $json.xato }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
     "Telegram - Xato": {
       "turi": "telegram",
       "text": "={{ $json.xabar || \"❌ Xato yuz berdi\" }}",
       "chatId": "={{ $json.chatId || $json.message && $json.message.chat && $json.message.chat.id }}",
-      "thread": null
+      "thread": null,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "ElevenLabs - Motion TTS": {
       "turi": "http",
       "method": "POST",
       "url": "={{ (function(){ var vid=\"\";try{vid=$(\"Mavzu va Avatar Aniqlash\").item.json.voice_id;}catch(e){}if(!vid){var K=$(\"KONSTANTALAR\").item.json;var a=K.joriy_avatar||\"a1\";vid=K.ovozlar[K.avatarlar[a].ovoz].voice_id;} return \"https://api.elevenlabs.io/v1/text-to-speech/\"+vid+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $json.narration, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "ElevenLabs API (Boburbek K)"
+      }
     },
     "Decode Motion Audio": {
       "turi": "code",
@@ -77,7 +205,10 @@
       "method": "POST",
       "url": "https://api.shotstack.io/ingest/stage/upload",
       "body": "{\"filename\":\"audio.mp3\"}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "Shotstack API (Boburbek K)"
+      }
     },
     "Shotstack - Attach Audio": {
       "turi": "code",
@@ -91,12 +222,43 @@
       "body": "",
       "sendBody": true
     },
+    "Wait - Motion Audio Ingest": {
+      "turi": "wait",
+      "amount": 10,
+      "unit": "seconds"
+    },
     "Shotstack - Poll Motion Audio": {
       "turi": "http",
       "method": "GET",
       "url": "={{ \"https://api.shotstack.io/ingest/stage/sources/\" + $(\"Shotstack - Attach Audio\").item.json.uploadId }}",
       "body": "",
-      "sendBody": false
+      "sendBody": false,
+      "creds": {
+        "httpTemplatedCustomAuth": "Shotstack API (Boburbek K)"
+      }
+    },
+    "Motion Audio Ready?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "ma-ready",
+            "leftValue": "={{ $json.data.attributes.status }}",
+            "rightValue": "ready",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
     },
     "Build Motion Render": {
       "turi": "code",
@@ -113,30 +275,168 @@
       "method": "POST",
       "url": "https://api.shotstack.io/edit/stage/render",
       "body": "={{ JSON.stringify($json.body) }}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "Shotstack API (Boburbek K)"
+      }
+    },
+    "Wait - Motion Render": {
+      "turi": "wait",
+      "amount": 30,
+      "unit": "seconds"
     },
     "Shotstack - Poll Motion Render": {
       "turi": "http",
       "method": "GET",
       "url": "={{ \"https://api.shotstack.io/edit/stage/render/\" + $(\"Shotstack - Create Motion Render\").item.json.response.id }}",
       "body": "",
-      "sendBody": false
+      "sendBody": false,
+      "creds": {
+        "httpTemplatedCustomAuth": "Shotstack API (Boburbek K)"
+      }
+    },
+    "Motion Render Done?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "mr-done",
+            "leftValue": "={{ $json.response.status }}",
+            "rightValue": "done",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
     },
     "Telegram - Send Motion Video": {
       "turi": "telegram",
       "text": "={{ \"✅ Grafik video tayyor!\\n\\n\" + ($(\"Build Render Body\").item.json.xulosa || \"ZIBROCK tahlili\") + \"\\n\\n🎬 Video: \" + String($json.response.url).split(\"&\").join(\"&amp;\") }}",
       "chatId": "={{ $(\"Build Render Body\").item.json.chatId }}",
-      "thread": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
+      "thread": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "Motion Render Hisoblagich": {
       "turi": "code",
       "mode": "runOnceForAllItems",
       "kod": "const j = $input.first().json;\nconst n = (j.urinish_render || 0) + 1;\nif (n > 60) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 30 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish_render: n } }];"
     },
+    "Render Xato? (Motion)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "mr-xato",
+            "leftValue": "={{ $json.xato }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
     "Motion Audio Hisoblagich": {
       "turi": "code",
       "mode": "runOnceForAllItems",
       "kod": "const j = $input.first().json;\nconst n = (j.urinish_audio || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Audio 7 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish_audio: n } }];"
+    },
+    "Audio Xato? (Motion)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "ma-xato",
+            "leftValue": "={{ $json.xato }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Agent Trigger": {
+      "turi": "executeWorkflow",
+      "workflowId": "",
+      "inputs": {}
+    },
+    "Extract From Agent": {
+      "turi": "unknown"
+    },
+    "Input Merge": {
+      "turi": "unknown"
+    },
+    "Platforma bo'yicha o'lcham": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": false,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "chk-instagram",
+            "leftValue": "={{ $json.platforma }}",
+            "rightValue": "instagram",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          },
+          {
+            "id": "chk-tiktok",
+            "leftValue": "={{ $json.platforma }}",
+            "rightValue": "tiktok",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          },
+          {
+            "id": "chk-shorts",
+            "leftValue": "={{ $json.platforma }}",
+            "rightValue": "shorts",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          }
+        ],
+        "combinator": "or"
+      }
+    },
+    "O'lcham Merge": {
+      "turi": "unknown"
     },
     "Faqat skript matnini ajratish": {
       "turi": "code",
@@ -147,7 +447,33 @@
       "turi": "telegram",
       "text": "⏳ *Video tayyorlanmoqda...*\n\nHeyGen video yaratmoqda. Taxminan 2-3 daqiqa kuting.",
       "chatId": "={{ $(\"Faqat skript matnini ajratish\").item.json.chatId }}",
-      "thread": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
+      "thread": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "Bevosita yoki Claude?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "check-bevosita",
+            "leftValue": "={{ $json.bevosita }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
     },
     "Platforma Aniqlash (Bev)": {
       "turi": "code",
@@ -164,6 +490,29 @@
       "mode": "runOnceForAllItems",
       "kod": "var item=$input.first().json;\nvar text=(item.merged_response||'').toLowerCase();\nvar variant=(item.variant||'full').toLowerCase();\nvar RED=['garanti eder','kesin kar','risksiz','zahmetsiz gelir','gunde kazanin','ayda kazanin','hizli zengin'];\nvar ORANGE=['challenge','prop firma','funded','payout','kaldıraç','spread','hesap ac','fiyat tablosu','a-book'];\nvar EXC=['garanti etmiyor','garanti degil','garanti vermiyor'];\nvar hasExc=EXC.some(function(e){return text.indexOf(e)>=0;});\nvar fail=null;\nfor(var i=0;i<RED.length&&!fail;i++){if(text.indexOf(RED[i])>=0&&!hasExc){fail={tur:'RED',atama:RED[i]};}}\nif(!fail&&variant==='metasafe'){for(var i=0;i<ORANGE.length&&!fail;i++){if(text.indexOf(ORANGE[i])>=0&&!hasExc){fail={tur:'ORANGE',atama:ORANGE[i]};}}}\nvar hasSrc=text.indexOf('manba(lar)')>=0||text.indexOf('source')>=0;\nvar hasNum=text.indexOf('%')>=0;\nif(!fail&&hasNum&&!hasSrc){fail={tur:'MANBA',atama:'raqam bor, manba yoq'};}\nif(fail){return[{json:{...item,compliance:'FAIL',tur:fail.tur,atama:fail.atama,chatId:item.chatId||'',xabar:'❌ Compliance FAIL: '+fail.tur+' — \"'+fail.atama+'\"'}}];}\nreturn[{json:{...item,compliance:'PASS'}}];"
     },
+    "Compliance OK? (Bev)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "c-pass-bev",
+            "leftValue": "={{ $json.compliance }}",
+            "rightValue": "PASS",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
     "K2 Zichlik (Bev)": {
       "turi": "code",
       "mode": "runOnceForAllItems",
@@ -179,7 +528,10 @@
       "method": "POST",
       "url": "={{ (function(){ var vid=\"\";try{vid=$(\"Mavzu va Avatar Aniqlash\").item.json.voice_id;}catch(e){}if(!vid){var K=$(\"KONSTANTALAR\").item.json;var a=K.joriy_avatar||\"a1\";vid=K.ovozlar[K.avatarlar[a].ovoz].voice_id;} return \"https://api.elevenlabs.io/v1/text-to-speech/\"+vid+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $(\"Skriptni Ajratish\").item.json.merged_response, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "ElevenLabs API (Boburbek K)"
+      }
     },
     "Audio Decode (Bevosita)": {
       "turi": "code",
@@ -191,21 +543,58 @@
       "method": "POST",
       "url": "https://upload.heygen.com/v1/asset",
       "body": "",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
     },
     "HeyGen - Video (Bevosita)": {
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
       "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json;var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;}var vt=\"GIBRID\";try{vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\";}catch(e){}var ar=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\";return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid, scale: 1.0, offset: { x: 0, y: 0 } }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Bevosita)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: (ar === \"9:16\") ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, test: false, motion_prompt: \"calm professional demeanor, minimal head movement, steady eye contact with camera, occasional natural blink, no hand gestures, neutral expression, no smile\", motion_engine: \"Avatar III\" }); })() }}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Wait 20s (Bev)": {
+      "turi": "wait",
+      "amount": 20,
+      "unit": "seconds"
     },
     "HeyGen Video Status (Bev)": {
       "turi": "http",
       "method": "GET",
       "url": "={{ \"https://api.heygen.com/v1/video_status.get?video_id=\" + $(\"HeyGen - Video (Bevosita)\").item.json.data.video_id }}",
       "body": "",
-      "sendBody": false
+      "sendBody": false,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Video Tayyor? (Bev)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "vid-done-bev",
+            "leftValue": "={{ $json.data.status }}",
+            "rightValue": "completed",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
     },
     "Extract Video (Bev)": {
       "turi": "code",
@@ -217,26 +606,69 @@
       "mode": "runOnceForEachItem",
       "kod": "\nfunction computeSubtitleBlocks(alignment, coloredSpans, isVertical) {\n  var maxCharsPerLine = isVertical ? 32 : 44;\n  var maxLines = 2;\n  var maxDuration = 5.0;\n  var minDuration = 1.0;\n  var minGap = 0.08;\n  var chars = alignment.characters || [];\n  var tStarts = alignment.character_start_times_seconds || [];\n  var tEnds = alignment.character_end_times_seconds || [];\n  var words = [];\n  var cur = null;\n  for (var i = 0; i < chars.length; i++) {\n    var ch = chars[i];\n    if (ch === ' ') {\n      if (cur) { words.push(cur); cur = null; }\n    } else {\n      if (!cur) cur = { text: '', startTime: tStarts[i], endTime: tEnds[i] };\n      cur.text += ch;\n      cur.endTime = tEnds[i];\n    }\n  }\n  if (cur) words.push(cur);\n  var colorMap = { 'GOLD': 'c-gold', 'CLAY': 'c-clay', 'SAGE': 'c-sage' };\n  try {\n    (coloredSpans || []).forEach(function(span) {\n      if (!span || !span.text) return;\n      var cssClass = colorMap[(span.color || '').toUpperCase()] || null;\n      if (!cssClass) return;\n      var clean = function(s) { return s.replace(/[.,!?]/g, '').toLowerCase(); };\n      var spanWords = span.text.trim().split(/\\s+/);\n      for (var wi = 0; wi <= words.length - spanWords.length; wi++) {\n        var match = true;\n        for (var si = 0; si < spanWords.length; si++) {\n          if (clean(words[wi + si].text) !== clean(spanWords[si])) { match = false; break; }\n        }\n        if (match) { for (var si2 = 0; si2 < spanWords.length; si2++) words[wi + si2].colorClass = cssClass; }\n      }\n    });\n  } catch (colorErr) {}\n  function isSplit(word) { return word.text.endsWith('.') || word.text.endsWith(','); }\n  var blocks = []; var wi = 0;\n  while (wi < words.length) {\n    var lines = [[]]; var lineIdx = 0;\n    var bStart = words[wi].startTime; var bEnd = words[wi].endTime;\n    while (wi < words.length) {\n      var word = words[wi];\n      var curLine = lines[lineIdx];\n      var lineText = curLine.map(function(w) { return w.text; }).join(' ');\n      var addedText = lineText ? lineText + ' ' + word.text : word.text;\n      if (addedText.length <= maxCharsPerLine) {\n        if ((word.endTime - bStart) > maxDuration && curLine.length > 0) break;\n        curLine.push(word); bEnd = word.endTime; wi++;\n        if (isSplit(word) && wi < words.length) break;\n        if (bEnd - bStart >= maxDuration) break;\n      } else {\n        if (lineIdx < maxLines - 1) { lineIdx++; lines.push([]); } else break;\n      }\n    }\n    // Yolg'iz so'z tuzatish: oxirgi qatorda 1 so'z bo'lsa, oldingi qatordan ko'chir\n    if (lines.length > 1) {\n      var _lastL = lines[lines.length - 1];\n      var _prevL = lines[lines.length - 2];\n      if (_lastL.length === 1 && _prevL.length > 1) {\n        _lastL.unshift(_prevL.pop());\n      }\n    }\n    var allWords = [];\n    lines.forEach(function(l) { allWords = allWords.concat(l); });\n    if (allWords.length === 0) { wi++; continue; }\n    var dur = Math.max(bEnd - bStart, minDuration);\n    var wordsWithColor = lines.map(function(line) {\n      return line.map(function(w) { return { text: w.text, colorClass: w.colorClass || null }; });\n    });\n    blocks.push({\n      startTime: parseFloat(bStart.toFixed(3)),\n      endTime: parseFloat(bEnd.toFixed(3)),\n      duration: parseFloat(dur.toFixed(3)),\n      lines: wordsWithColor\n    });\n  }\n  for (var i = 0; i < blocks.length - 1; i++) {\n    var cur = blocks[i];\n    var nxt = blocks[i + 1];\n    if (cur.endTime > nxt.startTime - 0.08) {\n      cur.endTime = parseFloat((nxt.startTime - 0.08).toFixed(3));\n    }\n    if (cur.endTime <= cur.startTime + 0.5) {\n      cur.endTime = parseFloat((cur.startTime + 0.5).toFixed(3));\n    }\n    cur.duration = parseFloat((cur.endTime - cur.startTime).toFixed(3));\n  }\n  return blocks;\n}\n\nfunction buildSubtitleHtml(subtitleBlocks, startTrackIndex) {\n  if (!subtitleBlocks || subtitleBlocks.length === 0) return '';\n  return subtitleBlocks.map(function(block, idx) {\n    var lineHtml = block.lines.map(function(line) {\n      var wordHtml = line.map(function(w) {\n        return w.colorClass\n          ? '<span class=\"' + w.colorClass + '\">' + w.text + '</span>'\n          : w.text;\n      }).join(' ');\n      return '<div class=\"sub-line\">' + wordHtml + '</div>';\n    }).join('');\n    return '<div class=\"clip subtitle-block\" data-start=\"' + block.startTime +\n      '\" data-duration=\"' + block.duration +\n      '\" data-track-index=\"' + (startTrackIndex + idx) + '\">' +\n      lineHtml + '</div>';\n  }).join('');\n}\nconst sb = $('Skriptni Tozalash (AI)').first().json.sceneBlocks || [];\nconsole.log('DIAG sceneBlocks:', sb.length, /---SAHNA---/.test($('Skriptni Tozalash (AI)').first().json.raw_script || ''));\nvar isVertical=false;\ntry{isVertical=$('Skriptni Ajratish').item.json.isVertical||false;}catch(e){}\nvar isV=isVertical;\nvar __videoUrl='';var __duration=60;\ntry{var ev=$('Extract Video (Bev)').item.json;__videoUrl=ev.videoUrl||'';__duration=ev.duration||60;}catch(e){}\nvar _ad=null;\ntry{_ad=$('Audio Decode (Bevosita)').item.json;}catch(_e1){try{_ad=$('Audio Decode (Asosiy)').item.json;}catch(_e2){}}\nif(isVertical){\n  var videoUrl=__videoUrl||'';\nvar duration=Math.round((__duration||60)*100)/100;\nvar logoDuration=duration;\nvar subtitleBlocks=[];\ntry{if(_ad&&_ad.alignment){var _cS=_ad.coloredSpans||[];subtitleBlocks=computeSubtitleBlocks(_ad.alignment,_cS,true);}}catch(_er){}\nvar subtitleHtml=buildSubtitleHtml(subtitleBlocks,3);\nvar html=\"<!DOCTYPE html><html lang=\\\"en\\\"><head><meta charset=\\\"UTF-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=1080, height=1920\\\"><script src=\\\"https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js\\\"></script><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:transparent;}body{font-family:\\\"Inter\\\",sans-serif;}#avatar-video{position:absolute;left:0;top:0;width:1080px;height:1920px;object-fit:cover;transform-origin:50% 35%;will-change:transform;}#shade{display:none;}#logo-image{position:absolute;top:90px;left:50%;transform:translateX(-50%);width:240px;height:auto;opacity:0;}.subtitle-block{position:absolute;bottom:500px;left:60px;right:60px;text-align:center;font-family:Inter,system-ui,sans-serif;font-size:70px;font-weight:600;color:#F7F5F0;line-height:1.25;background:none;text-shadow:0 2px 12px rgba(10,23,39,.90),0 0 4px rgba(10,23,39,.75);-webkit-text-stroke:1.5px rgba(10,23,39,.60);paint-order:stroke fill;}.subtitle-block .em{font-weight:800;}.sub-line{display:inline-block;background:none;margin:2px 0;}.c-gold{color:#D6AD62;font-weight:800;}.c-clay{color:#E0584A;font-weight:800;}.c-sage{color:#82BD8F;font-weight:800;}</style></head><body><div id=\\\"root\\\" data-composition-id=\\\"main\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-width=\\\"1080\\\" data-height=\\\"1920\\\"><video id=\\\"avatar-video\\\" class=\\\"clip\\\" src=\\\"\"+videoUrl+\"\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-track-index=\\\"0\\\" playsinline></video><div id=\\\"shade\\\" class=\\\"clip\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-track-index=\\\"1\\\"></div>\"+subtitleHtml+\"</div><script>window.__timelines=window.__timelines||{};var dur=\"+duration+\";const tl=gsap.timeline({paused:true});var zoomScale=1.04;var zoomTransitionDur=0.9;var holdDur=5;var pauseDur=3;var zt=2;while(zt<dur-2){tl.to(\\\"#avatar-video\\\",{scale:zoomScale,duration:zoomTransitionDur,ease:\\\"power2.inOut\\\"},zt);zt+=zoomTransitionDur+holdDur;if(zt<dur-2){tl.to(\\\"#avatar-video\\\",{scale:1.0,duration:zoomTransitionDur,ease:\\\"power2.inOut\\\"},zt);}zt+=zoomTransitionDur+pauseDur;}tl.to(\\\"#logo-image\\\",{opacity:1,duration:0.6,ease:\\\"power1.out\\\"},0.3);window.__timelines[\\\"main\\\"]=tl;</script></body></html>\";\nhtml=html.replace('</head>','<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@600;800&family=JetBrains+Mono:wght@500;700&display=swap\"><style>#stat-block{display:none!important}.source-label{position:absolute;top:6.5%;left:50%;transform:translateX(-50%);font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:26px;color:rgba(247,245,240,.72);white-space:nowrap;z-index:40}.source-label::after{content:\"\";display:block;height:2px;margin-top:10px;background:rgba(214,173,98,.42)}</style></head>');var sceneBlocks=[];try{sceneBlocks=$('Skriptni Ajratish').item.json.sceneBlocks||[];}catch(e){}if(sceneBlocks&&sceneBlocks.length){var _alc=[],_als=[];try{_alc=(_ad&&_ad.alignment&&_ad.alignment.characters)||[];_als=(_ad&&_ad.alignment&&_ad.alignment.character_start_times_seconds)||[];}catch(e){}var _fmap={'İ':'i','I':'i','ı':'i','Ş':'s','ş':'s','Ğ':'g','ğ':'g','Ü':'u','ü':'u','Ö':'o','ö':'o','Ç':'c','ç':'c','Â':'a','â':'a','Î':'i','î':'i','Û':'u','û':'u'};var _fold=function(s){var o='';for(var k=0;k<s.length;k++){var ch=s[k];o+=(_fmap[ch]||ch.toLowerCase());}return o;};var _ftxt=_fold(_alc.join(''));var _findT=function(a){var n=_fold(String(a||''));if(!n)return -1;var i=_ftxt.indexOf(n);if(i<0)return -1;var t=_als[i];return (typeof t==='number')?t:-1;};var scEsc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};var scCol=function(c){return c==='clay'?'#E0584A':(c==='sage'?'#82BD8F':'#D6AD62');};var VV=isV;var _p=function(a,b){return VV?a:b;};var scCss='<style>.scene-wrap{position:absolute;top:'+(VV?'11%':'15%')+';left:'+(VV?'8%':'5.5%')+';width:'+(VV?'84%':'38%')+';opacity:0;text-align:'+(VV?'center':'left')+';font-family:\"Inter\",sans-serif;}.scene-rule{width:'+_p(96,72)+'px;height:4px;background:#D6AD62;margin-bottom:'+_p(26,20)+'px;'+(VV?'margin-left:auto;margin-right:auto;':'')+'}.scene-label{font-size:'+_p(36,30)+'px;font-weight:700;color:#F5F1E8;margin-bottom:'+_p(16,14)+'px;letter-spacing:-0.2px;}.scene-sub{font-size:'+_p(28,22)+'px;color:#9C9A92;margin-top:'+_p(14,12)+'px;}.scene-bar-track{width:100%;height:'+_p(34,28)+'px;background:rgba(245,241,232,.14);border-radius:'+_p(17,14)+'px;overflow:hidden;}.scene-bar-fill{height:100%;border-radius:inherit;width:0%;}.scene-countup{font-family:\"JetBrains Mono\",monospace;font-size:'+_p(120,96)+'px;font-weight:700;line-height:1;letter-spacing:-2px;}.scene-numcard{font-family:\"JetBrains Mono\",monospace;font-size:'+_p(150,120)+'px;font-weight:500;line-height:1;letter-spacing:-3px;}.scene-tl-track{position:relative;width:100%;height:4px;background:rgba(245,241,232,.28);margin-top:'+_p(18,14)+'px;}.scene-tl-dot{position:absolute;top:50%;width:'+_p(18,14)+'px;height:'+_p(18,14)+'px;border-radius:50%;transform:translate(-50%,-50%);}.scene-flat{position:relative;width:100%;height:'+_p(120,96)+'px;}.scene-flat-line{position:absolute;top:46%;left:0;width:100%;height:4px;}.scene-flat-ax{display:flex;justify-content:space-between;font-size:'+_p(26,22)+'px;color:#9C9A92;}.scene-dots{display:flex;flex-wrap:wrap;gap:'+_p(8,7)+'px;justify-content:'+(VV?'center':'flex-start')+';}.scene-dots i{width:'+_p(16,14)+'px;height:'+_p(16,14)+'px;border-radius:50%;background:#D6AD62;opacity:.4;display:block;}.scene-source{position:absolute;bottom:'+(VV?'330px':'210px')+';left:0;width:100%;text-align:center;font-family:\"Inter\",sans-serif;font-size:'+_p(26,24)+'px;color:#9C9A92;font-style:italic;opacity:0;}.scene-end{position:absolute;top:'+(VV?'40%':'38%')+';left:0;width:100%;text-align:center;opacity:0;font-family:\"Inter\",sans-serif;}.scene-end-line{width:'+_p(120,96)+'px;height:4px;background:#D6AD62;margin:0 auto '+_p(34,28)+'px;}.scene-end-t{font-size:'+_p(86,72)+'px;font-weight:700;color:#F5F1E8;letter-spacing:'+_p(8,6)+'px;}.scene-bump{position:absolute;top:'+(VV?'43%':'41%')+';left:0;width:100%;text-align:center;opacity:0;font-family:\"Inter\",sans-serif;}.scene-bump-line{height:4px;background:#D6AD62;margin:'+_p(28,22)+'px auto 0;width:0%;}.scene-peak{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;z-index:99;}.peak-value{font:700 clamp(60px,12vw,200px)/1 Sora,sans-serif;color:#E0584A;text-align:center;letter-spacing:-2px;}.peak-label{font:600 clamp(22px,3vw,42px)/1.2 Inter,sans-serif;color:rgba(255,255,255,.85);text-align:center;margin-top:20px;}</style>';var scHtml='';var scJs='';sceneBlocks.forEach(function(sb,i){var id='sc'+i;var p=sb.params||{};var col=scCol(p.color);var st=sb.start||0;if(p.anchor){var _t=_findT(p.anchor);if(_t>=0){st=Math.max(0,_t+(parseFloat(p.offset)||0));}}var du=sb.duration||3;if(typeof duration==='number'&&duration>0){if(st>=duration-0.6){return;}if(st+du>duration-0.1){du=Math.max(1,duration-st-0.1);}}st=Math.round(st*100)/100;du=Math.round(du*100)/100;var fi=Math.min(.5,du/4);var fo=Math.min(.5,du/4);var mid=Math.max(.6,du-fi-fo);var trk=60+i;var dat=' data-start=\"'+st+'\" data-duration=\"'+du+'\" data-track-index=\"'+trk+'\"';var rise='tl.fromTo(\"#'+id+'\",{opacity:0,y:18},{opacity:1,y:0,duration:'+fi+',ease:\"power2.out\"},'+st+');';var fout='tl.to(\"#'+id+'\",{opacity:0,duration:'+fo+'},'+(st+du-fo)+');';if(sb.type==='percent-bar'){var fv=parseFloat(p.from)||0,tv=parseFloat(p.to)||100;scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'><div class=\"scene-label\">'+scEsc(p.label||'')+' <span id=\"'+id+'n\">'+fv+'</span>%</div><div class=\"scene-bar-track\"><div id=\"'+id+'f\" class=\"scene-bar-fill\" style=\"background:'+col+'\"></div></div></div>';scJs+=rise+'tl.to(\"#'+id+'f\",{width:\"'+tv+'%\",duration:'+mid+',ease:\"power2.out\"},'+(st+fi)+');tl.to({v:'+fv+'},{v:'+tv+',duration:'+mid+',ease:\"power2.out\",onUpdate:function(){var e=document.getElementById(\"'+id+'n\");if(e)e.textContent=Math.round(this.targets()[0].v*10)/10;}},'+(st+fi)+');'+fout;}else if(sb.type==='count-up'){var toN=parseFloat(p.to)||0;scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'>'+(p.label?('<div class=\"scene-label\">'+scEsc(p.label)+'</div>'):'')+'<div id=\"'+id+'n\" class=\"scene-countup\" style=\"color:'+col+'\">0</div>'+(p.note?('<div class=\"scene-sub\">'+scEsc(p.note)+'</div>'):'')+'</div>';scJs+=rise+'tl.to({v:0},{v:'+toN+',duration:'+mid+',ease:\"power1.out\",onUpdate:function(){var e=document.getElementById(\"'+id+'n\");if(e)e.textContent=Math.round(this.targets()[0].v).toLocaleString(\"tr-TR\");}},'+(st+fi)+');'+fout;}else if(sb.type==='number-card'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'><div class=\"scene-rule\"></div><div class=\"scene-numcard\" style=\"color:'+col+'\">'+scEsc(p.value||p.to||'')+'</div>'+(p.label?('<div class=\"scene-sub\">'+scEsc(p.label)+'</div>'):'')+'</div>';scJs+=rise+fout;}else if(sb.type==='source-label'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-source\"'+dat+'>'+scEsc(p.text||p.label||'')+'</div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');'+fout;}else if(sb.type==='timeline-flat'||sb.type==='flat-line'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'>'+(p.label?('<div class=\"scene-label\">'+scEsc(p.label)+'</div>'):'')+'<div class=\"scene-flat\"><div class=\"scene-flat-line\" style=\"background:'+col+'\"></div></div>'+((p.from||p.to)?('<div class=\"scene-flat-ax\"><span>'+scEsc(p.from||'')+'</span><span>'+scEsc(p.to||'')+'</span></div>'):'')+'</div>';scJs+=rise+fout;}else if(sb.type==='dot-grid'){var tot=Math.min(parseInt(p.dots,10)||300,600);var pct=parseFloat(p.percent)||0;var lit=Math.round(tot*pct/100);var dh='';for(var q=0;q<tot;q++){dh+='<i class=\"'+(q<lit?'on':'off')+'\"></i>';}scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'>'+(p.label?('<div class=\"scene-label\">'+scEsc(p.label)+'</div>'):'')+'<div class=\"scene-dots\">'+dh+'</div>'+(p.note?('<div class=\"scene-sub\">'+scEsc(p.note)+'</div>'):'')+'</div>';scJs+=rise+'tl.to(\"#'+id+' i.on\",{backgroundColor:\"'+col+'\",opacity:1,duration:0.3,stagger:{each:'+(mid/Math.max(lit,1)).toFixed(4)+',from:\"start\"}},'+(st+fi)+');'+fout;}else if(sb.type==='end-card'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-end\"'+dat+'><div class=\"scene-end-line\"></div><div class=\"scene-end-t\">'+scEsc(p.title||'ZIBROCK')+'</div>'+(p.subtitle?('<div class=\"scene-sub\">'+scEsc(p.subtitle)+'</div>'):'')+'</div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');'+fout;}else if(sb.type==='logo-bumper'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-bump\"'+dat+'><div class=\"scene-end-t\">'+scEsc(p.text||'ZIBROCK')+'</div><div id=\"'+id+'l\" class=\"scene-bump-line\"></div></div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');tl.fromTo(\"#'+id+'l\",{width:\"0%\"},{width:\"22%\",duration:'+mid+',ease:\"power2.out\"},'+(st+fi)+');'+fout;}else if(sb.type==='peak'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-peak\"'+dat+'><div class=\"peak-value\" style=\"color:'+col+'\">'+scEsc(p.value||'')+'</div>'+(p.label?('<div class=\"peak-label\">'+scEsc(p.label)+'</div>'):'')+'</div>';scJs+='tl.to(\"#avatar-video\",{scale:1.0,duration:0.3,ease:\"power2.out\"},'+st+');'+rise+fout+'tl.to(\"#avatar-video\",{scale:1.04,duration:0.9,ease:\"power2.inOut\"},'+(st+du)+');';}});html=html.replace('</body>',scCss+scHtml+'<script>'+scJs+'</script></body>');}var _src = \"\";\ntry { _src = $(\"Claude - Video G’oya va Skript\").item.json.merged_response || \"\"; } catch(e) {}\nif (!_src) { try { _src = $(\"Input Merge\").item.json.text || \"\"; } catch(e) {} }\nvar _bs = String.fromCharCode(92);\nvar _pat = \"MANBA\" + _bs + \"(LAR\" + _bs + \")\" + _bs + \"s*:\" + _bs + \"s*(.+)\";\nvar _manba = \"\";\nvar _mm = _src.match(new RegExp(_pat, \"i\"));\nif (_mm) { _manba = _mm[1].trim(); }\nif (_manba) {\n  var _me = _manba\n    .split(\"&\").join(\"&amp;\")\n    .split(\"<\").join(\"&lt;\")\n    .split(\">\").join(\"&gt;\");\n  var _div = '<div class=\"source-label\">' + _me + '</div>';\n  if (html.indexOf(\"</body>\") > -1) {\n    html = html.replace(\"</body>\", _div + \"</body>\");\n  } else {\n    html = html + _div;\n  }\n}\nvar b64=Buffer.from(html).toString('base64');\nreturn{json:{htmlBase64:b64,DEBUG_subtitleBlocksCount:subtitleBlocks?subtitleBlocks.length:-1,DEBUG_isVertical:isV}};\n}else{\n  var videoUrl=__videoUrl||'';\nvar duration=Math.round((__duration||60)*100)/100;\nvar logoDuration=duration;\nvar statNumber='\\u2014';var statLabel='ZIBROCK tahlili';var sourceLabel='ZIBROCK Research, 2024';\nvar subtitleCss='.subtitle-block{position:absolute;bottom:86px;left:100px;right:100px;text-align:center;font-family:Inter,system-ui,sans-serif;font-size:52px;font-weight:600;color:#F7F5F0;line-height:1.25;background:none;text-shadow:0 2px 12px rgba(10,23,39,.90),0 0 4px rgba(10,23,39,.75);-webkit-text-stroke:1.5px rgba(10,23,39,.60);paint-order:stroke fill;}.subtitle-block .em{font-weight:800;}.sub-line{display:inline-block;background:none;margin:4px 0;}.c-gold{color:#D6AD62;font-weight:800;}.c-clay{color:#E0584A;font-weight:800;}.c-sage{color:#82BD8F;font-weight:800;}';\nvar subtitleBlocks=[];\ntry{if(_ad&&_ad.alignment){var isVv=_ad.isVertical||false;var cS=_ad.coloredSpans||[];subtitleBlocks=computeSubtitleBlocks(_ad.alignment,cS,isVv);}}catch(e){}\nvar subtitleHtml=buildSubtitleHtml(subtitleBlocks,4);\nvar html=\"<!DOCTYPE html><html lang=\\\"en\\\"><head><meta charset=\\\"UTF-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=1920, height=1080\\\"><script src=\\\"https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js\\\"></script><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#0A1727;}body{font-family:\\\"Inter\\\",sans-serif;}#avatar-video{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover;transform-origin:50% 35%;will-change:transform;}#shade{position:absolute;left:0;top:0;width:1920px;height:500px;background:linear-gradient(180deg,rgba(10,23,39,0.92) 0%,rgba(10,23,39,0.4) 70%,rgba(10,23,39,0) 100%);}#stat-block{position:absolute;top:80px;left:100px;opacity:0;}#stat-number{font-size:180px;font-weight:700;color:#D6AD62;line-height:1;letter-spacing:-4px;}#stat-label{margin-top:14px;font-size:36px;color:#F5F1E8;max-width:900px;line-height:1.3;}#graph-wrap{margin-top:28px;display:flex;align-items:center;gap:16px;}#source-label{margin-top:14px;font-size:22px;color:#9C9A92;font-style:italic;}#logo-image{position:absolute;bottom:50px;left:64px;width:120px;height:auto;opacity:0;}\"+subtitleCss+\"</style></head><body><div id=\\\"root\\\" data-composition-id=\\\"main\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-width=\\\"1920\\\" data-height=\\\"1080\\\"><video id=\\\"avatar-video\\\" class=\\\"clip\\\" src=\\\"\"+videoUrl+\"\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-track-index=\\\"0\\\" playsinline></video><div id=\\\"shade\\\" class=\\\"clip\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-track-index=\\\"1\\\"></div><div id=\\\"stat-block\\\" class=\\\"clip\\\" data-start=\\\"0.3\\\" data-duration=\\\"4.2\\\" data-track-index=\\\"2\\\"><div id=\\\"stat-number\\\">\"+statNumber+\"</div><div id=\\\"stat-label\\\">\"+statLabel+\"</div><div id=\\\"graph-wrap\\\"><svg width=\\\"120\\\" height=\\\"60\\\" viewBox=\\\"0 0 120 60\\\" fill=\\\"none\\\"><polyline points=\\\"5,8 35,18 60,16 85,40 115,52\\\" stroke=\\\"#E0584A\\\" stroke-width=\\\"6\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" fill=\\\"none\\\"/><circle cx=\\\"115\\\" cy=\\\"52\\\" r=\\\"6\\\" fill=\\\"#E0584A\\\"/></svg></div><div id=\\\"source-label\\\">\"+sourceLabel+\"</div></div>\"+subtitleHtml+\"</div><script>window.__timelines=window.__timelines||{};var dur=\"+duration+\";const tl=gsap.timeline({paused:true});var zoomScale=1.04;var zoomTransitionDur=0.9;var holdDur=5;var pauseDur=3;var zt=2;while(zt<dur-2){tl.to(\\\"#avatar-video\\\",{scale:zoomScale,duration:zoomTransitionDur,ease:\\\"power2.inOut\\\"},zt);zt+=zoomTransitionDur+holdDur;if(zt<dur-2){tl.to(\\\"#avatar-video\\\",{scale:1.0,duration:zoomTransitionDur,ease:\\\"power2.inOut\\\"},zt);}zt+=zoomTransitionDur+pauseDur;}tl.to(\\\"#stat-block\\\",{opacity:1,y:-15,duration:0.5,ease:\\\"power2.out\\\"},0.3).from(\\\"#stat-number\\\",{scale:0.85,duration:0.5,ease:\\\"back.out(1.7)\\\"},0.35).to(\\\"#logo-image\\\",{opacity:1,duration:0.6,ease:\\\"power1.out\\\"},0.3).to(\\\"#stat-block\\\",{opacity:0,duration:0.4,ease:\\\"power1.in\\\"},4.1);window.__timelines[\\\"main\\\"]=tl;</script></body></html>\";\nhtml=html.replace('</head>','<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@600;800&family=JetBrains+Mono:wght@500;700&display=swap\"><style>#stat-block{display:none!important}.source-label{position:absolute;top:7%;left:50%;transform:translateX(-50%);font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:22px;color:rgba(247,245,240,.72);white-space:nowrap;z-index:40}.source-label::after{content:\"\";display:block;height:2px;margin-top:10px;background:rgba(214,173,98,.42)}</style></head>');var sceneBlocks=[];try{sceneBlocks=$('Skriptni Ajratish').item.json.sceneBlocks||[];}catch(e){}if(sceneBlocks&&sceneBlocks.length){var _alc=[],_als=[];try{_alc=(_ad&&_ad.alignment&&_ad.alignment.characters)||[];_als=(_ad&&_ad.alignment&&_ad.alignment.character_start_times_seconds)||[];}catch(e){}var _fmap={'İ':'i','I':'i','ı':'i','Ş':'s','ş':'s','Ğ':'g','ğ':'g','Ü':'u','ü':'u','Ö':'o','ö':'o','Ç':'c','ç':'c','Â':'a','â':'a','Î':'i','î':'i','Û':'u','û':'u'};var _fold=function(s){var o='';for(var k=0;k<s.length;k++){var ch=s[k];o+=(_fmap[ch]||ch.toLowerCase());}return o;};var _ftxt=_fold(_alc.join(''));var _findT=function(a){var n=_fold(String(a||''));if(!n)return -1;var i=_ftxt.indexOf(n);if(i<0)return -1;var t=_als[i];return (typeof t==='number')?t:-1;};var scEsc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};var scCol=function(c){return c==='clay'?'#E0584A':(c==='sage'?'#82BD8F':'#D6AD62');};var VV=isV;var _p=function(a,b){return VV?a:b;};var scCss='<style>.scene-wrap{position:absolute;top:'+(VV?'11%':'15%')+';left:'+(VV?'8%':'5.5%')+';width:'+(VV?'84%':'38%')+';opacity:0;text-align:'+(VV?'center':'left')+';font-family:\"Inter\",sans-serif;}.scene-rule{width:'+_p(96,72)+'px;height:4px;background:#D6AD62;margin-bottom:'+_p(26,20)+'px;'+(VV?'margin-left:auto;margin-right:auto;':'')+'}.scene-label{font-size:'+_p(36,30)+'px;font-weight:700;color:#F5F1E8;margin-bottom:'+_p(16,14)+'px;letter-spacing:-0.2px;}.scene-sub{font-size:'+_p(28,22)+'px;color:#9C9A92;margin-top:'+_p(14,12)+'px;}.scene-bar-track{width:100%;height:'+_p(34,28)+'px;background:rgba(245,241,232,.14);border-radius:'+_p(17,14)+'px;overflow:hidden;}.scene-bar-fill{height:100%;border-radius:inherit;width:0%;}.scene-countup{font-family:\"JetBrains Mono\",monospace;font-size:'+_p(120,96)+'px;font-weight:700;line-height:1;letter-spacing:-2px;}.scene-numcard{font-family:\"JetBrains Mono\",monospace;font-size:'+_p(150,120)+'px;font-weight:500;line-height:1;letter-spacing:-3px;}.scene-tl-track{position:relative;width:100%;height:4px;background:rgba(245,241,232,.28);margin-top:'+_p(18,14)+'px;}.scene-tl-dot{position:absolute;top:50%;width:'+_p(18,14)+'px;height:'+_p(18,14)+'px;border-radius:50%;transform:translate(-50%,-50%);}.scene-flat{position:relative;width:100%;height:'+_p(120,96)+'px;}.scene-flat-line{position:absolute;top:46%;left:0;width:100%;height:4px;}.scene-flat-ax{display:flex;justify-content:space-between;font-size:'+_p(26,22)+'px;color:#9C9A92;}.scene-dots{display:flex;flex-wrap:wrap;gap:'+_p(8,7)+'px;justify-content:'+(VV?'center':'flex-start')+';}.scene-dots i{width:'+_p(16,14)+'px;height:'+_p(16,14)+'px;border-radius:50%;background:#D6AD62;opacity:.4;display:block;}.scene-source{position:absolute;bottom:'+(VV?'330px':'210px')+';left:0;width:100%;text-align:center;font-family:\"Inter\",sans-serif;font-size:'+_p(26,24)+'px;color:#9C9A92;font-style:italic;opacity:0;}.scene-end{position:absolute;top:'+(VV?'40%':'38%')+';left:0;width:100%;text-align:center;opacity:0;font-family:\"Inter\",sans-serif;}.scene-end-line{width:'+_p(120,96)+'px;height:4px;background:#D6AD62;margin:0 auto '+_p(34,28)+'px;}.scene-end-t{font-size:'+_p(86,72)+'px;font-weight:700;color:#F5F1E8;letter-spacing:'+_p(8,6)+'px;}.scene-bump{position:absolute;top:'+(VV?'43%':'41%')+';left:0;width:100%;text-align:center;opacity:0;font-family:\"Inter\",sans-serif;}.scene-bump-line{height:4px;background:#D6AD62;margin:'+_p(28,22)+'px auto 0;width:0%;}.scene-peak{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;z-index:99;}.peak-value{font:700 clamp(60px,12vw,200px)/1 Sora,sans-serif;color:#E0584A;text-align:center;letter-spacing:-2px;}.peak-label{font:600 clamp(22px,3vw,42px)/1.2 Inter,sans-serif;color:rgba(255,255,255,.85);text-align:center;margin-top:20px;}</style>';var scHtml='';var scJs='';sceneBlocks.forEach(function(sb,i){var id='sc'+i;var p=sb.params||{};var col=scCol(p.color);var st=sb.start||0;if(p.anchor){var _t=_findT(p.anchor);if(_t>=0){st=Math.max(0,_t+(parseFloat(p.offset)||0));}}var du=sb.duration||3;if(typeof duration==='number'&&duration>0){if(st>=duration-0.6){return;}if(st+du>duration-0.1){du=Math.max(1,duration-st-0.1);}}st=Math.round(st*100)/100;du=Math.round(du*100)/100;var fi=Math.min(.5,du/4);var fo=Math.min(.5,du/4);var mid=Math.max(.6,du-fi-fo);var trk=60+i;var dat=' data-start=\"'+st+'\" data-duration=\"'+du+'\" data-track-index=\"'+trk+'\"';var rise='tl.fromTo(\"#'+id+'\",{opacity:0,y:18},{opacity:1,y:0,duration:'+fi+',ease:\"power2.out\"},'+st+');';var fout='tl.to(\"#'+id+'\",{opacity:0,duration:'+fo+'},'+(st+du-fo)+');';if(sb.type==='percent-bar'){var fv=parseFloat(p.from)||0,tv=parseFloat(p.to)||100;scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'><div class=\"scene-label\">'+scEsc(p.label||'')+' <span id=\"'+id+'n\">'+fv+'</span>%</div><div class=\"scene-bar-track\"><div id=\"'+id+'f\" class=\"scene-bar-fill\" style=\"background:'+col+'\"></div></div></div>';scJs+=rise+'tl.to(\"#'+id+'f\",{width:\"'+tv+'%\",duration:'+mid+',ease:\"power2.out\"},'+(st+fi)+');tl.to({v:'+fv+'},{v:'+tv+',duration:'+mid+',ease:\"power2.out\",onUpdate:function(){var e=document.getElementById(\"'+id+'n\");if(e)e.textContent=Math.round(this.targets()[0].v*10)/10;}},'+(st+fi)+');'+fout;}else if(sb.type==='count-up'){var toN=parseFloat(p.to)||0;scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'>'+(p.label?('<div class=\"scene-label\">'+scEsc(p.label)+'</div>'):'')+'<div id=\"'+id+'n\" class=\"scene-countup\" style=\"color:'+col+'\">0</div>'+(p.note?('<div class=\"scene-sub\">'+scEsc(p.note)+'</div>'):'')+'</div>';scJs+=rise+'tl.to({v:0},{v:'+toN+',duration:'+mid+',ease:\"power1.out\",onUpdate:function(){var e=document.getElementById(\"'+id+'n\");if(e)e.textContent=Math.round(this.targets()[0].v).toLocaleString(\"tr-TR\");}},'+(st+fi)+');'+fout;}else if(sb.type==='number-card'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'><div class=\"scene-rule\"></div><div class=\"scene-numcard\" style=\"color:'+col+'\">'+scEsc(p.value||p.to||'')+'</div>'+(p.label?('<div class=\"scene-sub\">'+scEsc(p.label)+'</div>'):'')+'</div>';scJs+=rise+fout;}else if(sb.type==='source-label'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-source\"'+dat+'>'+scEsc(p.text||p.label||'')+'</div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');'+fout;}else if(sb.type==='timeline-flat'||sb.type==='flat-line'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'>'+(p.label?('<div class=\"scene-label\">'+scEsc(p.label)+'</div>'):'')+'<div class=\"scene-flat\"><div class=\"scene-flat-line\" style=\"background:'+col+'\"></div></div>'+((p.from||p.to)?('<div class=\"scene-flat-ax\"><span>'+scEsc(p.from||'')+'</span><span>'+scEsc(p.to||'')+'</span></div>'):'')+'</div>';scJs+=rise+fout;}else if(sb.type==='dot-grid'){var tot=Math.min(parseInt(p.dots,10)||300,600);var pct=parseFloat(p.percent)||0;var lit=Math.round(tot*pct/100);var dh='';for(var q=0;q<tot;q++){dh+='<i class=\"'+(q<lit?'on':'off')+'\"></i>';}scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\"'+dat+'>'+(p.label?('<div class=\"scene-label\">'+scEsc(p.label)+'</div>'):'')+'<div class=\"scene-dots\">'+dh+'</div>'+(p.note?('<div class=\"scene-sub\">'+scEsc(p.note)+'</div>'):'')+'</div>';scJs+=rise+'tl.to(\"#'+id+' i.on\",{backgroundColor:\"'+col+'\",opacity:1,duration:0.3,stagger:{each:'+(mid/Math.max(lit,1)).toFixed(4)+',from:\"start\"}},'+(st+fi)+');'+fout;}else if(sb.type==='end-card'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-end\"'+dat+'><div class=\"scene-end-line\"></div><div class=\"scene-end-t\">'+scEsc(p.title||'ZIBROCK')+'</div>'+(p.subtitle?('<div class=\"scene-sub\">'+scEsc(p.subtitle)+'</div>'):'')+'</div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');'+fout;}else if(sb.type==='logo-bumper'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-bump\"'+dat+'><div class=\"scene-end-t\">'+scEsc(p.text||'ZIBROCK')+'</div><div id=\"'+id+'l\" class=\"scene-bump-line\"></div></div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');tl.fromTo(\"#'+id+'l\",{width:\"0%\"},{width:\"22%\",duration:'+mid+',ease:\"power2.out\"},'+(st+fi)+');'+fout;}else if(sb.type==='peak'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-peak\"'+dat+'><div class=\"peak-value\" style=\"color:'+col+'\">'+scEsc(p.value||'')+'</div>'+(p.label?('<div class=\"peak-label\">'+scEsc(p.label)+'</div>'):'')+'</div>';scJs+='tl.to(\"#avatar-video\",{scale:1.0,duration:0.3,ease:\"power2.out\"},'+st+');'+rise+fout+'tl.to(\"#avatar-video\",{scale:1.04,duration:0.9,ease:\"power2.inOut\"},'+(st+du)+');';}});html=html.replace('</body>',scCss+scHtml+'<script>'+scJs+'</script></body>');}var _src = \"\";\ntry { _src = $(\"Claude - Video G’oya va Skript\").item.json.merged_response || \"\"; } catch(e) {}\nif (!_src) { try { _src = $(\"Input Merge\").item.json.text || \"\"; } catch(e) {} }\nvar _bs = String.fromCharCode(92);\nvar _pat = \"MANBA\" + _bs + \"(LAR\" + _bs + \")\" + _bs + \"s*:\" + _bs + \"s*(.+)\";\nvar _manba = \"\";\nvar _mm = _src.match(new RegExp(_pat, \"i\"));\nif (_mm) { _manba = _mm[1].trim(); }\nif (_manba) {\n  var _me = _manba\n    .split(\"&\").join(\"&amp;\")\n    .split(\"<\").join(\"&lt;\")\n    .split(\">\").join(\"&gt;\");\n  var _div = '<div class=\"source-label\">' + _me + '</div>';\n  if (html.indexOf(\"</body>\") > -1) {\n    html = html.replace(\"</body>\", _div + \"</body>\");\n  } else {\n    html = html + _div;\n  }\n}\nvar b64=Buffer.from(html).toString('base64');\nreturn{json:{htmlBase64:b64,DEBUG_subtitleBlocksCount:subtitleBlocks?subtitleBlocks.length:-1,DEBUG_isVertical:isV}};\n}"
     },
+    "HTML to Binary (Bev)": {
+      "turi": "unknown"
+    },
+    "HTML zip (Bev)": {
+      "turi": "unknown"
+    },
     "HeyGen - Asset yuklash (Bev)": {
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v3/assets",
       "body": "",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
     },
     "Hyperframes render boshlash (Bev)": {
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v3/hyperframes/renders",
       "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: \"1080p\", aspect_ratio: (function(){ try { var K=$(\"KONSTANTALAR\").item.json; var vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\"; return (K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\"; } catch(e){ return \"9:16\"; } })(), title: \"ZIBROCK video - statistika overlay\" }) }}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Wait - 15s (Bev)": {
+      "turi": "wait",
+      "amount": 15,
+      "unit": "seconds"
     },
     "Hyperframes status (Bev)": {
       "turi": "http",
       "method": "GET",
       "url": "={{ \"https://api.heygen.com/v3/hyperframes/renders/\" + ($(\"Hyperframes render boshlash (Bev)\").item.json.data.render_id || $(\"Hyperframes render boshlash (Bev)\").item.json.render_id || \"\") }}",
       "body": "",
-      "sendBody": false
+      "sendBody": false,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Render Tayyor? (Bev)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "hf-status-bev",
+            "leftValue": "={{ $json.data.status }}",
+            "rightValue": "completed",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
     },
     "Extract HF URL (Bev)": {
       "turi": "code",
@@ -247,7 +679,10 @@
       "turi": "telegram",
       "text": "={{ \"✅ Videongiz tayyor!\\n\\n🎬 Ko'rish uchun: \" + String($json.hfVideoUrl).split(\"&\").join(\"&amp;\") }}",
       "chatId": "={{ $(\"Faqat skript matnini ajratish\").item.json.chatId }}",
-      "thread": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}"
+      "thread": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "Render Hisoblagich (Bev)": {
       "turi": "code",
@@ -261,9 +696,12 @@
     },
     "Claude - Video G'oya va Skript": {
       "turi": "ai",
-      "model": "",
+      "model": "claude-sonnet-4-6",
       "maxTokens": 4000,
-      "system": ""
+      "system": "",
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
     },
     "Skriptni Tozalash (AI)": {
       "turi": "code",
@@ -274,6 +712,29 @@
       "turi": "code",
       "mode": "runOnceForAllItems",
       "kod": "var item=$input.first().json;\nvar text=(item.merged_response||'').toLowerCase();\nvar variant=(item.variant||'full').toLowerCase();\nvar RED=['garanti eder','kesin kar','risksiz','zahmetsiz gelir','gunde kazanin','ayda kazanin','hizli zengin'];\nvar ORANGE=['challenge','prop firma','funded','payout','kaldıraç','spread','hesap ac','fiyat tablosu','a-book'];\nvar EXC=['garanti etmiyor','garanti degil','garanti vermiyor'];\nvar hasExc=EXC.some(function(e){return text.indexOf(e)>=0;});\nvar fail=null;\nfor(var i=0;i<RED.length&&!fail;i++){if(text.indexOf(RED[i])>=0&&!hasExc){fail={tur:'RED',atama:RED[i]};}}\nif(!fail&&variant==='metasafe'){for(var i=0;i<ORANGE.length&&!fail;i++){if(text.indexOf(ORANGE[i])>=0&&!hasExc){fail={tur:'ORANGE',atama:ORANGE[i]};}}}\nvar hasSrc=text.indexOf('manba(lar)')>=0||text.indexOf('source')>=0;\nvar hasNum=text.indexOf('%')>=0;\nif(!fail&&hasNum&&!hasSrc){fail={tur:'MANBA',atama:'raqam bor, manba yoq'};}\nif(fail){return[{json:{...item,compliance:'FAIL',tur:fail.tur,atama:fail.atama,chatId:item.chatId||'',xabar:'❌ Compliance FAIL: '+fail.tur+' — \"'+fail.atama+'\"'}}];}\nreturn[{json:{...item,compliance:'PASS'}}];"
+    },
+    "Compliance OK? (AI)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "c-pass-ai",
+            "leftValue": "={{ $json.compliance }}",
+            "rightValue": "PASS",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
     },
     "K2 Zichlik (AI)": {
       "turi": "code",
@@ -295,7 +756,10 @@
       "method": "POST",
       "url": "={{ (function(){ var vid=\"\";try{vid=$(\"Mavzu va Avatar Aniqlash\").item.json.voice_id;}catch(e){}if(!vid){var K=$(\"KONSTANTALAR\").item.json;var a=K.joriy_avatar||\"a1\";vid=K.ovozlar[K.avatarlar[a].ovoz].voice_id;} return \"https://api.elevenlabs.io/v1/text-to-speech/\"+vid+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $(\"Platforma Aniqlash\").item.json.merged_response, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "ElevenLabs API (Boburbek K)"
+      }
     },
     "Audio Decode (Asosiy)": {
       "turi": "code",
@@ -307,21 +771,58 @@
       "method": "POST",
       "url": "https://upload.heygen.com/v1/asset",
       "body": "",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
     },
     "HeyGen - Video Yaratish": {
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
       "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json;var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;}var vt=\"GIBRID\";try{vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\";}catch(e){}var ar=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\";return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid, scale: 1.0, offset: { x: 0, y: 0 }, use_avatar_iv_model: true, prompt: \"natural conversational presenter speaking to camera, subtle continuous head movement, small nods on key points, gentle head tilts, natural blinking, occasional eyebrow raise for emphasis, relaxed shoulders, calm and credible, no hand gestures\", keep_original_prompt: false }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: (ar === \"9:16\") ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, test: false }); })() }}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Wait 20s (AI)": {
+      "turi": "wait",
+      "amount": 20,
+      "unit": "seconds"
     },
     "HeyGen Video Status (AI)": {
       "turi": "http",
       "method": "GET",
       "url": "={{ \"https://api.heygen.com/v1/video_status.get?video_id=\" + $(\"HeyGen - Video Yaratish\").item.json.data.video_id }}",
       "body": "",
-      "sendBody": false
+      "sendBody": false,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Video Tayyor? (AI)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "vid-done-ai",
+            "leftValue": "={{ $json.data.status }}",
+            "rightValue": "completed",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
     },
     "Extract Video (AI)": {
       "turi": "code",
@@ -333,43 +834,115 @@
       "mode": "runOnceForEachItem",
       "kod": "\nfunction computeSubtitleBlocks(alignment, coloredSpans, isVertical) {\n  var maxCharsPerLine = isVertical ? 32 : 44;\n  var maxLines = 2;\n  var maxDuration = 5.0;\n  var minDuration = 1.0;\n  var minGap = 0.08;\n  var chars = alignment.characters || [];\n  var tStarts = alignment.character_start_times_seconds || [];\n  var tEnds = alignment.character_end_times_seconds || [];\n  var words = [];\n  var cur = null;\n  for (var i = 0; i < chars.length; i++) {\n    var ch = chars[i];\n    if (ch === ' ') {\n      if (cur) { words.push(cur); cur = null; }\n    } else {\n      if (!cur) cur = { text: '', startTime: tStarts[i], endTime: tEnds[i] };\n      cur.text += ch;\n      cur.endTime = tEnds[i];\n    }\n  }\n  if (cur) words.push(cur);\n  var colorMap = { 'GOLD': 'c-gold', 'CLAY': 'c-clay', 'SAGE': 'c-sage' };\n  try {\n    (coloredSpans || []).forEach(function(span) {\n      if (!span || !span.text) return;\n      var cssClass = colorMap[(span.color || '').toUpperCase()] || null;\n      if (!cssClass) return;\n      var clean = function(s) { return s.replace(/[.,!?]/g, '').toLowerCase(); };\n      var spanWords = span.text.trim().split(/\\s+/);\n      for (var wi = 0; wi <= words.length - spanWords.length; wi++) {\n        var match = true;\n        for (var si = 0; si < spanWords.length; si++) {\n          if (clean(words[wi + si].text) !== clean(spanWords[si])) { match = false; break; }\n        }\n        if (match) { for (var si2 = 0; si2 < spanWords.length; si2++) words[wi + si2].colorClass = cssClass; }\n      }\n    });\n  } catch (colorErr) {}\n  function isSplit(word) { return word.text.endsWith('.') || word.text.endsWith(','); }\n  var blocks = []; var wi = 0;\n  while (wi < words.length) {\n    var lines = [[]]; var lineIdx = 0;\n    var bStart = words[wi].startTime; var bEnd = words[wi].endTime;\n    while (wi < words.length) {\n      var word = words[wi];\n      var curLine = lines[lineIdx];\n      var lineText = curLine.map(function(w) { return w.text; }).join(' ');\n      var addedText = lineText ? lineText + ' ' + word.text : word.text;\n      if (addedText.length <= maxCharsPerLine) {\n        if ((word.endTime - bStart) > maxDuration && curLine.length > 0) break;\n        curLine.push(word); bEnd = word.endTime; wi++;\n        if (isSplit(word) && wi < words.length) break;\n        if (bEnd - bStart >= maxDuration) break;\n      } else {\n        if (lineIdx < maxLines - 1) { lineIdx++; lines.push([]); } else break;\n      }\n    }\n    // Yolg'iz so'z tuzatish: oxirgi qatorda 1 so'z bo'lsa, oldingi qatordan ko'chir\n    if (lines.length > 1) {\n      var _lastL = lines[lines.length - 1];\n      var _prevL = lines[lines.length - 2];\n      if (_lastL.length === 1 && _prevL.length > 1) {\n        _lastL.unshift(_prevL.pop());\n      }\n    }\n    var allWords = [];\n    lines.forEach(function(l) { allWords = allWords.concat(l); });\n    if (allWords.length === 0) { wi++; continue; }\n    var dur = Math.max(bEnd - bStart, minDuration);\n    var wordsWithColor = lines.map(function(line) {\n      return line.map(function(w) { return { text: w.text, colorClass: w.colorClass || null }; });\n    });\n    blocks.push({\n      startTime: parseFloat(bStart.toFixed(3)),\n      endTime: parseFloat(bEnd.toFixed(3)),\n      duration: parseFloat(dur.toFixed(3)),\n      lines: wordsWithColor\n    });\n  }\n  for (var i = 0; i < blocks.length - 1; i++) {\n    var cur = blocks[i];\n    var nxt = blocks[i + 1];\n    if (cur.endTime > nxt.startTime - 0.08) {\n      cur.endTime = parseFloat((nxt.startTime - 0.08).toFixed(3));\n    }\n    if (cur.endTime <= cur.startTime + 0.5) {\n      cur.endTime = parseFloat((cur.startTime + 0.5).toFixed(3));\n    }\n    cur.duration = parseFloat((cur.endTime - cur.startTime).toFixed(3));\n  }\n  return blocks;\n}\n\nfunction buildSubtitleHtml(subtitleBlocks, startTrackIndex) {\n  if (!subtitleBlocks || subtitleBlocks.length === 0) return '';\n  return subtitleBlocks.map(function(block, idx) {\n    var lineHtml = block.lines.map(function(line) {\n      var wordHtml = line.map(function(w) {\n        return w.colorClass\n          ? '<span class=\"' + w.colorClass + '\">' + w.text + '</span>'\n          : w.text;\n      }).join(' ');\n      return '<div class=\"sub-line\">' + wordHtml + '</div>';\n    }).join('');\n    return '<div class=\"clip subtitle-block\" data-start=\"' + block.startTime +\n      '\" data-duration=\"' + block.duration +\n      '\" data-track-index=\"' + (startTrackIndex + idx) + '\">' +\n      lineHtml + '</div>';\n  }).join('');\n}\nconst sb = $('Skriptni Tozalash (AI)').first().json.sceneBlocks || [];\nconsole.log('DIAG sceneBlocks:', sb.length, /---SAHNA---/.test($('Skriptni Tozalash (AI)').first().json.raw_script || ''));\nvar platforma='';var isVertical=false;\ntry{var pa=$('Platforma Aniqlash').item.json;platforma=pa.platforma||'YouTube';isVertical=pa.isVertical||false;}catch(e){isVertical=false;}\nvar isV=isVertical;\nvar __videoUrl='';var __duration=60;\ntry{var ev=$('Extract Video (AI)').item.json;__videoUrl=ev.videoUrl||'';__duration=ev.duration||60;}catch(e){}\nvar _ad=null;\ntry{_ad=$('Audio Decode (Bevosita)').item.json;}catch(_e1){try{_ad=$('Audio Decode (Asosiy)').item.json;}catch(_e2){}}var sceneBlocks=[];try{var _rOs=$('Platforma Aniqlash').item.json.merged_response||'';var _sIdx2=_rOs.indexOf('---SAHNA---');if(_sIdx2!==-1){var _sPart2=_rOs.substring(_sIdx2+11).trim();_sPart2.split('\\n').forEach(function(ln){ln=ln.trim();if(!ln)return;var parts=ln.split('|');if(parts.length<3)return;var st=parseFloat(parts[0]);var du=parseFloat(parts[1]);var ty=parts[2].trim();var pr={};if(parts[3]){parts[3].split(';').forEach(function(kv){var kvp=kv.split('=');if(kvp.length===2)pr[kvp[0].trim()]=kvp[1].trim();});}if(!isNaN(st)&&!isNaN(du)&&ty){sceneBlocks.push({start:st,duration:du,type:ty,params:pr});}});}}catch(e){}\nif(isVertical){\n  var videoUrl=__videoUrl||'';\nvar duration=Math.round((__duration||60)*100)/100;\nvar subtitleBlocks=[];\ntry{if(_ad&&_ad.alignment){var _cS=_ad.coloredSpans||[];subtitleBlocks=computeSubtitleBlocks(_ad.alignment,_cS,true);}}catch(_er2){}\nvar subtitleHtml=buildSubtitleHtml(subtitleBlocks,3);\nvar html=\"<!DOCTYPE html><html lang=\\\"en\\\"><head><meta charset=\\\"UTF-8\\\"><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:transparent;}#avatar-video{position:absolute;left:0;top:0;width:1080px;height:1920px;object-fit:cover;}.subtitle-block{position:absolute;bottom:500px;left:60px;right:60px;text-align:center;font-family:Inter,system-ui,sans-serif;font-size:70px;font-weight:600;color:#F7F5F0;line-height:1.25;background:none;text-shadow:0 2px 12px rgba(10,23,39,.90),0 0 4px rgba(10,23,39,.75);-webkit-text-stroke:1.5px rgba(10,23,39,.60);paint-order:stroke fill;}.subtitle-block .em{font-weight:800;}.sub-line{display:inline-block;background:none;margin:2px 0;}.c-gold{color:#D6AD62;font-weight:800;}.c-clay{color:#E0584A;font-weight:800;}.c-sage{color:#82BD8F;font-weight:800;}</style></head><body><div id=\\\"root\\\" data-composition-id=\\\"main\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-width=\\\"1080\\\" data-height=\\\"1920\\\"><video id=\\\"avatar-video\\\" class=\\\"clip\\\" src=\\\"\"+videoUrl+\"\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-track-index=\\\"0\\\" playsinline></video>\"+subtitleHtml+\"</div></body></html>\";\nhtml=html.replace('</head>','<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap\"><style>.source-label{position:absolute;top:6.5%;left:50%;transform:translateX(-50%);font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:26px;color:rgba(247,245,240,.72);white-space:nowrap;z-index:40}.source-label::after{content:\"\";display:block;height:2px;margin-top:10px;background:rgba(214,173,98,.42)}</style></head>');\nvar sceneBlocks2=[];try{sceneBlocks2=sceneBlocks||[];}catch(e){}if(sceneBlocks2&&sceneBlocks2.length){var scEsc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};var scCol=function(c){return c==='clay'?'#E0584A':(c==='sage'?'#82BD8F':'#D6AD62');};var scCss='<style>.scene-wrap{position:absolute;top:12%;left:10%;width:80%;opacity:0;}.scene-label{font-family:\"Inter\",sans-serif;font-size:2.2vw;font-weight:700;color:#F5F1E8;margin-bottom:.8vw;text-align:center;}.scene-bar-track{width:100%;height:3vw;background:rgba(245,241,232,.15);border-radius:2vw;overflow:hidden;}.scene-bar-fill{height:100%;border-radius:2vw;width:0%;}.scene-countup{font-family:\"Inter\",sans-serif;font-size:7vw;font-weight:700;text-align:center;}.scene-tl-track{position:relative;width:100%;height:.35vw;background:rgba(245,241,232,.3);margin-top:1vw;}.scene-tl-dot{position:absolute;top:50%;width:1.4vw;height:1.4vw;border-radius:50%;transform:translate(-50%,-50%);}</style>';var scHtml='';var scJs='';sceneBlocks2.forEach(function(sb,i){var id='sc'+i;var p=sb.params||{};var col=scCol(p.color);var st=sb.start||0;var du=sb.duration||3;var fi=Math.min(.5,du/4);var fo=Math.min(.5,du/4);var mid=Math.max(.6,du-fi-fo);var trk=60+i;if(sb.type==='percent-bar'){var fv=parseFloat(p.from)||0,tv=parseFloat(p.to)||100;scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\" data-start=\"'+st+'\" data-duration=\"'+du+'\" data-track-index=\"'+trk+'\"><div class=\"scene-label\">'+scEsc(p.label||'')+' <span id=\"'+id+'n\">'+fv+'</span>%</div><div class=\"scene-bar-track\"><div id=\"'+id+'f\" class=\"scene-bar-fill\" style=\"background:'+col+'\"></div></div></div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');tl.to(\"#'+id+'f\",{width:\"'+tv+'%\",duration:'+mid+',ease:\"power2.out\"},'+(st+fi)+');tl.to({v:'+fv+'},{v:'+tv+',duration:'+mid+',ease:\"power2.out\",onUpdate:function(){var e=document.getElementById(\"'+id+'n\");if(e)e.textContent=Math.round(this.targets()[0].v);}},'+(st+fi)+');tl.to(\"#'+id+'\",{opacity:0,duration:'+fo+'},'+(st+du-fo)+');';}else if(sb.type==='count-up'){var toN=parseFloat(p.to)||0;scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\" data-start=\"'+st+'\" data-duration=\"'+du+'\" data-track-index=\"'+trk+'\">'+(p.label?('<div class=\"scene-label\">'+scEsc(p.label)+'</div>'):'')+'<div id=\"'+id+'n\" class=\"scene-countup\" style=\"color:'+col+'\">0</div></div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');tl.to({v:0},{v:'+toN+',duration:'+mid+',ease:\"power1.out\",onUpdate:function(){var e=document.getElementById(\"'+id+'n\");if(e)e.textContent=Math.round(this.targets()[0].v);}},'+(st+fi)+');tl.to(\"#'+id+'\",{opacity:0,duration:'+fo+'},'+(st+du-fo)+');';}else if(sb.type==='timeline-flat'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\" data-start=\"'+st+'\" data-duration=\"'+du+'\" data-track-index=\"'+trk+'\"><div class=\"scene-label\">'+scEsc(p.from||'')+' - '+scEsc(p.to||'')+'</div><div class=\"scene-tl-track\"><div class=\"scene-tl-dot\" style=\"left:0%;background:'+col+'\"></div><div class=\"scene-tl-dot\" style=\"left:100%;background:'+col+'\"></div></div></div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');tl.to(\"#'+id+'\",{opacity:0,duration:'+fo+'},'+(st+du-fo)+');';}});html=html.replace('</body>',scCss+scHtml+'<script>'+scJs+'</script></body>');}var _src = \"\";\ntry { _src = $(\"Claude - Video G’oya va Skript\").item.json.merged_response || \"\"; } catch(e) {}\nif (!_src) { try { _src = $(\"Input Merge\").item.json.text || \"\"; } catch(e) {} }\nvar _bs = String.fromCharCode(92);\nvar _pat = \"MANBA\" + _bs + \"(LAR\" + _bs + \")\" + _bs + \"s*:\" + _bs + \"s*(.+)\";\nvar _manba = \"\";\nvar _mm = _src.match(new RegExp(_pat, \"i\"));\nif (_mm) { _manba = _mm[1].trim(); }\nif (_manba) {\n  var _me = _manba\n    .split(\"&\").join(\"&amp;\")\n    .split(\"<\").join(\"&lt;\")\n    .split(\">\").join(\"&gt;\");\n  var _div = '<div class=\"source-label\">' + _me + '</div>';\n  if (html.indexOf(\"</body>\") > -1) {\n    html = html.replace(\"</body>\", _div + \"</body>\");\n  } else {\n    html = html + _div;\n  }\n}\nvar b64=Buffer.from(html).toString('base64');\nreturn{json:{htmlBase64:b64,DEBUG_subtitleBlocksCount:subtitleBlocks?subtitleBlocks.length:-1,DEBUG_isVertical:isV}};\n}else{\n  var videoUrl=__videoUrl||'';\nvar duration=Math.round((__duration||60)*100)/100;\nvar statNumber='\\u2014';var statLabel='ZIBROCK tahlili';var sourceLabel='ZIBROCK Research, 2024';\nvar _rO='';try{_rO=$('Platforma Aniqlash').item.json.merged_response||'';}catch(_er){}\nvar _sLs=_rO.split('\\n');\nfor(var _si2=0;_si2<_sLs.length;_si2++){var _sl2=_sLs[_si2].trim();if(_sl2.indexOf('STAT_NUMBER:')===0){statNumber=_sl2.substring(12).trim();}if(_sl2.indexOf('STAT_LABEL:')===0){statLabel=_sl2.substring(11).trim();}if(_sl2.indexOf('SOURCE_LABEL:')===0){sourceLabel=_sl2.substring(13).trim();}}\nif(statNumber==='-'||statNumber===''){statNumber='\\u2014';statLabel='ZIBROCK tahlili';sourceLabel='ZIBROCK Research, 2024';}\nvar subtitleCss='.subtitle-block{position:absolute;bottom:86px;left:100px;right:100px;text-align:center;font-family:Inter,system-ui,sans-serif;font-size:52px;font-weight:600;color:#F7F5F0;line-height:1.25;background:none;text-shadow:0 2px 12px rgba(10,23,39,.90),0 0 4px rgba(10,23,39,.75);-webkit-text-stroke:1.5px rgba(10,23,39,.60);paint-order:stroke fill;}.subtitle-block .em{font-weight:800;}.sub-line{display:inline-block;background:none;margin:4px 0;}.c-gold{color:#D6AD62;font-weight:800;}.c-clay{color:#E0584A;font-weight:800;}.c-sage{color:#82BD8F;font-weight:800;}';\nvar subtitleBlocks=[];\ntry{if(_ad&&_ad.alignment){var isVv=_ad.isVertical||false;var cS=_ad.coloredSpans||[];subtitleBlocks=computeSubtitleBlocks(_ad.alignment,cS,isVv);}}catch(e){}\nvar subtitleHtml=buildSubtitleHtml(subtitleBlocks,4);\nvar html=\"<!DOCTYPE html><html lang=\\\"en\\\"><head><meta charset=\\\"UTF-8\\\"><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#0A1727;}#avatar-video{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover;}#shade{position:absolute;left:0;top:0;width:1920px;height:500px;background:linear-gradient(180deg,rgba(10,23,39,0.92) 0%,rgba(10,23,39,0.4) 70%,rgba(10,23,39,0) 100%);}#stat-block{position:absolute;top:80px;left:100px;opacity:0;}#stat-number{font-size:180px;font-weight:700;color:#D6AD62;line-height:1;}#stat-label{margin-top:14px;font-size:36px;color:#F5F1E8;max-width:900px;line-height:1.3;}#source-label{margin-top:14px;font-size:22px;color:#9C9A92;font-style:italic;}#logo-image{position:absolute;bottom:50px;left:64px;width:120px;height:auto;opacity:0;}\"+subtitleCss+\"</style></head><body><div id=\\\"root\\\" data-composition-id=\\\"main\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-width=\\\"1920\\\" data-height=\\\"1080\\\"><video id=\\\"avatar-video\\\" class=\\\"clip\\\" src=\\\"\"+videoUrl+\"\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-track-index=\\\"0\\\" playsinline></video><div id=\\\"shade\\\" class=\\\"clip\\\" data-start=\\\"0\\\" data-duration=\\\"\"+duration+\"\\\" data-track-index=\\\"1\\\"></div><div id=\\\"stat-block\\\" class=\\\"clip\\\" data-start=\\\"0.3\\\" data-duration=\\\"4.2\\\" data-track-index=\\\"2\\\"><div id=\\\"stat-number\\\">\"+statNumber+\"</div><div id=\\\"stat-label\\\">\"+statLabel+\"</div><div id=\\\"source-label\\\">\"+sourceLabel+\"</div></div>\"+subtitleHtml+\"</div></body></html>\";\nhtml=html.replace('</head>','<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap\"><style>.source-label{position:absolute;top:7%;left:50%;transform:translateX(-50%);font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:22px;color:rgba(247,245,240,.72);white-space:nowrap;z-index:40}.source-label::after{content:\"\";display:block;height:2px;margin-top:10px;background:rgba(214,173,98,.42)}</style></head>');\nvar sceneBlocks2=[];try{sceneBlocks2=sceneBlocks||[];}catch(e){}if(sceneBlocks2&&sceneBlocks2.length){var scEsc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};var scCol=function(c){return c==='clay'?'#E0584A':(c==='sage'?'#82BD8F':'#D6AD62');};var scCss='<style>.scene-wrap{position:absolute;top:12%;left:10%;width:80%;opacity:0;}.scene-label{font-family:\"Inter\",sans-serif;font-size:2.2vw;font-weight:700;color:#F5F1E8;margin-bottom:.8vw;text-align:center;}.scene-bar-track{width:100%;height:3vw;background:rgba(245,241,232,.15);border-radius:2vw;overflow:hidden;}.scene-bar-fill{height:100%;border-radius:2vw;width:0%;}.scene-countup{font-family:\"Inter\",sans-serif;font-size:7vw;font-weight:700;text-align:center;}.scene-tl-track{position:relative;width:100%;height:.35vw;background:rgba(245,241,232,.3);margin-top:1vw;}.scene-tl-dot{position:absolute;top:50%;width:1.4vw;height:1.4vw;border-radius:50%;transform:translate(-50%,-50%);}</style>';var scHtml='';var scJs='';sceneBlocks2.forEach(function(sb,i){var id='sc'+i;var p=sb.params||{};var col=scCol(p.color);var st=sb.start||0;var du=sb.duration||3;var fi=Math.min(.5,du/4);var fo=Math.min(.5,du/4);var mid=Math.max(.6,du-fi-fo);var trk=60+i;if(sb.type==='percent-bar'){var fv=parseFloat(p.from)||0,tv=parseFloat(p.to)||100;scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\" data-start=\"'+st+'\" data-duration=\"'+du+'\" data-track-index=\"'+trk+'\"><div class=\"scene-label\">'+scEsc(p.label||'')+' <span id=\"'+id+'n\">'+fv+'</span>%</div><div class=\"scene-bar-track\"><div id=\"'+id+'f\" class=\"scene-bar-fill\" style=\"background:'+col+'\"></div></div></div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');tl.to(\"#'+id+'f\",{width:\"'+tv+'%\",duration:'+mid+',ease:\"power2.out\"},'+(st+fi)+');tl.to({v:'+fv+'},{v:'+tv+',duration:'+mid+',ease:\"power2.out\",onUpdate:function(){var e=document.getElementById(\"'+id+'n\");if(e)e.textContent=Math.round(this.targets()[0].v);}},'+(st+fi)+');tl.to(\"#'+id+'\",{opacity:0,duration:'+fo+'},'+(st+du-fo)+');';}else if(sb.type==='count-up'){var toN=parseFloat(p.to)||0;scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\" data-start=\"'+st+'\" data-duration=\"'+du+'\" data-track-index=\"'+trk+'\">'+(p.label?('<div class=\"scene-label\">'+scEsc(p.label)+'</div>'):'')+'<div id=\"'+id+'n\" class=\"scene-countup\" style=\"color:'+col+'\">0</div></div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');tl.to({v:0},{v:'+toN+',duration:'+mid+',ease:\"power1.out\",onUpdate:function(){var e=document.getElementById(\"'+id+'n\");if(e)e.textContent=Math.round(this.targets()[0].v);}},'+(st+fi)+');tl.to(\"#'+id+'\",{opacity:0,duration:'+fo+'},'+(st+du-fo)+');';}else if(sb.type==='timeline-flat'){scHtml+='<div id=\"'+id+'\" class=\"clip scene-wrap\" data-start=\"'+st+'\" data-duration=\"'+du+'\" data-track-index=\"'+trk+'\"><div class=\"scene-label\">'+scEsc(p.from||'')+' - '+scEsc(p.to||'')+'</div><div class=\"scene-tl-track\"><div class=\"scene-tl-dot\" style=\"left:0%;background:'+col+'\"></div><div class=\"scene-tl-dot\" style=\"left:100%;background:'+col+'\"></div></div></div>';scJs+='tl.to(\"#'+id+'\",{opacity:1,duration:'+fi+'},'+st+');tl.to(\"#'+id+'\",{opacity:0,duration:'+fo+'},'+(st+du-fo)+');';}});html=html.replace('</body>',scCss+scHtml+'<script>'+scJs+'</script></body>');}var _src = \"\";\ntry { _src = $(\"Claude - Video G’oya va Skript\").item.json.merged_response || \"\"; } catch(e) {}\nif (!_src) { try { _src = $(\"Input Merge\").item.json.text || \"\"; } catch(e) {} }\nvar _bs = String.fromCharCode(92);\nvar _pat = \"MANBA\" + _bs + \"(LAR\" + _bs + \")\" + _bs + \"s*:\" + _bs + \"s*(.+)\";\nvar _manba = \"\";\nvar _mm = _src.match(new RegExp(_pat, \"i\"));\nif (_mm) { _manba = _mm[1].trim(); }\nif (_manba) {\n  var _me = _manba\n    .split(\"&\").join(\"&amp;\")\n    .split(\"<\").join(\"&lt;\")\n    .split(\">\").join(\"&gt;\");\n  var _div = '<div class=\"source-label\">' + _me + '</div>';\n  if (html.indexOf(\"</body>\") > -1) {\n    html = html.replace(\"</body>\", _div + \"</body>\");\n  } else {\n    html = html + _div;\n  }\n}\nvar b64=Buffer.from(html).toString('base64');\nreturn{json:{htmlBase64:b64,DEBUG_subtitleBlocksCount:subtitleBlocks?subtitleBlocks.length:-1,DEBUG_isVertical:isV}};\n}"
     },
+    "HTML to Binary (AI)": {
+      "turi": "unknown"
+    },
+    "HTML zip (AI)": {
+      "turi": "unknown"
+    },
     "HeyGen - Asset yuklash (AI)": {
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v3/assets",
       "body": "",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
     },
     "Hyperframes render boshlash (AI)": {
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v3/hyperframes/renders",
       "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: \"1080p\", aspect_ratio: (function(){ try { var K=$(\"KONSTANTALAR\").item.json; var vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\"; return (K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\"; } catch(e){ return \"9:16\"; } })(), title: \"ZIBROCK video - statistika overlay\" }) }}",
-      "sendBody": true
+      "sendBody": true,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Wait - 15s (AI)": {
+      "turi": "wait",
+      "amount": 15,
+      "unit": "seconds"
     },
     "Hyperframes status (AI)": {
       "turi": "http",
       "method": "GET",
       "url": "={{ \"https://api.heygen.com/v3/hyperframes/renders/\" + ($(\"Hyperframes render boshlash (AI)\").item.json.data.render_id || $(\"Hyperframes render boshlash (AI)\").item.json.render_id || \"\") }}",
       "body": "",
-      "sendBody": false
+      "sendBody": false,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Render Tayyor? (AI)": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "hf-status-ai",
+            "leftValue": "={{ $json.data.status }}",
+            "rightValue": "completed",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
     },
     "Extract HF URL (AI)": {
       "turi": "code",
       "mode": "runOnceForEachItem",
       "kod": "var d=$json.data||$json;var videoUrl=d.video_url||'';var status=d.status||'';var ok=(status==='completed')&&videoUrl&&!videoUrl.endsWith('.gif');return{json:{hfVideoUrl:ok?videoUrl:'',status:status,ok:ok}};"
     },
+    "HF URL bor?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "hf-ok",
+            "leftValue": "={{ $json.ok }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
     "Telegram - Overlay Link (AI)": {
       "turi": "telegram",
       "text": "={{ \"✅ Videongiz tayyor! (9:16)\\n\\n🎬 Ko'rish: \" + String($json.hfVideoUrl).split(\"&\").join(\"&amp;\") }}",
       "chatId": "={{ $(\"Input Merge\").item.json.chatId }}",
-      "thread": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
+      "thread": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "Telegram - Crop Xato": {
       "turi": "telegram",
       "text": "={{ \"❌ \" + ($json.xabar || (\"Hyperframes render xato. Status: \" + $json.status)) }}",
       "chatId": "-1004462774154",
-      "thread": 13
+      "thread": 13,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "Render Hisoblagich (AI)": {
       "turi": "code",
@@ -382,5 +955,1149 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-23T07:30:56.226Z"
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "KONSTANTALAR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KONSTANTALAR": {
+      "main": [
+        [
+          {
+            "node": "Telegram Kirish Filtri",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Kirish Filtri": {
+      "main": [
+        [
+          {
+            "node": "Marshrut",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marshrut": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Callback javob",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract From Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram - Callback javob": {
+      "main": [
+        [
+          {
+            "node": "Callback amal?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Callback amal?": {
+      "main": [
+        [
+          {
+            "node": "Rad etildi (jurnal)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nashr kutilmoqda (TODO)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract From Telegram": {
+      "main": [
+        [
+          {
+            "node": "Mavzu va Avatar Aniqlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mavzu va Avatar Aniqlash": {
+      "main": [
+        [
+          {
+            "node": "Analitika Qoidalari",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analitika Qoidalari": {
+      "main": [
+        [
+          {
+            "node": "Motion Buyrug'i?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motion Buyrug'i?": {
+      "main": [
+        [
+          {
+            "node": "Extract Motion Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Input Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Motion Data": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Motion Jarayonda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram - Motion Jarayonda": {
+      "main": [
+        [
+          {
+            "node": "Claude - Motion Tahlil",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - Motion Tahlil": {
+      "main": [
+        [
+          {
+            "node": "Parse Motion Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Motion Response": {
+      "main": [
+        [
+          {
+            "node": "Parse Xato? (Motion)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Xato? (Motion)": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Xato",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ElevenLabs - Motion TTS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs - Motion TTS": {
+      "main": [
+        [
+          {
+            "node": "Decode Motion Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decode Motion Audio": {
+      "main": [
+        [
+          {
+            "node": "Shotstack - Get Upload URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shotstack - Get Upload URL": {
+      "main": [
+        [
+          {
+            "node": "Shotstack - Attach Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shotstack - Attach Audio": {
+      "main": [
+        [
+          {
+            "node": "Shotstack - PUT Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shotstack - PUT Audio": {
+      "main": [
+        [
+          {
+            "node": "Wait - Motion Audio Ingest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait - Motion Audio Ingest": {
+      "main": [
+        [
+          {
+            "node": "Shotstack - Poll Motion Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shotstack - Poll Motion Audio": {
+      "main": [
+        [
+          {
+            "node": "Motion Audio Ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motion Audio Ready?": {
+      "main": [
+        [
+          {
+            "node": "Build Motion Render",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Motion Audio Hisoblagich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Motion Render": {
+      "main": [
+        [
+          {
+            "node": "Build Render Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Render Body": {
+      "main": [
+        [
+          {
+            "node": "Shotstack - Create Motion Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shotstack - Create Motion Render": {
+      "main": [
+        [
+          {
+            "node": "Wait - Motion Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait - Motion Render": {
+      "main": [
+        [
+          {
+            "node": "Shotstack - Poll Motion Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shotstack - Poll Motion Render": {
+      "main": [
+        [
+          {
+            "node": "Motion Render Done?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motion Render Done?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Send Motion Video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Motion Render Hisoblagich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motion Render Hisoblagich": {
+      "main": [
+        [
+          {
+            "node": "Render Xato? (Motion)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render Xato? (Motion)": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Xato",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait - Motion Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motion Audio Hisoblagich": {
+      "main": [
+        [
+          {
+            "node": "Audio Xato? (Motion)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio Xato? (Motion)": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Xato",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait - Motion Audio Ingest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract From Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract From Agent": {
+      "main": [
+        [
+          {
+            "node": "Input Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Input Merge": {
+      "main": [
+        [
+          {
+            "node": "Faqat skript matnini ajratish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Platforma bo'yicha o'lcham": {
+      "main": [
+        [
+          {
+            "node": "O'lcham Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "O'lcham Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "O'lcham Merge": {
+      "main": [
+        [
+          {
+            "node": "ElevenLabs - Audio (Asosiy)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Faqat skript matnini ajratish": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Tayyorlanmoqda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram - Tayyorlanmoqda": {
+      "main": [
+        [
+          {
+            "node": "Bevosita yoki Claude?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bevosita yoki Claude?": {
+      "main": [
+        [
+          {
+            "node": "Platforma Aniqlash (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Claude - Video G'oya va Skript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Platforma Aniqlash (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Skriptni Ajratish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skriptni Ajratish": {
+      "main": [
+        [
+          {
+            "node": "K1 Compliance (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K1 Compliance (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Compliance OK? (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compliance OK? (Bev)": {
+      "main": [
+        [
+          {
+            "node": "K2 Zichlik (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Xato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K2 Zichlik (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Job Meta (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job Meta (Bev)": {
+      "main": [
+        [
+          {
+            "node": "ElevenLabs - Audio (Bevosita)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs - Audio (Bevosita)": {
+      "main": [
+        [
+          {
+            "node": "Audio Decode (Bevosita)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio Decode (Bevosita)": {
+      "main": [
+        [
+          {
+            "node": "HeyGen - Audio Upload (Bevosita)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen - Audio Upload (Bevosita)": {
+      "main": [
+        [
+          {
+            "node": "HeyGen - Video (Bevosita)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen - Video (Bevosita)": {
+      "main": [
+        [
+          {
+            "node": "Wait 20s (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 20s (Bev)": {
+      "main": [
+        [
+          {
+            "node": "HeyGen Video Status (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen Video Status (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Video Tayyor? (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Tayyor? (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Extract Video (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Urinish Hisoblagich (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Video (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Hyperframes HTML (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hyperframes HTML (Bev)": {
+      "main": [
+        [
+          {
+            "node": "HTML to Binary (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML to Binary (Bev)": {
+      "main": [
+        [
+          {
+            "node": "HTML zip (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML zip (Bev)": {
+      "main": [
+        [
+          {
+            "node": "HeyGen - Asset yuklash (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen - Asset yuklash (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Hyperframes render boshlash (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hyperframes render boshlash (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Wait - 15s (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait - 15s (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Hyperframes status (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hyperframes status (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Render Tayyor? (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render Tayyor? (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Extract HF URL (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Render Hisoblagich (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract HF URL (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Overlay Link (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render Hisoblagich (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Wait - 15s (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urinish Hisoblagich (Bev)": {
+      "main": [
+        [
+          {
+            "node": "Wait 20s (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - Video G'oya va Skript": {
+      "main": [
+        [
+          {
+            "node": "Skriptni Tozalash (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skriptni Tozalash (AI)": {
+      "main": [
+        [
+          {
+            "node": "K1 Compliance (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K1 Compliance (AI)": {
+      "main": [
+        [
+          {
+            "node": "Compliance OK? (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compliance OK? (AI)": {
+      "main": [
+        [
+          {
+            "node": "K2 Zichlik (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Xato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K2 Zichlik (AI)": {
+      "main": [
+        [
+          {
+            "node": "Platforma Aniqlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Platforma Aniqlash": {
+      "main": [
+        [
+          {
+            "node": "Job Meta (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job Meta (AI)": {
+      "main": [
+        [
+          {
+            "node": "Platforma bo'yicha o'lcham",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs - Audio (Asosiy)": {
+      "main": [
+        [
+          {
+            "node": "Audio Decode (Asosiy)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio Decode (Asosiy)": {
+      "main": [
+        [
+          {
+            "node": "HeyGen - Audio Upload (Asosiy)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen - Audio Upload (Asosiy)": {
+      "main": [
+        [
+          {
+            "node": "HeyGen - Video Yaratish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen - Video Yaratish": {
+      "main": [
+        [
+          {
+            "node": "Wait 20s (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 20s (AI)": {
+      "main": [
+        [
+          {
+            "node": "HeyGen Video Status (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen Video Status (AI)": {
+      "main": [
+        [
+          {
+            "node": "Video Tayyor? (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Tayyor? (AI)": {
+      "main": [
+        [
+          {
+            "node": "Extract Video (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Urinish Hisoblagich (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Video (AI)": {
+      "main": [
+        [
+          {
+            "node": "Hyperframes HTML (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hyperframes HTML (AI)": {
+      "main": [
+        [
+          {
+            "node": "HTML to Binary (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML to Binary (AI)": {
+      "main": [
+        [
+          {
+            "node": "HTML zip (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML zip (AI)": {
+      "main": [
+        [
+          {
+            "node": "HeyGen - Asset yuklash (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen - Asset yuklash (AI)": {
+      "main": [
+        [
+          {
+            "node": "Hyperframes render boshlash (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hyperframes render boshlash (AI)": {
+      "main": [
+        [
+          {
+            "node": "Wait - 15s (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait - 15s (AI)": {
+      "main": [
+        [
+          {
+            "node": "Hyperframes status (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hyperframes status (AI)": {
+      "main": [
+        [
+          {
+            "node": "Render Tayyor? (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render Tayyor? (AI)": {
+      "main": [
+        [
+          {
+            "node": "Extract HF URL (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Render Hisoblagich (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract HF URL (AI)": {
+      "main": [
+        [
+          {
+            "node": "HF URL bor?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HF URL bor?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Overlay Link (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Crop Xato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render Hisoblagich (AI)": {
+      "main": [
+        [
+          {
+            "node": "Wait - 15s (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urinish Hisoblagich (AI)": {
+      "main": [
+        [
+          {
+            "node": "Wait 20s (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "vaqt": "2026-09-23T08:30:52.003Z"
 }
