@@ -637,11 +637,6 @@
             "node": "T8 Eskalatsiya",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Token yaratish kerak?",
-            "type": "main",
-            "index": 0
           }
         ],
         [
@@ -658,6 +653,17 @@
         [
           {
             "node": "Setup birlashtirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setup birlashtirish": {
+      "main": [
+        [
+          {
+            "node": "Token yaratish kerak?",
             "type": "main",
             "index": 0
           }
@@ -1114,5 +1120,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T19:31:10.227Z"
+  "vaqt": "2026-09-23T19:41:09.123Z"
 }
