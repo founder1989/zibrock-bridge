@@ -1,0 +1,242 @@
+{
+  "nodes": {
+    "Execute Workflow Trigger": {
+      "turi": "executeWorkflow",
+      "workflowId": "",
+      "inputs": {
+        "values": [
+          {
+            "name": "paket",
+            "type": "object"
+          }
+        ]
+      }
+    },
+    "Kirish tayyorlash": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var p=$json.paket||$json;\nreturn{json:{\n  job_id:p.job_id||\"UNKNOWN\",\n  mavzu_kod:p.mavzu_kod||\"T1\",\n  burchak:(p.burchaklar&&p.burchaklar.tg_post&&p.burchaklar.tg_post[0])||\"Haftanin rakami\",\n  faktlar:p.faktlar||[],\n  sarlavha:p.sarlavha||\"\",\n  urinish:1\n}};"
+    },
+    "Claude - TG Post": {
+      "turi": "ai",
+      "model": "claude-sonnet-4-6",
+      "maxTokens": 1200,
+      "system": "",
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
+    },
+    "Post parse": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar parsed;\ntry{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");parsed=JSON.parse(raw.slice(s,e+1));}\ncatch(err){return{json:{xato:true,tur:\"PARSE_FAIL\",xabar:String(err),urinish:$(\"Kirish tayyorlash\").item.json.urinish||1}};}\nvar faktlar=$(\"Kirish tayyorlash\").item.json.faktlar||[];\nvar belgi=parseInt(parsed.belgi_soni||0);\nvar postHtml=parsed.post_html||\"\";\nreturn{json:{post_html:postHtml,belgi_soni:belgi,faktlar:faktlar,burchak:$(\"Kirish tayyorlash\").item.json.burchak,job_id:$(\"Kirish tayyorlash\").item.json.job_id,urinish:$(\"Kirish tayyorlash\").item.json.urinish||1}};"
+    },
+    "Post tekshiruvi": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var postHtml=$json.post_html||\"\";\nvar faktlar=$json.faktlar||[];\nvar xatolar=[];\n// Strip HTML tags to count chars\nvar bare=postHtml.replace(new RegExp(\"<[^>]+>\",\"g\"),\"\").replace(new RegExp(\"&[a-z]+;\",\"g\"),\"X\");\nvar uzunlik=bare.length;\nif(uzunlik<500)xatolar.push(\"Uzunlik \"+uzunlik+\" belgi, min 500\");\nif(uzunlik>900)xatolar.push(\"Uzunlik \"+uzunlik+\" belgi, max 900\");\n// Check only <b> and <i> tags\nvar badTags=postHtml.match(new RegExp(\"<(?!\\/?(b|i))[^>]+>\",\"gi\"))||[];\nif(badTags.length>0)xatolar.push(\"Noto'g'ri teglar: \"+badTags.join(\", \"));\n// Check Kaynak\nif(postHtml.indexOf(\"Kaynak:\")<0&&postHtml.indexOf(\"kaynak:\")<0)xatolar.push(\"Kaynak: qatori yo'q\");\n// Check numbers from faktlar\nvar faktRaqamlar=[];\nfor(var fi=0;fi<faktlar.length;fi++){\n  var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];\n  for(var j=0;j<m.length;j++)faktRaqamlar.push(m[j]);\n}\nvar pctM=bare.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pctM.length;pi++){\n  var num=pctM[pi].replace(\"%\",\"\");\n  var found=false;\n  for(var fk=0;fk<faktRaqamlar.length;fk++){if(faktRaqamlar[fk].indexOf(num)>=0){found=true;break;}}\n  if(!found)xatolar.push(\"Ixtiro raqam: \"+pctM[pi]+\" faktlarda yoq\");\n}\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,post_html:postHtml,belgi_soni:uzunlik,job_id:$json.job_id,burchak:$json.burchak,urinish:$json.urinish||1}};"
+    },
+    "PASS?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "pass",
+            "leftValue": "={{ $json.holat }}",
+            "rightValue": "PASS",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Telegram - Ko'rib chiqish (TG Post)": {
+      "turi": "telegram",
+      "text": "={{ $json.post_html }}",
+      "chatId": "-1004462774154",
+      "thread": 11,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "Qayta urinish?": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var n=$json.urinish||1;\nif(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,post_html:$json.post_html,urinish:n,job_id:$json.job_id}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,post_html:$json.post_html,job_id:$json.job_id,burchak:$json.burchak}};"
+    },
+    "Eskalatsiya?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "esc",
+            "leftValue": "={{ $json.eskalatsiya }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Telegram - Eskalatsiya": {
+      "turi": "telegram",
+      "text": "={{ \"❌ zb-p-tg-post: 3 urinishdan keyin FAIL\\nJob: \" + $json.job_id + \"\\nXatolar: \" + JSON.stringify($json.xatolar) }}",
+      "chatId": "-1004462774154",
+      "thread": 13,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "Kirishni yangilash": {
+      "turi": "unknown"
+    },
+    "Manual Trigger": {
+      "turi": "unknown"
+    }
+  },
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Kirish tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirish tayyorlash": {
+      "main": [
+        [
+          {
+            "node": "Claude - TG Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - TG Post": {
+      "main": [
+        [
+          {
+            "node": "Post parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post parse": {
+      "main": [
+        [
+          {
+            "node": "Post tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post tekshiruvi": {
+      "main": [
+        [
+          {
+            "node": "PASS?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PASS?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Ko'rib chiqish (TG Post)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Qayta urinish?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qayta urinish?": {
+      "main": [
+        [
+          {
+            "node": "Eskalatsiya?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Eskalatsiya?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Eskalatsiya",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Kirishni yangilash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirishni yangilash": {
+      "main": [
+        [
+          {
+            "node": "Claude - TG Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Kirish tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "vaqt": "2026-09-23T08:31:01.601Z"
+}
