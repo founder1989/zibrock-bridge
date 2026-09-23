@@ -24,7 +24,7 @@
     "Mavzu Himoyasi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var inp=$json;var mc=inp.mavzu_kod||\"\";if(mc===\"T8\")return[{json:{...inp,__stop:true,__mesaj:\"T8 — AI avatar taqiq, real odam kerak\"}};if(mc===\"T10\"&&true)return[{json:{...inp,__stop:true,__mesaj:\"T10 — Meta/TikTok'da taqiq\"}};return[{json:{...inp,__stop:false}};"
+      "kod": "var inp=$json;var mc=inp.mavzu_kod||\"\";if(mc===\"T8\")return {json:{...inp,__stop:true,__mesaj:\"T8 — AI avatar taqiq, real odam kerak\"}}};if(mc===\"T10\"&&true)return {json:{...inp,__stop:true,__mesaj:\"T10 — Meta/TikTok'da taqiq\"}}};return {json:{...inp,__stop:false}}};"
     },
     "To'xtatish kerak?": {
       "turi": "if",
@@ -636,5 +636,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T09:21:00.478Z"
+  "vaqt": "2026-09-23T09:31:00.777Z"
 }
