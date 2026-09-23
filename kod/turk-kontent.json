@@ -313,7 +313,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
-      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json;var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;}var vt=\"GIBRID\";try{vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\";}catch(e){}var ar=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\";return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid, scale: 1.0, offset: { x: 0, y: 0 } }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: (ar === \"9:16\") ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, test: false, motion_prompt: \"calm professional demeanor, minimal head movement, steady eye contact with camera, occasional natural blink, no hand gestures, neutral expression, no smile\", motion_engine: \"Avatar III\" }); })() }}",
+      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json;var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;}var vt=\"GIBRID\";try{vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\";}catch(e){}var ar=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\";return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid, scale: 1.0, offset: { x: 0, y: 0 }, use_avatar_iv_model: true, prompt: \"natural conversational presenter speaking to camera, subtle continuous head movement, small nods on key points, gentle head tilts, natural blinking, occasional eyebrow raise for emphasis, relaxed shoulders, calm and credible, no hand gestures\", keep_original_prompt: false }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: (ar === \"9:16\") ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, test: false }); })() }}",
       "sendBody": true
     },
     "HeyGen Video Status (AI)": {
@@ -359,41 +359,17 @@
       "mode": "runOnceForEachItem",
       "kod": "var d=$json.data||$json;var videoUrl=d.video_url||'';var status=d.status||'';var ok=(status==='completed')&&videoUrl&&!videoUrl.endsWith('.gif');return{json:{hfVideoUrl:ok?videoUrl:'',status:status,ok:ok}};"
     },
-    "Shotstack - Crop Render": {
-      "turi": "http",
-      "method": "POST",
-      "url": "https://api.shotstack.io/edit/stage/render",
-      "body": "={{ JSON.stringify({ timeline: { background: \"#0A1727\", tracks: [{ clips: [{ asset: { type: \"video\", src: $json.hfVideoUrl }, start: 0, length: \"auto\", fit: \"cover\", scale: 1 }] }] }, output: { format: \"mp4\", size: { width: 1080, height: 1920 } } }) }}",
-      "sendBody": true
-    },
-    "Shotstack - Crop Status": {
-      "turi": "http",
-      "method": "GET",
-      "url": "={{ \"https://api.shotstack.io/edit/stage/render/\" + $(\"Shotstack - Crop Render\").item.json.response.id }}",
-      "body": "",
-      "sendBody": false
-    },
-    "Crop Hisoblagich": {
-      "turi": "code",
-      "mode": "runOnceForEachItem",
-      "kod": "var r=$json.response||{};var st=String(r.status||\"\");var n=$runIndex+1;var out=Object.assign({},$json,{crop_urinish:n,crop_status:st});if(st===\"failed\"){out.xato=true;out.tur=\"CROP_FAILED\";out.xabar=\"Shotstack crop xato: \"+String(r.error||\"nomalum\");}else if(n>30){out.xato=true;out.tur=\"CROP_TIMEOUT\";out.xabar=\"Crop 10 daqiqadan oshdi.\";}return {json:out};"
+    "Telegram - Overlay Link (AI)": {
+      "turi": "telegram",
+      "text": "={{ \"✅ Videongiz tayyor! (9:16)\\n\\n🎬 Ko'rish: \" + String($json.hfVideoUrl).split(\"&\").join(\"&amp;\") }}",
+      "chatId": "={{ $(\"Input Merge\").item.json.chatId }}",
+      "thread": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
     },
     "Telegram - Crop Xato": {
       "turi": "telegram",
       "text": "={{ \"❌ \" + ($json.xabar || (\"Hyperframes render xato. Status: \" + $json.status)) }}",
       "chatId": "-1004462774154",
       "thread": 13
-    },
-    "Extract Crop URL": {
-      "turi": "code",
-      "mode": "runOnceForEachItem",
-      "kod": "var r=($json.response)||{};var url=r.url||\"\";return{json:{cropVideoUrl:url,ok:url.length>0}}"
-    },
-    "Telegram - Overlay Link (AI)": {
-      "turi": "telegram",
-      "text": "={{ \"✅ Videongiz tayyor! (9:16)\\n\\n🎬 Crop: \" + String($json.cropVideoUrl).split(\"&\").join(\"&amp;\") + \"\\n\\n🧪 HF asl: \" + String($('Extract HF URL (AI)').item.json.hfVideoUrl).split(\"&\").join(\"&amp;\") }}",
-      "chatId": "={{ $(\"Input Merge\").item.json.chatId }}",
-      "thread": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
     },
     "Render Hisoblagich (AI)": {
       "turi": "code",
@@ -406,5 +382,5 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-23T06:50:56.088Z"
+  "vaqt": "2026-09-23T07:00:56.318Z"
 }
