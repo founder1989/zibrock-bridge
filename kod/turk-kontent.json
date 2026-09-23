@@ -363,7 +363,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.shotstack.io/edit/stage/render",
-      "body": "={{ JSON.stringify({ timeline: { background: \"#0A1727\", tracks: [{ clips: [{ asset: { type: \"video\", src: $json.hfVideoUrl }, start: 0, length: \"end\", fit: \"cover\", scale: 1 }] }] }, output: { format: \"mp4\", size: { width: 1080, height: 1920 } } }) }}",
+      "body": "={{ JSON.stringify({ timeline: { background: \"#0A1727\", tracks: [{ clips: [{ asset: { type: \"video\", src: $json.hfVideoUrl }, start: 0, length: \"auto\", fit: \"cover\", scale: 1 }] }] }, output: { format: \"mp4\", size: { width: 1080, height: 1920 } } }) }}",
       "sendBody": true
     },
     "Shotstack - Crop Status": {
@@ -376,7 +376,13 @@
     "Crop Hisoblagich": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var j=$json;var n=(j.crop_urinish||0)+1;if(n>30){return{json:Object.assign({},j,{xato:true,tur:\"CROP_TIMEOUT\",xabar:\"Crop 10 daqiqadan oshdi. Jarayon tugatildi.\"})}}return{json:Object.assign({},j,{crop_urinish:n})}"
+      "kod": "var r=$json.response||{};var st=String(r.status||\"\");var n=$runIndex+1;var out=Object.assign({},$json,{crop_urinish:n,crop_status:st});if(st===\"failed\"){out.xato=true;out.tur=\"CROP_FAILED\";out.xabar=\"Shotstack crop xato: \"+String(r.error||\"nomalum\");}else if(n>30){out.xato=true;out.tur=\"CROP_TIMEOUT\";out.xabar=\"Crop 10 daqiqadan oshdi.\";}return {json:out};"
+    },
+    "Telegram - Crop Xato": {
+      "turi": "telegram",
+      "text": "={{ \"❌ \" + ($json.xabar || (\"Hyperframes render xato. Status: \" + $json.status)) }}",
+      "chatId": "-1004462774154",
+      "thread": 13
     },
     "Extract Crop URL": {
       "turi": "code",
@@ -400,5 +406,5 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-23T05:30:56.236Z"
+  "vaqt": "2026-09-23T05:40:56.188Z"
 }
