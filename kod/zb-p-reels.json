@@ -21,16 +21,56 @@
       "mode": "runOnceForEachItem",
       "kod": "var p=$json.paket||$json;var vi=parseInt($json.variant_idx||0);\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],variant_idx:vi,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
     },
+    "Mavzu Himoyasi": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var inp=$json;var mc=inp.mavzu_kod||\"\";if(mc===\"T8\")return[{json:{...inp,__stop:true,__mesaj:\"T8 — AI avatar taqiq, real odam kerak\"}};if(mc===\"T10\"&&true)return[{json:{...inp,__stop:true,__mesaj:\"T10 — Meta/TikTok'da taqiq\"}};return[{json:{...inp,__stop:false}};"
+    },
+    "To'xtatish kerak?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "stop",
+            "leftValue": "={{ $json.__stop }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Telegram - Himoya": {
+      "turi": "telegram",
+      "text": "={{ \"⚠️ \" + $json.mavzu_kod + \": \" + $json.__mesaj }}",
+      "chatId": "-1004462774154",
+      "thread": 13,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
     "Pasport o'qish": {
       "turi": "unknown"
     },
     "Hook o'qish": {
       "turi": "unknown"
     },
+    "CTA o'qish": {
+      "turi": "unknown"
+    },
     "Ma'lumot manbalarini birlashtirish": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;\nvar pas={};try{pas=$(\"Pasport o'qish\").first().json||{};}catch(e){}\nvar minS=parseFloat(pas.uzunlik_min_s||15);var maxS=parseFloat(pas.uzunlik_max_s||20);\nvar minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\nvar ilgak_s=parseFloat(pas.ilgak_s||1.7);\nvar hookMatn=\"\";\ntry{var hRow=$(\"Hook o'qish\").first().json||{};hookMatn=hRow.instagram||hRow.matn||\"\";}catch(e){}\nif(!hookMatn){hookMatn=inp.faktlar&&inp.faktlar[0]?inp.faktlar[0].matn.slice(0,60):\"\";}\nvar noVerbalCta=[\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0;\nvar faktlar=inp.faktlar||[];var filteredFaktlar=[];var qaytaOgoh=false;\nfor(var i=0;i<faktlar.length;i++){if(String(faktlar[i].meta_tiktok||\"\").toLowerCase()===\"taqiq\")continue;if(faktlar[i].daraja===\"C\")qaytaOgoh=true;filteredFaktlar.push(faktlar[i]);}\nreturn[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:filteredFaktlar,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,ilgak_s:ilgak_s,hookMatn:hookMatn,noVerbalCta:noVerbalCta,qaytaOgoh:qaytaOgoh}}];"
+      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;\nvar pas={};try{pas=$(\"Pasport o'qish\").first().json||{};}catch(e){}\nvar minS=parseFloat(pas.uzunlik_min_s||15);var maxS=parseFloat(pas.uzunlik_max_s||20);\nvar minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\nvar ilgak_s=parseFloat(pas.ilgak_s||1.7);\nvar hookMatn=\"\";\ntry{var hRow=$(\"Hook o'qish\").first().json||{};hookMatn=hRow.instagram||hRow.matn||\"\";}catch(e){}\nif(!hookMatn){hookMatn=inp.faktlar&&inp.faktlar[0]?inp.faktlar[0].matn.slice(0,60):\"\";}\nvar ctaMatn=\"\";try{var ctaRow=$(\"CTA o'qish\").first().json||{};ctaMatn=ctaRow.matn||\"\";}catch(e){}\nvar noVerbalCta=[\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0;if(noVerbalCta)ctaMatn=\"\";\nvar faktlar=inp.faktlar||[];var filteredFaktlar=[];var qaytaOgoh=false;\nfor(var i=0;i<faktlar.length;i++){if(String(faktlar[i].meta_tiktok||\"\").toLowerCase()===\"taqiq\")continue;if(faktlar[i].daraja===\"C\")qaytaOgoh=true;filteredFaktlar.push(faktlar[i]);}\nreturn[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:filteredFaktlar,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,ilgak_s:ilgak_s,hookMatn:hookMatn,noVerbalCta:noVerbalCta,qaytaOgoh:qaytaOgoh,ctaMatn:ctaMatn}}];"
     },
     "Claude - Reels Tana": {
       "turi": "ai",
@@ -351,6 +391,35 @@
       "main": [
         [
           {
+            "node": "Mavzu Himoyasi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mavzu Himoyasi": {
+      "main": [
+        [
+          {
+            "node": "To'xtatish kerak?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "To'xtatish kerak?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Himoya",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Pasport o'qish",
             "type": "main",
             "index": 0
@@ -370,6 +439,17 @@
       ]
     },
     "Hook o'qish": {
+      "main": [
+        [
+          {
+            "node": "CTA o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTA o'qish": {
       "main": [
         [
           {
@@ -556,5 +636,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T09:11:01.206Z"
+  "vaqt": "2026-09-23T09:21:00.478Z"
 }
