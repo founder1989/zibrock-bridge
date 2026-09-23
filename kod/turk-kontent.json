@@ -15,7 +15,7 @@
         ],
         "additionalFields": {}
       },
-      "webhookId": "db2ca0f0-9e3f-4fc3-9079-437067cb7e4a",
+      "webhookId": "be205895-ff16-46eb-89bb-69c514d9ede8",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -29,7 +29,7 @@
         -896
       ],
       "parameters": {
-        "jsCode": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}},avatarlar:{a1:{nom:\"ZIBROCK A1 Ekspert - neytral\",talking_photo_id:\"44e201e343754e2699e8cfe067ea308c\",ovoz:\"a1\"},a1s:{nom:\"ZIBROCK A1 Ekspert - tabassum\",talking_photo_id:\"9fdf918f3b37495bbab917b789b44729\",ovoz:\"a1\"},a2:{nom:\"ZIBROCK A2 Treyder - navy\",talking_photo_id:\"e6a2032867424558b776ad038e358319\",ovoz:\"a2\"}},joriy_avatar:\"a1\",mavzular:{T1:{nom:\"Rakamlar ne diyor\",avatar:\"a1\",tur:\"GIBRID\"},T2:{nom:\"Sektör rakamları\",avatar:\"a1\",tur:\"GIBRID\"},T3:{nom:\"Bilgi değil. Kimya.\",avatar:\"a2\",tur:\"STUDIO\"},T4:{nom:\"Dopamin\",avatar:\"a2\",tur:\"STUDIO\"},T5:{nom:\"Kortizol\",avatar:\"a2\",tur:\"STUDIO\"},T6:{nom:\"Bir günlük erime\",avatar:\"a2\",tur:\"STUDIO\"},T7:{nom:\"14 araştırma\",avatar:\"a1\",tur:\"GIBRID\"},T8:{nom:\"$870.000\",avatar:null,tur:\"REAL\"},T9:{nom:\"Dört kilit\",avatar:\"a1\",tur:\"GIBRID\"},T10:{nom:\"Prime / Instant Pro\",avatar:\"a2\",tur:\"STUDIO\"}},video_turlari:{GIBRID:{ekran:\"raqam markazda + avatar burchakda doira\",format:\"9:16\"},STUDIO:{ekran:\"avatar to'liq ekran\",format:\"9:16\"},MOTION:{ekran:\"faqat raqam va grafik\",format:\"9:16\"},REAL:{ekran:\"haqiqiy suratga olish\",format:\"16:9\"}},mahsulotlar:{yt_long:{platforma:\"youtube\",format:\"16:9\",olcham:[1920,1080],uzunlik:[300,480],ilgak_s:3,vada_s:15,sahna_almashinuvi_s:25,qayta_ilgak_s:75,variant:\"full\",subtitr:true,maqsad:{ushlab_turish:0.45,s30_qolgan:0.60}},yt_short:{platforma:\"youtube\",format:\"9:16\",olcham:[1080,1920],uzunlik:[45,60],ilgak_s:2,variant:\"full\",subtitr:true,maqsad:{tugatish:0.65}},tiktok:{platforma:\"tiktok\",format:\"9:16\",olcham:[1080,1920],uzunlik:[15,30],ilgak_s:1.5,variant:\"metasafe\",subtitr:true,xeshteg_soni:4,fyp_taqiq:true,maqsad:{tugatish:0.70}},reel:{platforma:\"instagram\",format:\"9:16\",olcham:[1080,1920],uzunlik:[15,20],ilgak_s:1.7,variant:\"metasafe\",subtitr:true,loop:true,sends_cta:true,maqsad:{tomosha_s:10,sends_per_reach:0.01}},carousel:{platforma:\"instagram\",format:\"4:5\",olcham:[1080,1350],slayd:[5,8],slayd_1_ogirlik:0.80,variant:\"metasafe\",maqsad:{saqlash_nisbati:0.03}},tg_post:{platforma:\"telegram\",format:\"matn\",belgi:[500,900],variant:\"full\",manba_toliq:true}},nashr_jadvali:{yt_long:{kun:1,soat:\"09:00\"},tiktok_1:{kun:1,soat:\"12:00\"},reel_1:{kun:1,soat:\"20:00\"},carousel:{kun:2,soat:\"10:00\"},tiktok_2:{kun:2,soat:\"19:00\"},yt_short_1:{kun:3,soat:\"11:00\"}},analitika:{ilgak:{yt_long:{vaqt_s:3,qoida:\"raqam yoki savol, kirish YO'Q\"},yt_short:{vaqt_s:2,qoida:\"raqam ekranda darhol\"},tiktok:{vaqt_s:1.5,qoida:\"raqam darhol, gapirmasdan\"},reel:{vaqt_s:1.7,qoida:\"harakat o'rtasidan boshlanadi\"},carousel:{vaqt_s:0,qoida:\"1-slayd: raqam + savol, 80% natija\"},tg_post:{vaqt_s:0,qoida:\"birinchi qator ilgak\"}},ritm:{yt_long:{sahna_s:25,qayta_ilgak_s:75,broll_s:12},yt_short:{sahna_s:8},tiktok:{sahna_s:5},reel:{sahna_s:5},carousel:{slayd:7},tg_post:{}},cta:{yt_long:\"Tam versiyon ve kaynaklar kanalda\",yt_short:\"Devami uzun videoda\",tiktok:\"Sizce hangisi? Yoruma yazin\",reel:\"Bunu bilmesi gereken birine gonderin\",carousel:\"Kaydedin - sonra lazim olacak\",tg_post:\"Kaynak asagida\"},uzunlik_qoida:{yt_long:{min:300,max:480,sabab:\"5-8 daqiqa, uzunroq ushlab turishni pasaytiradi\"},yt_short:{min:45,max:60},tiktok:{min:15,max:30,sabab:\"15-30 s da tugatish 72%\"},reel:{min:15,max:20,sabab:\"o'rtacha tomosha 8,5 s\"},carousel:{min:5,max:8,sabab:\"slayd soni, 5 dan kam bo'lsa algoritm signal olmaydi\"},tg_post:{min:500,max:900,sabab:\"belgi\"}},maqsadlar:{yt_long:{ctr:0.05,ushlab_turish:0.45,s30_qolgan:0.60},yt_short:{tugatish:0.65},tiktok:{tugatish:0.70,s3_qolgan:0.70},reel:{tomosha_s:10,sends_per_reach:0.01},carousel:{saqlash_nisbati:0.03,tugatish:0.60},tg_post:{oqish:0.40}},thumbnail:{matn_sozlar_min:3,matn_sozlar_max:5,kontrast_min:4.5,elementlar_max:3,fon:\"#0A1727\",asosiy_element:\"raqam\",yuz_ifoda:\"jiddiy, ekstremal EMAS\",taqiqlar:[\"oq fon\",\"pastel rang\",\"pastki o'ng burchakda matn\",\"4 dan ortiq so'z\",\"clickbait\"]},taqiqlar:{trend_audio:true,clickbait:true,ekstremal_ifoda:true,fyp_xeshteg:true,tez_ovoz:true,manbasiz_raqam:true},ilgak_formulalari:[{nom:\"togridan raqam\",misol:\"%97\",moslik:\"eng yuqori\"},{nom:\"kechiktirilgan ochilish\",misol:\"3 ta tadqiqot. Bitta xulosa.\",moslik:\"eng yuqori\"},{nom:\"kutilmagan taqqos\",misol:\"$310 va $2.560\",moslik:\"yuqori\"},{nom:\"bilim boshligi\",misol:\"Traderlarning %97 i bilmaydi\",moslik:\"orta\"}],metasafe_taqiq:[\"challenge\",\"prop\",\"funded\",\"CFD\",\"forex\",\"kaldıraç\",\"kazanç garantisi\",\"hesap\",\"fiyat\"]}};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular,video_turlari:K.video_turlari,mahsulotlar:K.mahsulotlar,nashr_jadvali:K.nashr_jadvali,analitika:K.analitika})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular,video_turlari:K.video_turlari,mahsulotlar:K.mahsulotlar,nashr_jadvali:K.nashr_jadvali,analitika:K.analitika}});\nreturn out;"
+        "jsCode": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}},avatarlar:{a1:{nom:\"ZIBROCK A1 Ekspert - neytral\",talking_photo_id:\"44e201e343754e2699e8cfe067ea308c\",ovoz:\"a1\"},a1s:{nom:\"ZIBROCK A1 Ekspert - tabassum\",talking_photo_id:\"9fdf918f3b37495bbab917b789b44729\",ovoz:\"a1\"},a2:{nom:\"ZIBROCK A2 Treyder - navy\",talking_photo_id:\"e6a2032867424558b776ad038e358319\",ovoz:\"a2\"}},joriy_avatar:\"a1\",mavzular:{T1:{nom:\"Rakamlar ne diyor\",avatar:\"a1\",tur:\"GIBRID\"},T2:{nom:\"Sektör rakamları\",avatar:\"a1\",tur:\"GIBRID\"},T3:{nom:\"Bilgi değil. Kimya.\",avatar:\"a2\",tur:\"STUDIO\"},T4:{nom:\"Dopamin\",avatar:\"a2\",tur:\"STUDIO\"},T5:{nom:\"Kortizol\",avatar:\"a2\",tur:\"STUDIO\"},T6:{nom:\"Bir günlük erime\",avatar:\"a2\",tur:\"STUDIO\"},T7:{nom:\"14 araştırma\",avatar:\"a1\",tur:\"GIBRID\"},T8:{nom:\"$870.000\",avatar:null,tur:\"REAL\"},T9:{nom:\"Dört kilit\",avatar:\"a1\",tur:\"GIBRID\"},T10:{nom:\"Prime / Instant Pro\",avatar:\"a2\",tur:\"STUDIO\"}},video_turlari:{GIBRID:{ekran:\"raqam markazda + avatar burchakda doira\",format:\"9:16\"},STUDIO:{ekran:\"avatar to'liq ekran\",format:\"9:16\"},MOTION:{ekran:\"faqat raqam va grafik\",format:\"9:16\"},REAL:{ekran:\"haqiqiy suratga olish\",format:\"16:9\"}},mahsulotlar:{yt_long:{platforma:\"youtube\",format:\"16:9\",olcham:[1920,1080],uzunlik:[300,480],ilgak_s:3,vada_s:15,sahna_almashinuvi_s:25,qayta_ilgak_s:75,variant:\"full\",subtitr:true,maqsad:{ushlab_turish:0.45,s30_qolgan:0.60}},yt_short:{platforma:\"youtube\",format:\"9:16\",olcham:[1080,1920],uzunlik:[45,60],ilgak_s:2,variant:\"full\",subtitr:true,maqsad:{tugatish:0.65}},tiktok:{platforma:\"tiktok\",format:\"9:16\",olcham:[1080,1920],uzunlik:[15,30],ilgak_s:1.5,variant:\"metasafe\",subtitr:true,xeshteg_soni:4,fyp_taqiq:true,maqsad:{tugatish:0.70}},reel:{platforma:\"instagram\",format:\"9:16\",olcham:[1080,1920],uzunlik:[15,20],ilgak_s:1.7,variant:\"metasafe\",subtitr:true,loop:true,sends_cta:true,maqsad:{tomosha_s:10,sends_per_reach:0.01}},carousel:{platforma:\"instagram\",format:\"4:5\",olcham:[1080,1350],slayd:[5,8],slayd_1_ogirlik:0.80,variant:\"metasafe\",maqsad:{saqlash_nisbati:0.03}},tg_post:{platforma:\"telegram\",format:\"matn\",belgi:[500,900],variant:\"full\",manba_toliq:true}},nashr_jadvali:{yt_long:{kun:1,soat:\"09:00\"},tiktok_1:{kun:1,soat:\"12:00\"},reel_1:{kun:1,soat:\"20:00\"},carousel:{kun:2,soat:\"10:00\"},tiktok_2:{kun:2,soat:\"19:00\"},yt_short_1:{kun:3,soat:\"11:00\"}},analitika:{ilgak:{yt_long:{vaqt_s:3,qoida:\"raqam yoki savol, kirish YO'Q\"},yt_short:{vaqt_s:2,qoida:\"raqam ekranda darhol\"},tiktok:{vaqt_s:1.5,qoida:\"raqam darhol, gapirmasdan\"},reel:{vaqt_s:1.7,qoida:\"harakat o'rtasidan boshlanadi\"},carousel:{vaqt_s:0,qoida:\"1-slayd: raqam + savol, 80% natija\"},tg_post:{vaqt_s:0,qoida:\"birinchi qator ilgak\"}},ritm:{yt_long:{sahna_s:25,qayta_ilgak_s:75,broll_s:12},yt_short:{sahna_s:8},tiktok:{sahna_s:5},reel:{sahna_s:5},carousel:{slayd:7},tg_post:{}},cta:{yt_long:\"Tam versiyon ve kaynaklar kanalda\",yt_short:\"Devami uzun videoda\",tiktok:\"Sizce hangisi? Yoruma yazin\",reel:\"Bunu bilmesi gereken birine gonderin\",carousel:\"Kaydedin - sonra lazim olacak\",tg_post:\"Kaynak asagida\"},uzunlik_qoida:{yt_long:{min:300,max:480,sabab:\"5-8 daqiqa, uzunroq ushlab turishni pasaytiradi\"},yt_short:{min:45,max:60},tiktok:{min:15,max:30,sabab:\"15-30 s da tugatish 72%\"},reel:{min:15,max:20,sabab:\"o'rtacha tomosha 8,5 s\"},carousel:{min:5,max:8,sabab:\"slayd soni, 5 dan kam bo'lsa algoritm signal olmaydi\"},tg_post:{min:500,max:900,sabab:\"belgi\"}},maqsadlar:{yt_long:{ctr:0.05,ushlab_turish:0.45,s30_qolgan:0.60},yt_short:{tugatish:0.65},tiktok:{tugatish:0.70,s3_qolgan:0.70},reel:{tomosha_s:10,sends_per_reach:0.01},carousel:{saqlash_nisbati:0.03,tugatish:0.60},tg_post:{oqish:0.40}},thumbnail:{matn_sozlar_min:3,matn_sozlar_max:5,kontrast_min:4.5,elementlar_max:3,fon:\"#0A1727\",asosiy_element:\"raqam\",yuz_ifoda:\"jiddiy, ekstremal EMAS\",taqiqlar:[\"oq fon\",\"pastel rang\",\"pastki o'ng burchakda matn\",\"4 dan ortiq so'z\",\"clickbait\"]},taqiqlar:{trend_audio:true,clickbait:true,ekstremal_ifoda:true,fyp_xeshteg:true,tez_ovoz:true,manbasiz_raqam:true},ilgak_formulalari:[{nom:\"togridan raqam\",misol:\"%97\",moslik:\"eng yuqori\"},{nom:\"kechiktirilgan ochilish\",misol:\"3 ta tadqiqot. Bitta xulosa.\",moslik:\"eng yuqori\"},{nom:\"kutilmagan taqqos\",misol:\"$310 va $2.560\",moslik:\"yuqori\"},{nom:\"bilim boshligi\",misol:\"Traderlarning %97 i bilmaydi\",moslik:\"orta\"}],metasafe_taqiq:[\"challenge\",\"prop\",\"funded\",\"CFD\",\"forex\",\"kaldıraç\",\"kazanç garantisi\",\"hesap\",\"fiyat\"]},heygen_parallel:10};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular,video_turlari:K.video_turlari,mahsulotlar:K.mahsulotlar,nashr_jadvali:K.nashr_jadvali,analitika:K.analitika,heygen_parallel:K.heygen_parallel})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular,video_turlari:K.video_turlari,mahsulotlar:K.mahsulotlar,nashr_jadvali:K.nashr_jadvali,analitika:K.analitika,heygen_parallel:K.heygen_parallel}});\nreturn out;"
       },
       "creds": {}
     },
@@ -94,7 +94,7 @@
           "text": "Qabul qilindi"
         }
       },
-      "webhookId": "91124fd9-0ae5-40b8-b4a4-13c9ada185c2",
+      "webhookId": "d131ef68-14f9-4f7c-8698-279af48069a0",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -290,7 +290,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "6dfaa68a-1223-4c63-b4a3-2febaa48e888",
+      "webhookId": "7adba43e-20d5-4ae5-8a8c-9576c0761042",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -390,7 +390,7 @@
           "message_thread_id": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}"
         }
       },
-      "webhookId": "9675181c-9d7e-4d7a-ad45-f3ae5a77053c",
+      "webhookId": "6e3d5f88-dd21-42b1-8743-667f5ea22ed9",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -504,7 +504,7 @@
       "parameters": {
         "amount": 10
       },
-      "webhookId": "91684c86-1640-4e32-a2d0-84695578023b",
+      "webhookId": "e6733b3f-abb7-4545-ac8d-14372e952777",
       "creds": {}
     },
     "Shotstack - Poll Motion Audio": {
@@ -619,7 +619,7 @@
       "parameters": {
         "amount": 30
       },
-      "webhookId": "8add6f0a-030c-4325-aa0c-51add4ac4331",
+      "webhookId": "6f718a6a-4533-4b03-b9dd-910f43ca147c",
       "creds": {}
     },
     "Shotstack - Poll Motion Render": {
@@ -690,7 +690,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "4b2437f2-1a0f-4d3c-b5e9-e5ff46304c95",
+      "webhookId": "6f1d4236-9759-44fd-bf5f-13ac1ba36e2f",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -798,6 +798,497 @@
       "parameters": {
         "inputSource": "passthrough"
       },
+      "creds": {}
+    },
+    "OR · Bo'lim marshruti": {
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "id": "2bdfeff0-f4c6-4ea6-b55f-4bc271cb5c51",
+      "position": [
+        -2784,
+        480
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "orkestr",
+                    "leftValue": "={{ $json.rol }}",
+                    "rightValue": "orkestr",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "analitik",
+                    "leftValue": "={{ $json.rol }}",
+                    "rightValue": "analitik",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "k1",
+                    "leftValue": "={{ $json.rol }}",
+                    "rightValue": "k1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "render",
+                    "leftValue": "={{ $json.rol }}",
+                    "rightValue": "render",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "render_davom",
+                    "leftValue": "={{ $json.rol }}",
+                    "rightValue": "render_davom",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "dizayn",
+                    "leftValue": "={{ $json.rol }}",
+                    "rightValue": "dizayn",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "mahsulot",
+                    "leftValue": "={{ $json.rol }}",
+                    "rightValue": "mahsulot",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "eski_yol"
+        }
+      },
+      "creds": {}
+    },
+    "OR · Orkestr (F8)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "029a27f2-3e49-4b68-9f19-e88869a4d1be",
+      "position": [
+        -2560,
+        96
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "AN · Analitik (F4)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "8453afaf-c963-4def-90ed-1b3dcd0e1759",
+      "position": [
+        -2560,
+        480
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "K1 · Yurist (F3)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "0a71be00-aa99-4bc8-b5e1-18a713559230",
+      "position": [
+        -2560,
+        672
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "RN · Render (F6)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "5c18dc7c-9cc8-49b3-8f84-edb5b7fb717e",
+      "position": [
+        -2560,
+        864
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "RN · Render Davom (F6)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "4f01c751-cb10-4444-902b-aa374fcb839a",
+      "position": [
+        -2560,
+        1056
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "DZ · Dizayn (F8)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "638b588a-d652-40cc-9d39-6021a794e706",
+      "position": [
+        -2560,
+        1248
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "OR · Mahsulot marshruti": {
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "id": "f38f5660-9b38-4f80-b6d8-8cdccfe3e04d",
+      "position": [
+        -2560,
+        1488
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "tiktok",
+                    "leftValue": "={{ $json.mahsulot_kod }}",
+                    "rightValue": "tiktok",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "reel",
+                    "leftValue": "={{ $json.mahsulot_kod }}",
+                    "rightValue": "reel",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "yt_short",
+                    "leftValue": "={{ $json.mahsulot_kod }}",
+                    "rightValue": "yt_short",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "yt_long",
+                    "leftValue": "={{ $json.mahsulot_kod }}",
+                    "rightValue": "yt_long",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "carousel",
+                    "leftValue": "={{ $json.mahsulot_kod }}",
+                    "rightValue": "carousel",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "tg_paket",
+                    "leftValue": "={{ $json.mahsulot_kod }}",
+                    "rightValue": "tg_paket",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "thumbnail",
+                    "leftValue": "={{ $json.mahsulot_kod }}",
+                    "rightValue": "thumbnail",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "nomalum"
+        }
+      },
+      "creds": {}
+    },
+    "TT · TikTok (F7)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "5373e856-e146-4530-b7dd-efc45a6f547f",
+      "position": [
+        -2336,
+        704
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "RL · Reels (F7)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "1d631312-98ef-40e4-8595-13d7cfd9c406",
+      "position": [
+        -2336,
+        896
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "SH · Shorts (F7)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "da4dc463-3024-4a40-89d7-fff877f09ef4",
+      "position": [
+        -2336,
+        1088
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "YT · Uzun (F7)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "d17a5e4e-30f7-4efa-8d1a-4ffdd0366cbd",
+      "position": [
+        -2336,
+        1280
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "KR · Karusel (F7)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "bdd643f0-8796-41bb-985c-ed125f56c75b",
+      "position": [
+        -2336,
+        1472
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "TG · Paket (F7)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "d565493c-279a-4663-8d8e-5acb5d91d4a7",
+      "position": [
+        -2336,
+        1664
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "TH · Thumbnail (F7)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "0cf083ca-07fb-4c33-9970-2246d625d1ff",
+      "position": [
+        -2336,
+        1856
+      ],
+      "parameters": {},
       "creds": {}
     },
     "Extract From Agent": {
@@ -933,7 +1424,7 @@
           "message_thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "297db289-b4c3-4580-96b4-6f15e64882cd",
+      "webhookId": "18147db5-9e17-4104-bd86-29acff6aa526",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1234,7 +1725,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "9b504eed-6fa0-4723-94bf-cdbb3b3e6cec",
+      "webhookId": "89e036c4-ea82-4c47-b06b-02c9a84e4a45",
       "creds": {}
     },
     "HeyGen Video Status (Bev)": {
@@ -1411,7 +1902,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "1cf0b2cb-6753-4f3b-b47e-60d8de53771b",
+      "webhookId": "f21e448b-a182-40d9-bf4a-0070e919a70b",
       "creds": {}
     },
     "Hyperframes status (Bev)": {
@@ -1496,7 +1987,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "b3e978ae-caf3-4b5b-b8a3-ab6d46b82c5d",
+      "webhookId": "03d4f14f-4acf-481d-9aa8-9337acfb75ac",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1822,7 +2313,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "6f15bfb6-484f-4a70-991d-7809eeec4d4b",
+      "webhookId": "a0b0b7ae-e944-4267-bd4f-9833128c53f6",
       "creds": {}
     },
     "HeyGen Video Status (AI)": {
@@ -1999,7 +2490,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "14602fc1-b139-45c1-a2b1-038c9961899f",
+      "webhookId": "c024a3d9-958c-490d-b82f-b2a1058ef93e",
       "creds": {}
     },
     "Hyperframes status (AI)": {
@@ -2117,7 +2608,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "f0f2cb9e-aa38-4657-b91d-d8fbb4518bb2",
+      "webhookId": "e84ff5c6-8df9-445e-8dd9-82179b4980cd",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2139,7 +2630,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "e9c8a5bc-b8dd-4aa0-aa44-59dc478bd8d9",
+      "webhookId": "661d7a0c-d8c2-4b62-be4e-be52b588c5a8",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2169,6 +2660,38 @@
         "jsCode": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
       },
       "creds": {}
+    },
+    "XM · Xato markazi": {
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "id": "1ecc6265-2d03-471c-9b00-0d5d05dc62e8",
+      "position": [
+        -6816,
+        2080
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "XM · Xato thread 13": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "id": "27a1ccc2-4afc-48ee-b1f3-23b212ad5292",
+      "position": [
+        -6592,
+        2080
+      ],
+      "parameters": {
+        "chatId": "-1004462774154",
+        "text": "={{ \"❌ Xato: \" + ($json.workflow && $json.workflow.name || \"n8n\") + \" | Node: \" + ($json.execution && $json.execution.lastNodeExecuted || \"?\") + \"\\nXabar: \" + ($json.error && $json.error.message || JSON.stringify($json)) }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "message_thread_id": 13
+        }
+      },
+      "webhookId": "04e71596-4879-4d98-87cd-9a3797cd31fc",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     }
   },
   "connections": {
@@ -2595,7 +3118,120 @@
       "main": [
         [
           {
+            "node": "OR · Bo'lim marshruti",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Bo'lim marshruti": {
+      "main": [
+        [
+          {
+            "node": "OR · Orkestr (F8)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AN · Analitik (F4)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "K1 · Yurist (F3)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "RN · Render (F6)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "RN · Render Davom (F6)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "DZ · Dizayn (F8)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OR · Mahsulot marshruti",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Extract From Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Mahsulot marshruti": {
+      "main": [
+        [
+          {
+            "node": "TT · TikTok (F7)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "RL · Reels (F7)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SH · Shorts (F7)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "YT · Uzun (F7)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "KR · Karusel (F7)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "TG · Paket (F7)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "TH · Thumbnail (F7)",
             "type": "main",
             "index": 0
           }
@@ -3335,6 +3971,17 @@
           }
         ]
       ]
+    },
+    "XM · Xato markazi": {
+      "main": [
+        [
+          {
+            "node": "XM · Xato thread 13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodeGroups": [
@@ -3400,7 +4047,8 @@
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
-    "availableInMCP": true
+    "availableInMCP": true,
+    "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "vaqt": "2026-09-23T22:00:57.358Z"
+  "vaqt": "2026-09-23T22:10:57.397Z"
 }
