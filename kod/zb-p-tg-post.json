@@ -17,13 +17,53 @@
       "mode": "runOnceForEachItem",
       "kod": "var p=$json.paket||$json;var burchak=(p.burchaklar&&p.burchaklar.tg_post&&p.burchaklar.tg_post[0])||\"Haftanin rakami\";return{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",burchak:burchak,faktlar:p.faktlar||[],urinish:1}};"
     },
+    "Mavzu Himoyasi": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var inp=$json;var mc=inp.mavzu_kod||\"\";if(mc===\"T8\")return[{json:{...inp,__stop:true,__mesaj:\"T8 — AI avatar taqiq, real odam kerak\"}}];if(mc===\"T10\"&&false)return[{json:{...inp,__stop:true,__mesaj:\"T10 — Meta/TikTok'da taqiq\"}}];return[{json:{...inp,__stop:false}}];"
+    },
+    "To'xtatish kerak?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "stop",
+            "leftValue": "={{ $json.__stop }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Telegram - Himoya": {
+      "turi": "telegram",
+      "text": "={{ \"⚠️ \" + $json.mavzu_kod + \": \" + $json.__mesaj }}",
+      "chatId": "-1004462774154",
+      "thread": 13,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
     "TG Post baza o'qish": {
+      "turi": "unknown"
+    },
+    "CTA o'qish": {
       "turi": "unknown"
     },
     "Kirish va baza birlashtirish": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;var bazaMatn=\"\";try{var row=$(\"TG Post baza o'qish\").first().json||{};bazaMatn=row.matn||row.html||\"\";}catch(e){}return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,burchak:inp.burchak,faktlar:inp.faktlar||[],urinish:inp.urinish||1,bazaMatn:bazaMatn,bazaBor:bazaMatn.length>0}}];"
+      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;var bazaMatn=\"\";try{var row=$(\"TG Post baza o'qish\").first().json||{};bazaMatn=row.matn||row.html||\"\";}catch(e){}var ctaTG=\"\";try{var ctaRTG=$(\"CTA o'qish\").first().json||{};ctaTG=ctaRTG.matn||\"\";}catch(e){} if([\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0)ctaTG=\"\"; return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,burchak:inp.burchak,faktlar:inp.faktlar||[],urinish:inp.urinish||1,bazaMatn:bazaMatn,bazaBor:bazaMatn.length>0,ctaMatn:ctaTG}}];"
     },
     "Claude - TG Post": {
       "turi": "ai",
@@ -184,6 +224,35 @@
       "main": [
         [
           {
+            "node": "Mavzu Himoyasi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mavzu Himoyasi": {
+      "main": [
+        [
+          {
+            "node": "To'xtatish kerak?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "To'xtatish kerak?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Himoya",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "TG Post baza o'qish",
             "type": "main",
             "index": 0
@@ -192,6 +261,17 @@
       ]
     },
     "TG Post baza o'qish": {
+      "main": [
+        [
+          {
+            "node": "CTA o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTA o'qish": {
       "main": [
         [
           {
@@ -338,5 +418,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T09:21:05.766Z"
+  "vaqt": "2026-09-23T09:31:06.296Z"
 }
