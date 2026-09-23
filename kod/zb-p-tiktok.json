@@ -21,6 +21,43 @@
       "mode": "runOnceForEachItem",
       "kod": "var p=$json.paket||$json;var vi=parseInt($json.variant_idx||0);\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],variant_idx:vi,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
     },
+    "Mavzu Himoyasi": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var inp=$json;var mc=inp.mavzu_kod||\"\";if(mc===\"T8\")return[{json:{...inp,__stop:true,__mesaj:\"T8 — AI avatar taqiq, real odam kerak\"}};if(mc===\"T10\"&&true)return[{json:{...inp,__stop:true,__mesaj:\"T10 — Meta/TikTok'da taqiq\"}};return[{json:{...inp,__stop:false}};"
+    },
+    "To'xtatish kerak?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "stop",
+            "leftValue": "={{ $json.__stop }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Telegram - Himoya": {
+      "turi": "telegram",
+      "text": "={{ \"⚠️ \" + $json.mavzu_kod + \": \" + $json.__mesaj }}",
+      "chatId": "-1004462774154",
+      "thread": 13,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
     "Pasport o'qish": {
       "turi": "unknown"
     },
@@ -354,6 +391,35 @@
       "main": [
         [
           {
+            "node": "Mavzu Himoyasi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mavzu Himoyasi": {
+      "main": [
+        [
+          {
+            "node": "To'xtatish kerak?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "To'xtatish kerak?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Himoya",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Pasport o'qish",
             "type": "main",
             "index": 0
@@ -570,5 +636,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T09:11:08.331Z"
+  "vaqt": "2026-09-23T09:21:06.928Z"
 }
