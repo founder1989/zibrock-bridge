@@ -15,7 +15,15 @@
     "Kirish tayyorlash": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var p=$json.paket||$json;\nreturn{json:{\n  job_id:p.job_id||\"UNKNOWN\",\n  mavzu_kod:p.mavzu_kod||\"T1\",\n  burchak:(p.burchaklar&&p.burchaklar.tg_post&&p.burchaklar.tg_post[0])||\"Haftanin rakami\",\n  faktlar:p.faktlar||[],\n  sarlavha:p.sarlavha||\"\",\n  urinish:1\n}};"
+      "kod": "var p=$json.paket||$json;var burchak=(p.burchaklar&&p.burchaklar.tg_post&&p.burchaklar.tg_post[0])||\"Haftanin rakami\";return{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",burchak:burchak,faktlar:p.faktlar||[],urinish:1}};"
+    },
+    "TG Post baza o'qish": {
+      "turi": "unknown"
+    },
+    "Kirish va baza birlashtirish": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;var bazaMatn=\"\";try{var row=$(\"TG Post baza o'qish\").first().json||{};bazaMatn=row.matn||row.html||\"\";}catch(e){}return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,burchak:inp.burchak,faktlar:inp.faktlar||[],urinish:inp.urinish||1,bazaMatn:bazaMatn,bazaBor:bazaMatn.length>0}}];"
     },
     "Claude - TG Post": {
       "turi": "ai",
@@ -29,12 +37,60 @@
     "Post parse": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar parsed;\ntry{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");parsed=JSON.parse(raw.slice(s,e+1));}\ncatch(err){return{json:{xato:true,tur:\"PARSE_FAIL\",xabar:String(err),urinish:$(\"Kirish tayyorlash\").item.json.urinish||1}};}\nvar faktlar=$(\"Kirish tayyorlash\").item.json.faktlar||[];\nvar belgi=parseInt(parsed.belgi_soni||0);\nvar postHtml=parsed.post_html||\"\";\nreturn{json:{post_html:postHtml,belgi_soni:belgi,faktlar:faktlar,burchak:$(\"Kirish tayyorlash\").item.json.burchak,job_id:$(\"Kirish tayyorlash\").item.json.job_id,urinish:$(\"Kirish tayyorlash\").item.json.urinish||1}};"
+      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);var parsed;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");parsed=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\",xabar:String(err),urinish:$(\"Kirish va baza birlashtirish\").first().json.urinish||1}};}var inp=$(\"Kirish va baza birlashtirish\").first().json;return{json:{post_html:parsed.post_html||\"\",belgi_soni:parseInt(parsed.belgi_soni||0),faktlar:inp.faktlar,burchak:inp.burchak,job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,urinish:inp.urinish||1}};"
     },
     "Post tekshiruvi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var postHtml=$json.post_html||\"\";\nvar faktlar=$json.faktlar||[];\nvar xatolar=[];\n// Strip HTML tags to count chars\nvar bare=postHtml.replace(new RegExp(\"<[^>]+>\",\"g\"),\"\").replace(new RegExp(\"&[a-z]+;\",\"g\"),\"X\");\nvar uzunlik=bare.length;\nif(uzunlik<500)xatolar.push(\"Uzunlik \"+uzunlik+\" belgi, min 500\");\nif(uzunlik>900)xatolar.push(\"Uzunlik \"+uzunlik+\" belgi, max 900\");\n// Check only <b> and <i> tags\nvar badTags=postHtml.match(new RegExp(\"<(?!\\/?(b|i))[^>]+>\",\"gi\"))||[];\nif(badTags.length>0)xatolar.push(\"Noto'g'ri teglar: \"+badTags.join(\", \"));\n// Check Kaynak\nif(postHtml.indexOf(\"Kaynak:\")<0&&postHtml.indexOf(\"kaynak:\")<0)xatolar.push(\"Kaynak: qatori yo'q\");\n// Check numbers from faktlar\nvar faktRaqamlar=[];\nfor(var fi=0;fi<faktlar.length;fi++){\n  var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];\n  for(var j=0;j<m.length;j++)faktRaqamlar.push(m[j]);\n}\nvar pctM=bare.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pctM.length;pi++){\n  var num=pctM[pi].replace(\"%\",\"\");\n  var found=false;\n  for(var fk=0;fk<faktRaqamlar.length;fk++){if(faktRaqamlar[fk].indexOf(num)>=0){found=true;break;}}\n  if(!found)xatolar.push(\"Ixtiro raqam: \"+pctM[pi]+\" faktlarda yoq\");\n}\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,post_html:postHtml,belgi_soni:uzunlik,job_id:$json.job_id,burchak:$json.burchak,urinish:$json.urinish||1}};"
+      "kod": "var postHtml=$json.post_html||\"\";var faktlar=$json.faktlar||[];var xatolar=[];var bare=postHtml.replace(new RegExp(\"<[^>]+>\",\"g\"),\"\").replace(new RegExp(\"&[a-z]+;\",\"g\"),\"X\");var uzunlik=bare.length;if(uzunlik<500)xatolar.push(\"Uzunlik \"+uzunlik+\" belgi, min 500\");if(uzunlik>900)xatolar.push(\"Uzunlik \"+uzunlik+\" belgi, max 900\");// First line bold check\nvar firstLine=(postHtml.split(\"\\n\")[0]||\"\");if(!firstLine.indexOf(\"<b>\")>=0||[...firstLine.replace(new RegExp(\"<[^>]+>\",\"g\"),\"\")].length>80)xatolar.push(\"1-qator qalin emas yoki 80 belgidan uzun\");var badTags=postHtml.match(new RegExp(\"<(?!\\\\/?( b|i))[^>]+>\",\"gi\"))||[];if(badTags.length>0)xatolar.push(\"Noto'g'ri teglar: \"+badTags.join(\", \"));if(postHtml.indexOf(\"Kaynak:\")<0&&postHtml.indexOf(\"kaynak:\")<0)xatolar.push(\"Kaynak: yo'q\");var fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}var pm=bare.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];for(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var fk=0;fk<fr.length;fk++){if(fr[fk].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}return{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,post_html:postHtml,belgi_soni:uzunlik,job_id:$json.job_id,burchak:$json.burchak,mavzu_kod:$json.mavzu_kod,faktlar:faktlar,urinish:$json.urinish||1}};"
+    },
+    "K1 Compliance": {
+      "turi": "executeWorkflow",
+      "workflowId": "Ls4eWDug9Lj5lPVP",
+      "inputs": {
+        "mappingMode": "defineBelow",
+        "value": {
+          "matn": "={{ $json.post_html }}",
+          "variant": "full",
+          "faktlar": "={{ $json.faktlar }}"
+        },
+        "schema": [
+          {
+            "id": "matn",
+            "displayName": "matn",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "string"
+          },
+          {
+            "id": "variant",
+            "displayName": "variant",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "string"
+          },
+          {
+            "id": "faktlar",
+            "displayName": "faktlar",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "array"
+          }
+        ],
+        "attemptToConvertTypes": false,
+        "convertFieldsToString": false
+      }
+    },
+    "K1 natijasini birlashtirish": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var k1=$json;var sc=$(\"Post tekshiruvi\").item.json;var k1H=k1.holat||\"FAIL\";var xa=sc.xatolar||[];if(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}return{json:{holat:(sc.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,post_html:sc.post_html,belgi_soni:sc.belgi_soni,job_id:sc.job_id,burchak:sc.burchak,mavzu_kod:sc.mavzu_kod,faktlar:sc.faktlar,urinish:sc.urinish||1}};"
     },
     "PASS?": {
       "turi": "if",
@@ -71,7 +127,7 @@
     "Qayta urinish?": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var n=$json.urinish||1;\nif(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,post_html:$json.post_html,urinish:n,job_id:$json.job_id}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,post_html:$json.post_html,job_id:$json.job_id,burchak:$json.burchak}};"
+      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,post_html:$json.post_html,urinish:n,job_id:$json.job_id}};}return{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,post_html:$json.post_html,job_id:$json.job_id,burchak:$json.burchak,faktlar:$json.faktlar,mavzu_kod:$json.mavzu_kod,bazaMatn:$json.bazaMatn,bazaBor:$json.bazaBor}};"
     },
     "Eskalatsiya?": {
       "turi": "if",
@@ -98,7 +154,7 @@
     },
     "Telegram - Eskalatsiya": {
       "turi": "telegram",
-      "text": "={{ \"❌ zb-p-tg-post: 3 urinishdan keyin FAIL\\nJob: \" + $json.job_id + \"\\nXatolar: \" + JSON.stringify($json.xatolar) }}",
+      "text": "={{ \"❌ zb-p-tg-post: FAIL\\nJob: \" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
       "chatId": "-1004462774154",
       "thread": 13,
       "creds": {
@@ -125,6 +181,28 @@
       ]
     },
     "Kirish tayyorlash": {
+      "main": [
+        [
+          {
+            "node": "TG Post baza o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG Post baza o'qish": {
+      "main": [
+        [
+          {
+            "node": "Kirish va baza birlashtirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirish va baza birlashtirish": {
       "main": [
         [
           {
@@ -158,6 +236,28 @@
       ]
     },
     "Post tekshiruvi": {
+      "main": [
+        [
+          {
+            "node": "K1 Compliance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K1 Compliance": {
+      "main": [
+        [
+          {
+            "node": "K1 natijasini birlashtirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K1 natijasini birlashtirish": {
       "main": [
         [
           {
@@ -238,5 +338,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T08:41:06.324Z"
+  "vaqt": "2026-09-23T08:51:06.302Z"
 }
