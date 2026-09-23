@@ -19,12 +19,23 @@
     "Kirish tayyorlash": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var p=$json.paket||$json;var vi=parseInt($json.variant_idx||0);\nvar b=(p.burchaklar&&p.burchaklar.reel)||[];var burchak=b[vi]||b[0]||\"Reels burchak\";\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],burchak:burchak,variant_idx:vi,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
+      "kod": "var p=$json.paket||$json;var vi=parseInt($json.variant_idx||0);\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],variant_idx:vi,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
     },
-    "Claude - Reels Skript": {
+    "Pasport o'qish": {
+      "turi": "unknown"
+    },
+    "Hook o'qish": {
+      "turi": "unknown"
+    },
+    "Ma'lumot manbalarini birlashtirish": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;\nvar pas={};try{pas=$(\"Pasport o'qish\").first().json||{};}catch(e){}\nvar minS=parseFloat(pas.uzunlik_min_s||15);var maxS=parseFloat(pas.uzunlik_max_s||20);\nvar minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\nvar ilgak_s=parseFloat(pas.ilgak_s||1.7);\nvar hookMatn=\"\";\ntry{var hRow=$(\"Hook o'qish\").first().json||{};hookMatn=hRow.instagram||hRow.matn||\"\";}catch(e){}\nif(!hookMatn){hookMatn=inp.faktlar&&inp.faktlar[0]?inp.faktlar[0].matn.slice(0,60):\"\";}\nvar noVerbalCta=[\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0;\nvar faktlar=inp.faktlar||[];var filteredFaktlar=[];var qaytaOgoh=false;\nfor(var i=0;i<faktlar.length;i++){if(String(faktlar[i].meta_tiktok||\"\").toLowerCase()===\"taqiq\")continue;if(faktlar[i].daraja===\"C\")qaytaOgoh=true;filteredFaktlar.push(faktlar[i]);}\nreturn[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:filteredFaktlar,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,ilgak_s:ilgak_s,hookMatn:hookMatn,noVerbalCta:noVerbalCta,qaytaOgoh:qaytaOgoh}}];"
+    },
+    "Claude - Reels Tana": {
       "turi": "ai",
       "model": "claude-sonnet-4-6",
-      "maxTokens": 800,
+      "maxTokens": 600,
       "system": "",
       "creds": {
         "anthropicApi": "Anthropic account 2"
@@ -33,12 +44,12 @@
     "Skript parse": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\"}};}\nvar inp=$(\"Kirish tayyorlash\").item.json;\nreturn{json:{hook:p.hook||\"\",tts_matn:p.tts_matn||\"\",sceneBlocks:p.sceneBlocks||[],manba:p.manba||\"\",caption:p.caption||\"\",heshteglar:p.heshteglar||[],ulashish_cta:p.ulashish_cta||\"\",faktlar:inp.faktlar,burchak:inp.burchak,variant_idx:inp.variant_idx,job_id:inp.job_id,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,urinish:inp.urinish||1}};"
+      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\"}};}\nvar ds=$(\"Ma'lumot manbalarini birlashtirish\").first().json;\nvar fullTts=ds.hookMatn+\" \"+(p.tts_tana||\"\");\nvar cta=ds.noVerbalCta?\"\":( p.ulashish_cta||\"\");\nreturn{json:{hook:ds.hookMatn,tts_matn:fullTts,sceneBlocks:p.sceneBlocks||[],manba:p.manba||\"\",caption:p.caption||\"\",heshteglar:[\"#psikoloji\",\"#disiplin\",\"#istatistik\",\"#bilim\",\"#davranisalfinans\"],ulashish_cta:cta,faktlar:ds.faktlar,mavzu_kod:ds.mavzu_kod,variant_idx:ds.variant_idx,job_id:ds.job_id,avatar_kod:ds.avatar_kod,test_rejim:ds.test_rejim,voice_id:ds.voice_id,talking_photo_id:ds.talking_photo_id,urinish:ds.urinish||1,minSoz:ds.minSoz,maxSoz:ds.maxSoz,ilgak_s:ds.ilgak_s,qaytaOgoh:ds.qaytaOgoh}};"
     },
     "Skript tekshiruvi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wc=words.length;var cta=$json.ulashish_cta||\"\";var faktlar=$json.faktlar||[];var xatolar=[];\nif(wc<38||wc>50)xatolar.push(\"So'z soni \"+wc+\", 38-50 bolishi kerak\");\nif(!cta)xatolar.push(\"ulashish_cta bosh\");\nvar fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}\nvar pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var fk=0;fk<fr.length;fk++){if(fr[fk].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,heshteglar:$json.heshteglar,manba:$json.manba,caption:$json.caption,ulashish_cta:cta,faktlar:faktlar,burchak:$json.burchak,variant_idx:$json.variant_idx,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1}};"
+      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wc=words.length;var faktlar=$json.faktlar||[];var xatolar=[];\nvar minSoz=$json.minSoz||38;var maxSoz=$json.maxSoz||50;\nif(wc<minSoz||wc>maxSoz)xatolar.push(\"So'z soni \"+wc+\", \"+minSoz+\"-\"+maxSoz+\" kerak\");\nvar cap=$json.caption||\"\";if([...(cap)].length>125)xatolar.push(\"Caption \"+[...cap].length+\" belgi, max 125\");\nvar fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}\nvar pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var k=0;k<fr.length;k++){if(fr[k].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nvar ogohlantirish=$json.qaytaOgoh?\"QAYTA TEKSHIR: daraja C\":\"\";\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,ogohlantirish:ogohlantirish,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,heshteglar:$json.heshteglar,manba:$json.manba,caption:cap,ulashish_cta:$json.ulashish_cta,faktlar:faktlar,mavzu_kod:$json.mavzu_kod,variant_idx:$json.variant_idx,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1,ilgak_s:$json.ilgak_s}};"
     },
     "K1 Compliance": {
       "turi": "executeWorkflow",
@@ -86,7 +97,7 @@
     "K1 natijasini birlashtirish": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var k1=$json;var sc=$(\"Skript tekshiruvi\").item.json;\nvar k1H=k1.holat||\"FAIL\";var xa=sc.xatolar||[];\nif(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}\nreturn{json:{holat:(sc.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,tts_matn:sc.tts_matn,hook:sc.hook,sceneBlocks:sc.sceneBlocks,heshteglar:sc.heshteglar,manba:sc.manba,caption:sc.caption,ulashish_cta:sc.ulashish_cta,faktlar:sc.faktlar,burchak:sc.burchak,variant_idx:sc.variant_idx,job_id:sc.job_id,avatar_kod:sc.avatar_kod,test_rejim:sc.test_rejim,voice_id:sc.voice_id,talking_photo_id:sc.talking_photo_id,urinish:sc.urinish||1}};"
+      "kod": "var k1=$json;var sc=$(\"Skript tekshiruvi\").item.json;var k1H=k1.holat||\"FAIL\";var xa=sc.xatolar||[];\nif(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}\nreturn{json:{holat:(sc.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,ogohlantirish:sc.ogohlantirish,tts_matn:sc.tts_matn,hook:sc.hook,sceneBlocks:sc.sceneBlocks,heshteglar:sc.heshteglar,manba:sc.manba,caption:sc.caption,ulashish_cta:sc.ulashish_cta,faktlar:sc.faktlar,mavzu_kod:sc.mavzu_kod,variant_idx:sc.variant_idx,job_id:sc.job_id,avatar_kod:sc.avatar_kod,test_rejim:sc.test_rejim,voice_id:sc.voice_id,talking_photo_id:sc.talking_photo_id,urinish:sc.urinish||1,ilgak_s:sc.ilgak_s}};"
     },
     "PASS?": {
       "turi": "if",
@@ -136,7 +147,7 @@
     },
     "Telegram - Test Preview": {
       "turi": "telegram",
-      "text": "={{ \"🧪 Reels test | \" + $json.burchak + \"\\n\\n\" + $json.tts_matn + \"\\n\\nCTA: \" + $json.ulashish_cta }}",
+      "text": "={{ \"🧪 Reels test | \" + $json.mavzu_kod + \" v\" + $json.variant_idx + \"\\n\\n\" + $json.tts_matn.slice(0,200) + \"\\n\\n\" + ($json.ulashish_cta?\"CTA: \"+$json.ulashish_cta:\"CTA: yo'q (TR-C-0)\") }}",
       "chatId": "-1004462774154",
       "thread": 9,
       "creds": {
@@ -269,11 +280,11 @@
     "Hook vaqti tekshiruvi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var hs=$json.hook_tugash_s||0;var sc=$(\"K1 natijasini birlashtirish\").item.json;\nreturn{json:{video_url:$json.video_url||\"\",hook_tugash_s:hs,jami_s:$json.jami_s||0,hook_ok:hs<=1.7,tts_matn:sc.tts_matn,hook:sc.hook,caption:sc.caption,heshteglar:sc.heshteglar,ulashish_cta:sc.ulashish_cta,burchak:sc.burchak,variant_idx:sc.variant_idx,job_id:sc.job_id}};"
+      "kod": "var hs=$json.hook_tugash_s||0;var sc=$(\"K1 natijasini birlashtirish\").item.json;\nreturn{json:{video_url:$json.video_url||\"\",hook_tugash_s:hs,jami_s:$json.jami_s||0,hook_ok:hs<=sc.ilgak_s,caption:sc.caption,heshteglar:sc.heshteglar,ulashish_cta:sc.ulashish_cta,ogohlantirish:sc.ogohlantirish,mavzu_kod:sc.mavzu_kod,variant_idx:sc.variant_idx,job_id:sc.job_id}};"
     },
     "Telegram - Ko'rib chiqish (Reels)": {
       "turi": "telegram",
-      "text": "={{ \"✅ Reels v\" + $json.variant_idx + \" | \" + $json.burchak + \"\\n\\n🎬 \" + $json.video_url + \"\\n\\n\" + ($json.hook_ok?\"\":\"⚠️ Hook \" + $json.hook_tugash_s + \"s > 1.7s\\n\") + $json.caption + \"\\n\\n\" + $json.heshteglar.join(\" \") }}",
+      "text": "={{ \"✅ Reels v\" + $json.variant_idx + \" | \" + $json.mavzu_kod + \"\\n\" + ($json.ogohlantirish?\"⚠️ \"+$json.ogohlantirish+\"\\n\":\"\") + \"\\n🎬 \" + $json.video_url + \"\\n\\n\" + ($json.hook_ok?\"\":\"⚠️ Hook \"+$json.hook_tugash_s+\"s > ilgak\\n\") + $json.caption + \"\\n\" + $json.heshteglar.join(\" \") }}",
       "chatId": "-1004462774154",
       "thread": 9,
       "creds": {
@@ -283,7 +294,7 @@
     "Qayta urinish?": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var n=$json.urinish||1;\nif(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,burchak:$json.burchak,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
+      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n,ogohlantirish:$json.ogohlantirish}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,mavzu_kod:$json.mavzu_kod,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
     },
     "Eskalatsiya?": {
       "turi": "if",
@@ -310,7 +321,7 @@
     },
     "Telegram - Eskalatsiya": {
       "turi": "telegram",
-      "text": "={{ \"❌ zb-p-reels: 3 urinishdan keyin FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
+      "text": "={{ \"❌ zb-p-reels: FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
       "chatId": "-1004462774154",
       "thread": 13,
       "creds": {
@@ -340,14 +351,47 @@
       "main": [
         [
           {
-            "node": "Claude - Reels Skript",
+            "node": "Pasport o'qish",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Claude - Reels Skript": {
+    "Pasport o'qish": {
+      "main": [
+        [
+          {
+            "node": "Hook o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hook o'qish": {
+      "main": [
+        [
+          {
+            "node": "Ma'lumot manbalarini birlashtirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ma'lumot manbalarini birlashtirish": {
+      "main": [
+        [
+          {
+            "node": "Claude - Reels Tana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - Reels Tana": {
       "main": [
         [
           {
@@ -493,7 +537,7 @@
       "main": [
         [
           {
-            "node": "Claude - Reels Skript",
+            "node": "Ma'lumot manbalarini birlashtirish",
             "type": "main",
             "index": 0
           }
@@ -512,5 +556,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T08:30:55.739Z"
+  "vaqt": "2026-09-23T08:41:00.726Z"
 }
