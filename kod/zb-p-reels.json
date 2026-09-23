@@ -334,7 +334,7 @@
     "Qayta urinish?": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n,ogohlantirish:$json.ogohlantirish}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,mavzu_kod:$json.mavzu_kod,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
+      "kod": "var n=$runIndex+1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n,ogohlantirish:$json.ogohlantirish}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,mavzu_kod:$json.mavzu_kod,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
     },
     "Eskalatsiya?": {
       "turi": "if",
@@ -652,5 +652,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T18:11:00.421Z"
+  "vaqt": "2026-09-23T18:21:00.415Z"
 }
