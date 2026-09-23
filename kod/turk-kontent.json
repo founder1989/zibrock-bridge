@@ -9,7 +9,7 @@
     "KONSTANTALAR": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}}};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar}});\nreturn out;"
+      "kod": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}},avatarlar:{a1:{nom:\"ZIBROCK A1 Ekspert\",talking_photo_id:\"69deef3c46d040ada847ebb6649e2f32\",rol:\"statistika, ilmiy manba, kitob\",ovoz:\"a1\"},a2:{nom:\"ZIBROCK A2 Treyder\",talking_photo_id:\"ed4a236dc01643b89381aaab1d79da9c\",rol:\"ambassador, mahsulot, qoidalar\",ovoz:\"a2\"}},joriy_avatar:\"a1\"};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar}});\nreturn out;"
     },
     "Telegram Kirish Filtri": {
       "turi": "code",
@@ -53,7 +53,7 @@
     "ElevenLabs - Motion TTS": {
       "turi": "http",
       "method": "POST",
-      "url": "https://api.elevenlabs.io/v1/text-to-speech/7VqWGAWwo2HMrylfKrcm/with-timestamps",
+      "url": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; return \"https://api.elevenlabs.io/v1/text-to-speech/\"+K.ovozlar[K.avatarlar[a].ovoz].voice_id+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $json.narration, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
       "sendBody": true
     },
@@ -167,7 +167,7 @@
     "ElevenLabs - Audio (Bevosita)": {
       "turi": "http",
       "method": "POST",
-      "url": "https://api.elevenlabs.io/v1/text-to-speech/7VqWGAWwo2HMrylfKrcm/with-timestamps",
+      "url": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; return \"https://api.elevenlabs.io/v1/text-to-speech/\"+K.ovozlar[K.avatarlar[a].ovoz].voice_id+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $(\"Skriptni Ajratish\").item.json.merged_response, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
       "sendBody": true
     },
@@ -187,7 +187,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
-      "body": "={{ JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: \"08617ecb814d40be876db3b1c7b83da0\" }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Bevosita)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: ($(\"Skriptni Ajratish\").item.json.isVertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }), test: false, motion_prompt: \"strong expressive facial emotions, intense eyebrow raises, surprised and concerned expressions, leaning forward with urgency, passionate and energetic delivery, dynamic natural hand gestures, wide eyes for emphasis\", custom_motion_prompt: \"gentle natural head movement, occasional soft blink, warm subtle smile, slow gentle camera dolly-in toward the presenter, natural hand gestures matching speech rhythm\", enhance_custom_motion_prompt: true }) }}",
+      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; var tpid=K.avatarlar[a].talking_photo_id; return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Bevosita)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: ($(\"Skriptni Ajratish\").item.json.isVertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }), test: false, motion_prompt: \"strong expressive facial emotions, intense eyebrow raises, surprised and concerned expressions, leaning forward with urgency, passionate and energetic delivery, dynamic natural hand gestures, wide eyes for emphasis\", custom_motion_prompt: \"gentle natural head movement, occasional soft blink, warm subtle smile, slow gentle camera dolly-in toward the presenter, natural hand gestures matching speech rhythm\", enhance_custom_motion_prompt: true }); })() }}",
       "sendBody": true
     },
     "HeyGen Video Status (Bev)": {
@@ -283,7 +283,7 @@
     "ElevenLabs - Audio (Asosiy)": {
       "turi": "http",
       "method": "POST",
-      "url": "https://api.elevenlabs.io/v1/text-to-speech/7VqWGAWwo2HMrylfKrcm/with-timestamps",
+      "url": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; return \"https://api.elevenlabs.io/v1/text-to-speech/\"+K.ovozlar[K.avatarlar[a].ovoz].voice_id+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $(\"Platforma Aniqlash\").item.json.merged_response, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
       "sendBody": true
     },
@@ -303,7 +303,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
-      "body": "={{ JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: \"08617ecb814d40be876db3b1c7b83da0\" }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: ($(\"Platforma Aniqlash\").item.json.isVertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }), test: false, motion_prompt: \"strong expressive facial emotions, intense eyebrow raises, surprised and concerned expressions, leaning forward with urgency, passionate and energetic delivery, dynamic natural hand gestures, wide eyes for emphasis\", custom_motion_prompt: \"gentle natural head movement, occasional soft blink, warm subtle smile, slow gentle camera dolly-in toward the presenter, natural hand gestures matching speech rhythm\", enhance_custom_motion_prompt: true }) }}",
+      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; var tpid=K.avatarlar[a].talking_photo_id; return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: ($(\"Platforma Aniqlash\").item.json.isVertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }), test: false, motion_prompt: \"strong expressive facial emotions, intense eyebrow raises, surprised and concerned expressions, leaning forward with urgency, passionate and energetic delivery, dynamic natural hand gestures, wide eyes for emphasis\", custom_motion_prompt: \"gentle natural head movement, occasional soft blink, warm subtle smile, slow gentle camera dolly-in toward the presenter, natural hand gestures matching speech rhythm\", enhance_custom_motion_prompt: true }); })() }}",
       "sendBody": true
     },
     "HeyGen Video Status (AI)": {
@@ -366,5 +366,5 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-22T23:50:56.080Z"
+  "vaqt": "2026-09-23T00:00:56.096Z"
 }
