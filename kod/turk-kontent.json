@@ -1399,10 +1399,11 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ \"❌ Xato: \" + ($json.workflow && $json.workflow.name || \"n8n\") + \" | Node: \" + ($json.execution && $json.execution.lastNodeExecuted || \"?\") + \"\\nXabar: \" + ($json.error && $json.error.message || JSON.stringify($json)) }}",
+        "text": "={{ String(\"❌ Xato: \" + ($json.workflow && $json.workflow.name || \"n8n\") + \" | Node: \" + ($json.execution && $json.execution.lastNodeExecuted || \"?\") + \"\\nXabar: \" + ($json.error && $json.error.message || JSON.stringify($json))).split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": 13
+          "message_thread_id": 13,
+          "parse_mode": "HTML"
         }
       },
       "webhookId": "7f587bd8-0363-42f1-a7a2-2cbc29c3ca0b",
@@ -2813,10 +2814,11 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ \"TIL_XATO: \" + ($json.mahsulot_kod||\"?\") + \" uz:\" + ($json.uzbek_count||0) + \" ap:\" + ($json.apostrophe_count||0) + \" tr:\" + (($json.turkish_ratio||0)*100).toFixed(1) + \"%\" }}",
+        "text": "={{ String(\"TIL_XATO: \" + ($json.mahsulot_kod||\"?\") + \" uz:\" + ($json.uzbek_count||0) + \" ap:\" + ($json.apostrophe_count||0) + \" tr:\" + (($json.turkish_ratio||0)*100).toFixed(1) + \"%\").split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": 13
+          "message_thread_id": 13,
+          "parse_mode": "HTML"
         }
       },
       "webhookId": "4303f749-47c2-4a53-b9f4-0f6fda35c153",
@@ -3130,10 +3132,11 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ \"❌ AN· Brif FAIL · \" + $json.mavzu_kod + \"\\nXatolar: \" + JSON.stringify($json.tekshiruv_xatolar) }}",
+        "text": "={{ String(\"❌ AN· Brif FAIL · \" + $json.mavzu_kod + \"\\nXatolar: \" + JSON.stringify($json.tekshiruv_xatolar)).split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": 13
+          "message_thread_id": 13,
+          "parse_mode": "HTML"
         }
       },
       "webhookId": "61af1c4f-85d2-4fd2-b1ed-c60056daf15f",
@@ -3151,10 +3154,11 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ \"⚠️ AN· s_jadval’da \" + $(\"OR · Bo'lim marshruti\").item.json.mavzu_kod + \" uchun fakt yo'q. Eskalatsiya.\" }}",
+        "text": "={{ String(\"⚠️ AN· s_jadval’da \" + $(\"OR · Bo'lim marshruti\").item.json.mavzu_kod + \" uchun fakt yo'q. Eskalatsiya.\").split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": 13
+          "message_thread_id": 13,
+          "parse_mode": "HTML"
         }
       },
       "webhookId": "ab019e37-84f2-4376-9451-9e1fedf64f27",
@@ -4694,5 +4698,5 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "vaqt": "2026-09-23T23:20:57.524Z"
+  "vaqt": "2026-09-23T23:30:57.444Z"
 }
