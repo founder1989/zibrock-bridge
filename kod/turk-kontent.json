@@ -15,7 +15,7 @@
         ],
         "additionalFields": {}
       },
-      "webhookId": "51149245-624d-458a-bc4f-880059d8a364",
+      "webhookId": "1af1a8a6-bd22-478d-b799-25d6388b5c5e",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -94,7 +94,7 @@
           "text": "Qabul qilindi"
         }
       },
-      "webhookId": "9ed91c9b-8503-4fa8-8631-9d27828b8a93",
+      "webhookId": "83598e42-51cd-4746-bdc3-c478a3d23fbe",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -290,7 +290,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "396fb4d9-663d-4e8e-9b7e-5f545946a9de",
+      "webhookId": "615143ce-b01e-4854-96d8-8afc87bdeb89",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -390,7 +390,7 @@
           "message_thread_id": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}"
         }
       },
-      "webhookId": "81ef9b95-1f00-4ba6-8884-49816c843f20",
+      "webhookId": "db5f50d5-e761-49ac-9dcc-89a8c9ec413d",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -504,7 +504,7 @@
       "parameters": {
         "amount": 10
       },
-      "webhookId": "5a4d6e61-92ab-46a6-8ed2-0dbc5642ee10",
+      "webhookId": "f5a00b73-41ee-4b3e-a665-d5eccf6b79aa",
       "creds": {}
     },
     "Shotstack - Poll Motion Audio": {
@@ -619,7 +619,7 @@
       "parameters": {
         "amount": 30
       },
-      "webhookId": "bfd1f919-4703-4b15-b7b6-b844f64dac6a",
+      "webhookId": "04d46ff6-9474-4057-8a10-545c1e0a99d6",
       "creds": {}
     },
     "Shotstack - Poll Motion Render": {
@@ -690,7 +690,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "74e23c77-c3c9-4a19-913b-4424bdc46aba",
+      "webhookId": "83392070-5f24-4e83-8fb0-743008a00744",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1405,7 +1405,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "ebcc787e-6005-4810-9fc2-abf87207f256",
+      "webhookId": "7f587bd8-0363-42f1-a7a2-2cbc29c3ca0b",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1514,7 +1514,7 @@
           "message_thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "b84a1a2c-2587-4e47-aa61-46eecc910de2",
+      "webhookId": "22cb9802-c670-421e-97f0-ff670132bdb5",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1825,7 +1825,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "239adca8-40b5-4944-806f-ab3f9f1dd469",
+      "webhookId": "1caab636-366f-48de-8ce4-2d2c36864f2a",
       "creds": {}
     },
     "HeyGen Video Status (Bev)": {
@@ -2002,7 +2002,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "0dce1e69-7c66-4e42-b973-17d2af5c8b4f",
+      "webhookId": "f93534cb-6cd8-44e6-922a-95974481f377",
       "creds": {}
     },
     "Hyperframes status (Bev)": {
@@ -2087,7 +2087,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "0b7695fe-e651-4827-948a-b0736ae9f1d7",
+      "webhookId": "f73bc0f6-dc79-456f-b809-08622b38d8df",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2423,7 +2423,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "e07db71d-5170-45ec-9473-b8b53af0e108",
+      "webhookId": "a1b14391-43b7-432d-8691-a03fba819225",
       "creds": {}
     },
     "HeyGen Video Status (AI)": {
@@ -2600,7 +2600,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "7f8bbd34-d04b-4eda-8ecf-2d13a39ae60e",
+      "webhookId": "bfe7bd87-b6df-4205-9041-7591968baa6a",
       "creds": {}
     },
     "Hyperframes status (AI)": {
@@ -2718,7 +2718,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "80967f2d-0073-40bd-9f41-85ea9d88ea1f",
+      "webhookId": "0648290f-c894-4648-8914-6a81add9a1cd",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2740,7 +2740,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "5de11460-a0bf-48a7-a300-deb64074f015",
+      "webhookId": "134f2bd5-2c7f-4463-9581-bab04c49782b",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2813,13 +2813,13 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ \"🔴 TIL_XATO · \" + ($json.mahsulot_kod||\"?\") + \"\\nMatn turkcha emas.\\nO'zbek chars: \" + $json.uzbek_chars_count + \" | So'z: \" + $json.uzbek_words_count + \"\\nTurkcha nisbat: \" + (($json.turkish_ratio||0)*100).toFixed(1) + \"%\" }}",
+        "text": "={{ \"TIL_XATO: \" + ($json.mahsulot_kod||\"?\") + \" uz:\" + ($json.uzbek_count||0) + \" ap:\" + ($json.apostrophe_count||0) + \" tr:\" + (($json.turkish_ratio||0)*100).toFixed(1) + \"%\" }}",
         "additionalFields": {
           "appendAttribution": false,
           "message_thread_id": 13
         }
       },
-      "webhookId": "3473813d-f01f-4aad-b477-350c0429cd66",
+      "webhookId": "4303f749-47c2-4a53-b9f4-0f6fda35c153",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -3115,7 +3115,7 @@
           "message_thread_id": 3
         }
       },
-      "webhookId": "23d338f2-096b-40a2-8eea-68467a245a80",
+      "webhookId": "e249eec9-c56d-4540-ae5a-a2f76642c49c",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -3136,7 +3136,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "815add67-030f-4c82-b811-99a12697c90b",
+      "webhookId": "61af1c4f-85d2-4fd2-b1ed-c60056daf15f",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -3157,7 +3157,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "5a82cc5b-8f26-4c63-a265-49d5862100c6",
+      "webhookId": "ab019e37-84f2-4376-9451-9e1fedf64f27",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -4694,5 +4694,5 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "vaqt": "2026-09-23T23:00:57.448Z"
+  "vaqt": "2026-09-23T23:10:57.465Z"
 }
