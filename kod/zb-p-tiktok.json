@@ -89,7 +89,7 @@
     "Skript tekshiruvi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wc=words.length;var faktlar=$json.faktlar||[];var xatolar=[];\n// Q2: Pasportdan olingan chegaralar\nvar minSoz=$json.minSoz||38;var maxSoz=$json.maxSoz||75;\nif(wc<minSoz||wc>maxSoz)xatolar.push(\"So'z soni \"+wc+\", \"+minSoz+\"-\"+maxSoz+\" bolishi kerak\");\nif($json.heshteglar.length!==5)xatolar.push(\"Heshteg soni noto'g'ri (5 ta kerak)\");\n// Kapta ≤100\nvar tavsif=$json.tavsif||\"\";\nif(tavsif.length>100)xatolar.push(\"Caption \"+tavsif.length+\" belgi, max 100\");\nif(tavsif.indexOf(\"http\")>=0||tavsif.indexOf(\"t.me\")>=0)xatolar.push(\"Captionda havola bor\");\n// Raqamlar N-ID tekshiruvi\nvar faktIds={};for(var fi=0;fi<faktlar.length;fi++){var qv=String(faktlar[fi].qiymat||faktlar[fi].matn||\"\");var nm=qv.match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<nm.length;j++)faktIds[nm[j]]=faktlar[fi].s_id||\"?\";}\nvar pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var found=false;for(var k in faktIds){if(k.indexOf(n)>=0){found=true;break;}}if(!found)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nvar ogohlantirish=$json.qaytaOgoh?\"QAYTA TEKSHIR: daraja C fakt bor\":\"\";\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,ogohlantirish:ogohlantirish,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,heshteglar:$json.heshteglar,manba:$json.manba,tavsif:tavsif,faktlar:faktlar,mavzu_kod:$json.mavzu_kod,variant_idx:$json.variant_idx,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1,ilgak_s:$json.ilgak_s}};"
+      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wc=words.length;var faktlar=$json.faktlar||[];var xatolar=[];\n// Q2: Pasportdan olingan chegaralar\nvar minSoz=$json.minSoz||38;var maxSoz=$json.maxSoz||75;\nif(wc<minSoz||wc>maxSoz)xatolar.push(\"So'z soni \"+wc+\", \"+minSoz+\"-\"+maxSoz+\" bolishi kerak\");\nvar hc=($json.heshteglar||[]).length;if(hc<3||hc>4)xatolar.push(\"Heshteg soni \"+hc+\", 3-4 bolishi kerak\");\n// Kapta ≤100\nvar tavsif=$json.tavsif||\"\";\nif(tavsif.length>100)xatolar.push(\"Caption \"+tavsif.length+\" belgi, max 100\");\nif(tavsif.indexOf(\"http\")>=0||tavsif.indexOf(\"t.me\")>=0)xatolar.push(\"Captionda havola bor\");\n// Raqamlar N-ID tekshiruvi\nvar faktIds={};for(var fi=0;fi<faktlar.length;fi++){var qv=String(faktlar[fi].qiymat||faktlar[fi].matn||\"\");var nm=qv.match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<nm.length;j++)faktIds[nm[j]]=faktlar[fi].s_id||\"?\";}\nvar pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var found=false;for(var k in faktIds){if(k.indexOf(n)>=0){found=true;break;}}if(!found)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nvar ogohlantirish=$json.qaytaOgoh?\"QAYTA TEKSHIR: daraja C fakt bor\":\"\";\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,ogohlantirish:ogohlantirish,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,heshteglar:$json.heshteglar,manba:$json.manba,tavsif:tavsif,faktlar:faktlar,mavzu_kod:$json.mavzu_kod,variant_idx:$json.variant_idx,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1,ilgak_s:$json.ilgak_s}};"
     },
     "K1 Compliance": {
       "turi": "executeWorkflow",
@@ -334,7 +334,7 @@
     "Qayta urinish?": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n,ogohlantirish:$json.ogohlantirish}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,mavzu_kod:$json.mavzu_kod,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
+      "kod": "var n=$runIndex+1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n,ogohlantirish:$json.ogohlantirish}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,mavzu_kod:$json.mavzu_kod,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
     },
     "Eskalatsiya?": {
       "turi": "if",
@@ -652,5 +652,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T18:11:07.684Z"
+  "vaqt": "2026-09-23T18:21:09.044Z"
 }
