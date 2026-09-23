@@ -106,11 +106,6 @@
     "Token DB yozish": {
       "turi": "unknown"
     },
-    "Ready Bridge": {
-      "turi": "code",
-      "mode": "runOnceForAllItems",
-      "kod": "var tok=\"\";var base={};try{var src=$(\"Setup birlashtirish\").first().json;tok=src.telegraph_token||\"\";base=src;}catch(e){}try{var saved=$(\"Token saqlash\").first().json;tok=saved._token||tok;base={...saved,telegraph_token:tok};}catch(e){}return[{json:{...base,telegraph_token:tok}}];"
-    },
     "Epizod o'qish": {
       "turi": "unknown"
     },
@@ -642,6 +637,11 @@
             "node": "T8 Eskalatsiya",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Token yaratish kerak?",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -664,17 +664,6 @@
         ]
       ]
     },
-    "Setup birlashtirish": {
-      "main": [
-        [
-          {
-            "node": "Token yaratish kerak?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Token yaratish kerak?": {
       "main": [
         [
@@ -684,14 +673,14 @@
             "index": 0
           },
           {
-            "node": "Epizod o'qish",
+            "node": "CTA o'qish",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Ready Bridge",
+            "node": "Epizod o'qish",
             "type": "main",
             "index": 0
           }
@@ -724,18 +713,7 @@
       "main": [
         [
           {
-            "node": "Ready Bridge",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Epizod o'qish": {
-      "main": [
-        [
-          {
-            "node": "CTA o'qish",
+            "node": "Epizod o'qish",
             "type": "main",
             "index": 0
           }
@@ -1136,5 +1114,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T19:21:08.865Z"
+  "vaqt": "2026-09-23T19:31:10.227Z"
 }
