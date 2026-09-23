@@ -180,7 +180,7 @@
       "turi": "telegram",
       "text": "={{ $json.xabar || \"❌ Xato yuz berdi\" }}",
       "chatId": "={{ $json.chatId || $json.message && $json.message.chat && $json.message.chat.id }}",
-      "thread": null,
+      "thread": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -531,7 +531,7 @@
     "K1 Natija (Bev)": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var k1Holat=($input.first().json.holat||'FAIL');var orig=$('Skriptni Ajratish').first().json;var topilmalar=$input.first().json.topilmalar||[];if(k1Holat==='FAIL'){return[{json:{...orig,compliance:'FAIL',tur:(topilmalar[0]&&topilmalar[0].tur)||'K1',atama:(topilmalar[0]&&topilmalar[0].atama)||'',chatId:orig.chatId||'',xabar:'❌ K1 FAIL: '+(topilmalar[0]&&topilmalar[0].atama||'')}}];}return[{json:{...orig,compliance:'PASS'}}];"
+      "kod": "var k1Holat=($input.first().json.holat||'FAIL');var orig=$('Skriptni Ajratish').first().json;var topilmalar=$input.first().json.topilmalar||[];if(k1Holat==='FAIL'){return[{json:{...orig,compliance:'FAIL',tur:(topilmalar[0]&&topilmalar[0].tur)||'K1',atama:(topilmalar[0]&&topilmalar[0].atama)||'',chatId:(orig.chatId||$('Faqat skript matnini ajratish').first().json.chatId||''),xabar:'❌ K1 FAIL: '+(topilmalar[0]&&topilmalar[0].atama||'')}}];}return[{json:{...orig,compliance:'PASS'}}];"
     },
     "Compliance OK? (Bev)": {
       "turi": "if",
@@ -797,7 +797,7 @@
     "K1 Natija (AI)": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var k1Holat=($input.first().json.holat||'FAIL');var orig=$('Skriptni Tozalash (AI)').first().json;var topilmalar=$input.first().json.topilmalar||[];if(k1Holat==='FAIL'){return[{json:{...orig,compliance:'FAIL',tur:(topilmalar[0]&&topilmalar[0].tur)||'K1',atama:(topilmalar[0]&&topilmalar[0].atama)||'',chatId:orig.chatId||'',xabar:'❌ K1 FAIL: '+(topilmalar[0]&&topilmalar[0].atama||'')}}];}return[{json:{...orig,compliance:'PASS'}}];"
+      "kod": "var k1Holat=($input.first().json.holat||'FAIL');var orig=$('Skriptni Tozalash (AI)').first().json;var topilmalar=$input.first().json.topilmalar||[];if(k1Holat==='FAIL'){return[{json:{...orig,compliance:'FAIL',tur:(topilmalar[0]&&topilmalar[0].tur)||'K1',atama:(topilmalar[0]&&topilmalar[0].atama)||'',chatId:(orig.chatId||$('Faqat skript matnini ajratish').first().json.chatId||''),xabar:'❌ K1 FAIL: '+(topilmalar[0]&&topilmalar[0].atama||'')}}];}return[{json:{...orig,compliance:'PASS'}}];"
     },
     "Compliance OK? (AI)": {
       "turi": "if",
@@ -2207,5 +2207,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T09:00:57.371Z"
+  "vaqt": "2026-09-23T09:10:57.446Z"
 }
