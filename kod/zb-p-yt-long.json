@@ -17,7 +17,81 @@
       "mode": "runOnceForEachItem",
       "kod": "var p=$json.paket||$json;\nvar burchak=(p.burchaklar&&p.burchaklar.yt_long&&p.burchaklar.yt_long[0])||\"YT uzun burchak\";\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],burchak:burchak,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
     },
-    "Claude - YT Long Skript": {
+    "Pasport o'qish": {
+      "turi": "unknown"
+    },
+    "Epizod bloklarni o'qish": {
+      "turi": "unknown"
+    },
+    "Bloklarni yig'ish": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;\nvar pas={};try{pas=$(\"Pasport o'qish\").first().json||{};}catch(e){}\nvar minS=parseFloat(pas.uzunlik_min_s||300);var maxS=parseFloat(pas.uzunlik_max_s||480);\nvar minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\n\nvar bloklar=[];\ntry{bloklar=$(\"Epizod bloklarni o'qish\").all().map(function(i){return i.json;});}catch(e){}\nbloklar.sort(function(a,b){return(parseInt(a.tartib||0))-(parseInt(b.tartib||0));});\n\nif(bloklar.length===0){\n  return[{json:{eskalatsiya:true,xabar:\"epizod_bloklar'da T\"+inp.mavzu_kod+\" uchun blok yo'q\",job_id:inp.job_id}}];\n}\n\n// Rejim\nvar rejim=bloklar[0].rejim||\"QULF\";\nvar sarlavha=bloklar[0].sarlavha||inp.burchak;\nvar tts_bloklar=bloklar.map(function(b){return b.matn||\"\";}).filter(Boolean);\nvar tts_raw=tts_bloklar.join(\"\\n\\n\");\n\nreturn[{json:{\n  job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,\n  faktlar:inp.faktlar,burchak:inp.burchak,urinish:inp.urinish||1,\n  voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,\n  minSoz:minSoz,maxSoz:maxSoz,rejim:rejim,sarlavha:sarlavha,\n  tts_raw:tts_raw,bloklar:bloklar,qaytaOgoh:false\n}}];"
+    },
+    "Blok bormi?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "eskalatsiya",
+            "leftValue": "={{ $json.eskalatsiya }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Telegram - Blok yo'q": {
+      "turi": "telegram",
+      "text": "={{ \"⚠️ zb-p-yt-long: \" + $json.xabar }}",
+      "chatId": "-1004462774154",
+      "thread": 13,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "QULF rejimi?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "rejim",
+            "leftValue": "={{ $json.rejim }}",
+            "rightValue": "QULF",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "QULF — So'zma-so'z": {
+      "turi": "unknown"
+    },
+    "Yakuniy matn": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var ds=$(\"Bloklarni yig'ish\").first().json;\nvar tts=$json.tts_final||\"\";\nvar words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wc=words.length;var xatolar=[];\nvar minSoz=$json.minSoz||ds.minSoz||700;var maxSoz=$json.maxSoz||ds.maxSoz||1100;\nif(wc<minSoz||wc>maxSoz)xatolar.push(\"So'z soni \"+wc+\", \"+minSoz+\"-\"+maxSoz+\" kerak\");\nvar faktlar=$json.faktlar||ds.faktlar||[];\nvar fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}\nvar pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var k=0;k<fr.length;k++){if(fr[k].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,tts_matn:tts,sarlavha:$json.sarlavha||ds.sarlavha||\"\",rejim_info:$json.rejim_info||\"\",faktlar:faktlar,mavzu_kod:$json.mavzu_kod||ds.mavzu_kod,job_id:$json.job_id||ds.job_id,avatar_kod:$json.avatar_kod||ds.avatar_kod,test_rejim:$json.test_rejim||ds.test_rejim,voice_id:$json.voice_id||ds.voice_id,talking_photo_id:$json.talking_photo_id||ds.talking_photo_id,urinish:$json.urinish||1}};"
+    },
+    "Claude - 90% Silliqlash": {
       "turi": "ai",
       "model": "claude-sonnet-4-6",
       "maxTokens": 4000,
@@ -26,15 +100,10 @@
         "anthropicApi": "Anthropic account 2"
       }
     },
-    "Skript parse": {
+    "Silliqlangan matn": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\"}};}\nvar inp=$(\"Kirish tayyorlash\").item.json;\nreturn{json:{hook:p.hook||\"\",tts_matn:p.tts_matn||\"\",sceneBlocks:p.sceneBlocks||[],bolimlar:p.bolimlar||[],sarlavha:p.sarlavha||\"\",tavsif:p.tavsif||\"\",teglar:p.teglar||[],manbalar:p.manbalar||[],faktlar:inp.faktlar,burchak:inp.burchak,job_id:inp.job_id,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,urinish:inp.urinish||1}};"
-    },
-    "Skript tekshiruvi": {
-      "turi": "code",
-      "mode": "runOnceForEachItem",
-      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wc=words.length;var bolimlar=$json.bolimlar||[];var manbalar=$json.manbalar||[];var faktlar=$json.faktlar||[];var xatolar=[];\nif(wc<700||wc>1100)xatolar.push(\"So'z soni \"+wc+\", 700-1100 bolishi kerak\");\nif(bolimlar.length<4)xatolar.push(\"Bolimlar soni \"+bolimlar.length+\", min 4\");\nif(manbalar.length===0)xatolar.push(\"manbalar bosh\");\n// Check bolim durations ≤150s\nfor(var bi=0;bi<bolimlar.length-1;bi++){var dur=(bolimlar[bi+1].vaqt_s||0)-(bolimlar[bi].vaqt_s||0);if(dur>150)xatolar.push(\"Bolim \"+bi+\" \"+dur+\"s > 150s\");}\nvar fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}\nvar pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var fk=0;fk<fr.length;fk++){if(fr[fk].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,bolimlar:bolimlar,sarlavha:$json.sarlavha,tavsif:$json.tavsif,teglar:$json.teglar,manbalar:manbalar,faktlar:faktlar,burchak:$json.burchak,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1}};"
+      "kod": "var txt=$json.content&&$json.content[0]&&$json.content[0].text||$json.tts_raw||\"\";\nvar ds=$(\"Bloklarni yig'ish\").first().json;\nreturn{json:{tts_final:txt,sarlavha:ds.sarlavha,rejim_info:\"90% (Claude silliqlagan)\",faktlar:ds.faktlar,mavzu_kod:ds.mavzu_kod,job_id:ds.job_id,avatar_kod:ds.avatar_kod,test_rejim:ds.test_rejim,voice_id:ds.voice_id,talking_photo_id:ds.talking_photo_id,minSoz:ds.minSoz,maxSoz:ds.maxSoz,urinish:ds.urinish||1}};"
     },
     "K1 Compliance": {
       "turi": "executeWorkflow",
@@ -82,7 +151,7 @@
     "K1 natijasini birlashtirish": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var k1=$json;var sc=$(\"Skript tekshiruvi\").item.json;\nvar k1H=k1.holat||\"FAIL\";var xa=sc.xatolar||[];\nif(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}\nreturn{json:{holat:(sc.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,tts_matn:sc.tts_matn,hook:sc.hook,sceneBlocks:sc.sceneBlocks,bolimlar:sc.bolimlar,sarlavha:sc.sarlavha,tavsif:sc.tavsif,teglar:sc.teglar,manbalar:sc.manbalar,faktlar:sc.faktlar,burchak:sc.burchak,job_id:sc.job_id,avatar_kod:sc.avatar_kod,test_rejim:sc.test_rejim,voice_id:sc.voice_id,talking_photo_id:sc.talking_photo_id,urinish:sc.urinish||1}};"
+      "kod": "var k1=$json;var sc=$(\"Yakuniy matn\").item.json;var k1H=k1.holat||\"FAIL\";var xa=sc.xatolar||[];\nif(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}\nreturn{json:{holat:(sc.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,tts_matn:sc.tts_matn,sarlavha:sc.sarlavha,rejim_info:sc.rejim_info,faktlar:sc.faktlar,mavzu_kod:sc.mavzu_kod,job_id:sc.job_id,avatar_kod:sc.avatar_kod,test_rejim:sc.test_rejim,voice_id:sc.voice_id,talking_photo_id:sc.talking_photo_id,urinish:sc.urinish||1}};"
     },
     "PASS?": {
       "turi": "if",
@@ -132,7 +201,7 @@
     },
     "Telegram - Test Preview": {
       "turi": "telegram",
-      "text": "={{ \"🧪 YT Long test | \" + $json.burchak + \"\\n\\nSarlavha: \" + $json.sarlavha + \"\\n\\nSkript (boshlanishi): \" + $json.tts_matn.slice(0,200) }}",
+      "text": "={{ \"🧪 YT Long test | \" + $json.mavzu_kod + \" | \" + $json.rejim_info + \"\\n\\nSarlavha: \" + $json.sarlavha + \"\\n\\nSkript (boshi):\\n\" + $json.tts_matn.slice(0,300) }}",
       "chatId": "-1004462774154",
       "thread": 3,
       "creds": {
@@ -149,7 +218,7 @@
           "mahsulot_kod": "yt_long",
           "variant_idx": 0,
           "tts_matn": "={{ $json.tts_matn }}",
-          "sceneBlocks": "={{ $json.sceneBlocks }}",
+          "sceneBlocks": "={{ [] }}",
           "avatar_kod": "={{ $json.avatar_kod }}",
           "aspect": "16:9",
           "sarlavha": "={{ $json.sarlavha }}",
@@ -262,59 +331,26 @@
         "convertFieldsToString": false
       }
     },
-    "Video URL birlashtirish": {
-      "turi": "code",
-      "mode": "runOnceForEachItem",
-      "kod": "var vr=$json;var sc=$(\"K1 natijasini birlashtirish\").item.json;\nreturn{json:{video_url:vr.video_url||\"\",hook_tugash_s:vr.hook_tugash_s||0,jami_s:vr.jami_s||0,sarlavha:sc.sarlavha,teglar:sc.teglar,burchak:sc.burchak,job_id:sc.job_id}};"
+    "Video va matn": {
+      "turi": "unknown"
     },
     "Telegram - Ko'rib chiqish (YT Long)": {
       "turi": "telegram",
-      "text": "={{ \"✅ YT Long | \" + $json.burchak + \"\\n\\n🎬 \" + $json.video_url + \"\\n\\n\" + $json.sarlavha + \"\\n\" + $json.teglar.slice(0,5).join(\" \") }}",
+      "text": "={{ \"✅ YT Long | \" + $json.mavzu_kod + \" | \" + $json.rejim_info + \"\\n\\nSarlavha: \" + $($(\"K1 natijasini birlashtirish\").item.json.sarlavha||\"\") + \"\\n\\n🎬 \" + $json.video_url }}",
       "chatId": "-1004462774154",
       "thread": 3,
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
     },
-    "Qayta urinish?": {
-      "turi": "code",
-      "mode": "runOnceForEachItem",
-      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,burchak:$json.burchak,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
-    },
-    "Eskalatsiya?": {
-      "turi": "if",
-      "conditions": {
-        "options": {
-          "caseSensitive": true,
-          "leftValue": "",
-          "typeValidation": "strict",
-          "version": 2
-        },
-        "conditions": [
-          {
-            "id": "esc",
-            "leftValue": "={{ $json.eskalatsiya }}",
-            "rightValue": true,
-            "operator": {
-              "type": "boolean",
-              "operation": "equals"
-            }
-          }
-        ],
-        "combinator": "and"
-      }
-    },
     "Telegram - Eskalatsiya": {
       "turi": "telegram",
-      "text": "={{ \"❌ zb-p-yt-long: 3 urinishdan keyin FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
+      "text": "={{ \"❌ zb-p-yt-long: FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
       "chatId": "-1004462774154",
       "thread": 13,
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
-    },
-    "Kirishni yangilash": {
-      "turi": "unknown"
     },
     "Manual Trigger": {
       "turi": "unknown"
@@ -336,40 +372,114 @@
       "main": [
         [
           {
-            "node": "Claude - YT Long Skript",
+            "node": "Pasport o'qish",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Claude - YT Long Skript": {
+    "Pasport o'qish": {
       "main": [
         [
           {
-            "node": "Skript parse",
+            "node": "Epizod bloklarni o'qish",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Skript parse": {
+    "Epizod bloklarni o'qish": {
       "main": [
         [
           {
-            "node": "Skript tekshiruvi",
+            "node": "Bloklarni yig'ish",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Skript tekshiruvi": {
+    "Bloklarni yig'ish": {
       "main": [
         [
+          {
+            "node": "Blok bormi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Blok bormi?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Blok yo'q",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "K1 Compliance",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "QULF rejimi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "QULF rejimi?": {
+      "main": [
+        [
+          {
+            "node": "QULF — So'zma-so'z",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Claude - 90% Silliqlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "QULF — So'zma-so'z": {
+      "main": [
+        [
+          {
+            "node": "Yakuniy matn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - 90% Silliqlash": {
+      "main": [
+        [
+          {
+            "node": "Silliqlangan matn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Silliqlangan matn": {
+      "main": [
+        [
+          {
+            "node": "Yakuniy matn",
             "type": "main",
             "index": 0
           }
@@ -409,7 +519,7 @@
         ],
         [
           {
-            "node": "Qayta urinish?",
+            "node": "Telegram - Eskalatsiya",
             "type": "main",
             "index": 0
           }
@@ -438,58 +548,18 @@
       "main": [
         [
           {
-            "node": "Video URL birlashtirish",
+            "node": "Video va matn",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Video URL birlashtirish": {
+    "Video va matn": {
       "main": [
         [
           {
             "node": "Telegram - Ko'rib chiqish (YT Long)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Qayta urinish?": {
-      "main": [
-        [
-          {
-            "node": "Eskalatsiya?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Eskalatsiya?": {
-      "main": [
-        [
-          {
-            "node": "Telegram - Eskalatsiya",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Kirishni yangilash",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Kirishni yangilash": {
-      "main": [
-        [
-          {
-            "node": "Claude - YT Long Skript",
             "type": "main",
             "index": 0
           }
@@ -508,5 +578,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T08:41:09.577Z"
+  "vaqt": "2026-09-23T08:51:09.158Z"
 }
