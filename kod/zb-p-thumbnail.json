@@ -1,0 +1,191 @@
+{
+  "nodes": {
+    "Execute Workflow Trigger": {
+      "turi": "executeWorkflow",
+      "workflowId": "",
+      "inputs": {
+        "values": [
+          {
+            "name": "paket",
+            "type": "object"
+          },
+          {
+            "name": "yt_sarlavha"
+          }
+        ]
+      }
+    },
+    "Kirish tayyorlash": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var p=$json.paket||$json;\nvar burchak=(p.burchaklar&&p.burchaklar.thumbnail&&p.burchaklar.thumbnail[0])||\"Thumbnail\";\nvar tpid=p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\";\nvar yt_sar=$json.yt_sarlavha||p.sarlavha||burchak;\nvar faktlar=p.faktlar||[];\n// Validate raqam in faktlar\nvar fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}\n// Check thumbnail raqam\nvar pm=burchak.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];var xatolar=[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var fk=0;fk<fr.length;fk++){if(fr[fk].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",burchak:burchak,yt_sarlavha:yt_sar,faktlar:faktlar,talking_photo_id:tpid,xatolar:xatolar,holat:xatolar.length===0?\"PASS\":\"FAIL\"}};"
+    },
+    "HeyGen - Avatar rasm URL": {
+      "turi": "http",
+      "method": "GET",
+      "url": "={{ \"https://api.heygen.com/v2/talking_photo/\" + $json.talking_photo_id }}",
+      "body": "",
+      "sendBody": false,
+      "creds": {
+        "httpTemplatedCustomAuth": "HeyGen API (Boburbek K)"
+      }
+    },
+    "Thumbnail HTML qurish": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var inp=$(\"Kirish tayyorlash\").item.json;\nvar avatarUrl=($json.data&&$json.data.image_url)||($json.image_url)||\"\";\nvar raqam=inp.burchak;\nvar sar=(inp.yt_sarlavha||\"\").split(new RegExp(\"\\\\s+\",\"g\")).slice(0,3).join(\" \");\n\nvar variants=[\n  {accentColor:\"#D6AD62\",accentName:\"gold\"},\n  {accentColor:\"#E0584A\",accentName:\"clay\"},\n  {accentColor:\"#82BD8F\",accentName:\"sage\"}\n];\n\nvar htmls=variants.map(function(v,i){\nvar html='<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Sora:wght@700&display=block\"><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{width:1280px;height:720px;overflow:hidden;}body{background:#0A1727;display:flex;align-items:center;font-family:Sora,sans-serif;}.avatar-col{width:50%;height:100%;position:relative;overflow:hidden;}.avatar-col img{width:100%;height:100%;object-fit:cover;object-position:top;}.gradient-overlay{position:absolute;top:0;right:0;bottom:0;width:60%;background:linear-gradient(to right,transparent,#0A1727);}.right-col{width:50%;padding:60px 80px;display:flex;flex-direction:column;justify-content:center;gap:30px;}.big-num{font-size:160px;font-weight:700;color:'+v.accentColor+';line-height:1;letter-spacing:-4px;}.sub-text{font-size:52px;font-weight:700;color:#F7F5F0;line-height:1.2;max-width:500px;}.source-label{font-size:24px;font-weight:700;color:rgba(247,245,240,.5);}</style></head><body><div class=\"avatar-col\">'+(avatarUrl?'<img src=\"'+avatarUrl+'\" alt=\"avatar\">':\"\")+'<div class=\"gradient-overlay\"></div></div><div class=\"right-col\"><div class=\"big-num\">'+raqam+'</div><div class=\"sub-text\">'+sar+'</div><div class=\"source-label\">@zibrock_turkiye</div></div></body></html>';\nreturn{variant:v.accentName,html:html};\n});\n\nreturn{json:{htmls:htmls,job_id:inp.job_id,burchak:inp.burchak,yt_sarlavha:inp.yt_sarlavha}};"
+    },
+    "Variantlarni ajratish": {
+      "turi": "unknown"
+    },
+    "carousel-render (PNG)": {
+      "turi": "executeWorkflow",
+      "workflowId": "M3tR7zNQP8ITFWrH",
+      "inputs": {
+        "mappingMode": "defineBelow",
+        "value": {
+          "brand": "={{ { brand_name: \"ZIBROCK\", handle: \"@zibrock_turkiye\", output_format: \"png\", motif_key: \"instrument\", color_ground: \"#0A1727\", color_tile: \"#D6AD62\", color_porcelain: \"#F7F5F0\", color_gold: \"#D6AD62\", color_ink: \"#0A1727\", color_muted_dark: \"#9CA3AF\", color_muted_light: \"#6B7280\", font_display: \"Sora\", font_body: \"Inter\", font_css_url: \"https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Inter:wght@600&display=block\" } }}",
+          "carousel": "={{ { language: \"tr\", slides: [{ n: 1, layout: \"cover\", title: $json.htmls.variant + \" variant\" }], caption: \"\", hashtags: [] } }}",
+          "carouselId": "={{ $(\"Thumbnail HTML qurish\").item.json.job_id + \"-thumb-\" + $json.htmls.variant }}"
+        },
+        "schema": [
+          {
+            "id": "brand",
+            "displayName": "brand",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "object"
+          },
+          {
+            "id": "carousel",
+            "displayName": "carousel",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "object"
+          },
+          {
+            "id": "carouselId",
+            "displayName": "carouselId",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "string"
+          }
+        ],
+        "attemptToConvertTypes": false,
+        "convertFieldsToString": true
+      }
+    },
+    "3 variantni birlashtirish": {
+      "turi": "unknown"
+    },
+    "Telegram - Ko'rib chiqish (Thumbnail)": {
+      "turi": "telegram",
+      "text": "",
+      "chatId": "-1004462774154",
+      "thread": 3,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "Manual Trigger": {
+      "turi": "unknown"
+    }
+  },
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Kirish tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirish tayyorlash": {
+      "main": [
+        [
+          {
+            "node": "HeyGen - Avatar rasm URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HeyGen - Avatar rasm URL": {
+      "main": [
+        [
+          {
+            "node": "Thumbnail HTML qurish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thumbnail HTML qurish": {
+      "main": [
+        [
+          {
+            "node": "Variantlarni ajratish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Variantlarni ajratish": {
+      "main": [
+        [
+          {
+            "node": "carousel-render (PNG)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "carousel-render (PNG)": {
+      "main": [
+        [
+          {
+            "node": "3 variantni birlashtirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3 variantni birlashtirish": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Ko'rib chiqish (Thumbnail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Kirish tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "vaqt": "2026-09-23T08:31:07.240Z"
+}
