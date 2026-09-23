@@ -61,7 +61,7 @@
     "Pasport o'qish": {
       "turi": "unknown"
     },
-    "Hook o'qish": {
+    "Hook o'qish (hammasi)": {
       "turi": "unknown"
     },
     "CTA o'qish": {
@@ -373,6 +373,11 @@
     },
     "Manual Trigger": {
       "turi": "unknown"
+    },
+    "Hook o'qish": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var all=$input.all().filter(function(i){return i.json&&i.json.mavzu_kod;});\nvar idx=parseInt($(\"Kirish tayyorlash\").first().json.variant_idx||0,10)||0;\nif(!all.length){return [{json:{xato:true,tur:\"HOOK_YOQ\",xabar:\"hooklar jadvalida bu mavzu uchun hook yoq\"}}];}\nvar sel=all[idx%all.length].json;\nreturn [{json:Object.assign({},sel,{hook_idx:idx,hook_jami:all.length})}];"
     }
   },
   "connections": {
@@ -431,18 +436,7 @@
       "main": [
         [
           {
-            "node": "Hook o'qish",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Hook o'qish": {
-      "main": [
-        [
-          {
-            "node": "CTA o'qish",
+            "node": "Hook o'qish (hammasi)",
             "type": "main",
             "index": 0
           }
@@ -634,7 +628,29 @@
           }
         ]
       ]
+    },
+    "Hook o'qish (hammasi)": {
+      "main": [
+        [
+          {
+            "node": "Hook o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hook o'qish": {
+      "main": [
+        [
+          {
+            "node": "CTA o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "vaqt": "2026-09-23T18:01:00.985Z"
+  "vaqt": "2026-09-23T18:11:00.421Z"
 }
