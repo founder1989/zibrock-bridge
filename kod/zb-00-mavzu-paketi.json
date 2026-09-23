@@ -1,0 +1,187 @@
+{
+  "nodes": {
+    "Manual Trigger": {
+      "turi": "unknown"
+    },
+    "Kirishni tayyorlash": {
+      "turi": "unknown"
+    },
+    "s_jadval'dan faktlar": {
+      "turi": "unknown"
+    },
+    "Mavzu bo'yicha filtrlash": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var mavzu_kod = $('Kirishni tayyorlash').first().json.mavzu_kod || 'T1';\nvar rows = $input.all().map(function(i) { return i.json; });\nvar filtered = rows.filter(function(r) {\n  var mk = String(r.mavzu_kodlar || '');\n  return mk.indexOf(mavzu_kod) >= 0;\n});\nvar inp = $('Kirishni tayyorlash').first().json;\nreturn [{ json: {\n  faktlar: filtered,\n  mavzu_kod: inp.mavzu_kod,\n  avatar_kod: inp.avatar_kod,\n  foydalanuvchi_matni: inp.foydalanuvchi_matni,\n  fakt_soni: filtered.length\n} }];"
+    },
+    "Fakt bormi?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "fakt",
+            "leftValue": "={{ $json.fakt_soni }}",
+            "rightValue": 0,
+            "operator": {
+              "type": "number",
+              "operation": "gt"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Claude - Burchaklar yaratish": {
+      "turi": "ai",
+      "model": "claude-sonnet-4-6",
+      "maxTokens": 2000,
+      "system": "",
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
+    },
+    "Burchaklar parse": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var raw = $json.content && $json.content[0] && $json.content[0].text || JSON.stringify($json);\nvar parsed;\ntry {\n  var s = raw.indexOf('{');\n  var e = raw.lastIndexOf('}');\n  parsed = JSON.parse(raw.slice(s, e+1));\n} catch(err) {\n  return { json: { xato: true, tur: 'PARSE_FAIL', xabar: String(err) } };\n}\nvar inp = $(\"Mavzu bo'yicha filtrlash\").first().json;\nreturn { json: {\n  burchaklar: parsed.burchaklar || {},\n  sarlavha: parsed.sarlavha || '',\n  faktlar: inp.faktlar,\n  mavzu_kod: inp.mavzu_kod,\n  avatar_kod: inp.avatar_kod,\n  foydalanuvchi_matni: inp.foydalanuvchi_matni,\n  ok: !parsed.xato\n} };"
+    },
+    "Burchaklar tekshiruvi": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var b = $json.burchaklar || {};\nvar xatolar = [];\nif (!b.yt_long || b.yt_long.length !== 1) xatolar.push(\"yt_long: 1 ta bolishi kerak, topildi: \" + (b.yt_long ? b.yt_long.length : 0));\nif (!b.yt_short || b.yt_short.length !== 3) xatolar.push(\"yt_short: 3 ta bolishi kerak, topildi: \" + (b.yt_short ? b.yt_short.length : 0));\nif (!b.tiktok || b.tiktok.length !== 4) xatolar.push(\"tiktok: 4 ta bolishi kerak, topildi: \" + (b.tiktok ? b.tiktok.length : 0));\nif (!b.reel || b.reel.length !== 2) xatolar.push(\"reel: 2 ta bolishi kerak, topildi: \" + (b.reel ? b.reel.length : 0));\nif (!b.carousel || b.carousel.length !== 1) xatolar.push(\"carousel: 1 ta bolishi kerak, topildi: \" + (b.carousel ? b.carousel.length : 0));\nif (!b.tg_post || b.tg_post.length !== 1) xatolar.push(\"tg_post: 1 ta bolishi kerak, topildi: \" + (b.tg_post ? b.tg_post.length : 0));\nif (!b.thumbnail || b.thumbnail.length !== 1) xatolar.push(\"thumbnail: 1 ta bolishi kerak, topildi: \" + (b.thumbnail ? b.thumbnail.length : 0));\nvar faktlar = $json.faktlar || [];\nvar faktRaqamlar = [];\nfor (var i = 0; i < faktlar.length; i++) {\n  var qv = String(faktlar[i].qiymat || faktlar[i].matn_tr || \"\");\n  var m = qv.match(new RegExp(\"[0-9]+\",\"g\")) || [];\n  for (var j = 0; j < m.length; j++) faktRaqamlar.push(m[j]);\n}\nvar allBurchakText = JSON.stringify(b);\nvar pctM = allBurchakText.match(new RegExp(\"%([0-9]+)\",\"g\")) || [];\nfor (var pi = 0; pi < pctM.length; pi++) {\n  var num = pctM[pi].replace(\"%\",\"\");\n  var found = false;\n  for (var fk = 0; fk < faktRaqamlar.length; fk++) { if (faktRaqamlar[fk].indexOf(num) >= 0) { found = true; break; } }\n  if (!found) xatolar.push(\"Ixtiro raqam: \" + pctM[pi] + \" faktlarda yoq\");\n}\n// Build job_id\nvar now = new Date();\nvar sana = now.toISOString().slice(0,10).replace(new RegExp('-','g'),'');\nvar rand = Math.random().toString(36).slice(2,6).toUpperCase();\nvar job_id = $json.mavzu_kod + '-' + sana + '-' + rand;\n\nreturn { json: {\n  job_id: job_id,\n  mavzu_kod: $json.mavzu_kod,\n  avatar_kod: $json.avatar_kod,\n  til: 'tr',\n  test_rejim: false,\n  sarlavha: $json.sarlavha,\n  faktlar: $json.faktlar,\n  burchaklar: $json.burchaklar,\n  tekshiruv_xatolar: xatolar,\n  holat: xatolar.length === 0 ? 'PASS' : 'FAIL',\n  provenance: { workflow: 'zb-00-mavzu-paketi', model: 'claude-sonnet-4-6', urinish: 1, vaqt: now.toISOString() }\n} };"
+    },
+    "Telegram - Fakt yo'q": {
+      "turi": "telegram",
+      "text": "={{ \"⚠️ zb-00-mavzu-paketi: s_jadval'da \" + $json.mavzu_kod + \" uchun fakt yo'q. Eskalatsiya.\" }}",
+      "chatId": "-1004462774154",
+      "thread": 13,
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "Execute Workflow Trigger": {
+      "turi": "executeWorkflow",
+      "workflowId": "",
+      "inputs": {
+        "values": [
+          {
+            "name": "mavzu_kod",
+            "type": "string"
+          },
+          {
+            "name": "avatar_kod",
+            "type": "string"
+          },
+          {
+            "name": "foydalanuvchi_matni",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Kirishni tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirishni tayyorlash": {
+      "main": [
+        [
+          {
+            "node": "s_jadval'dan faktlar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "s_jadval'dan faktlar": {
+      "main": [
+        [
+          {
+            "node": "Mavzu bo'yicha filtrlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mavzu bo'yicha filtrlash": {
+      "main": [
+        [
+          {
+            "node": "Fakt bormi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fakt bormi?": {
+      "main": [
+        [
+          {
+            "node": "Claude - Burchaklar yaratish",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Fakt yo'q",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - Burchaklar yaratish": {
+      "main": [
+        [
+          {
+            "node": "Burchaklar parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Burchaklar parse": {
+      "main": [
+        [
+          {
+            "node": "Burchaklar tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Kirishni tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "vaqt": "2026-09-23T08:31:05.938Z"
+}
