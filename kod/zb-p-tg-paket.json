@@ -66,45 +66,7 @@
     "Setup birlashtirish": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var rows=$input.all().map(function(i){return i.json;});var token=rows.length>0?(rows[0].qiymat||\"\"):\"\";var inp=$(\"Kirish tayyorlash\").first().json;if(token.length>10){return[{json:{telegraph_token:token,mavzu_kod:inp.mavzu_kod,test_rejim:inp.test_rejim,video_url:inp.video_url,yt_url:inp.yt_url,faktlar:inp.faktlar,job_id:inp.job_id,need_create:false}}];}return[{json:{telegraph_token:\"\",mavzu_kod:inp.mavzu_kod,test_rejim:inp.test_rejim,video_url:inp.video_url,yt_url:inp.yt_url,faktlar:inp.faktlar,job_id:inp.job_id,need_create:true}}];"
-    },
-    "Token yaratish kerak?": {
-      "turi": "if",
-      "conditions": {
-        "options": {
-          "caseSensitive": true,
-          "leftValue": "",
-          "typeValidation": "strict",
-          "version": 2
-        },
-        "conditions": [
-          {
-            "id": "t",
-            "leftValue": "={{ $json.need_create }}",
-            "rightValue": true,
-            "operator": {
-              "type": "boolean",
-              "operation": "equals"
-            }
-          }
-        ],
-        "combinator": "and"
-      }
-    },
-    "Telegraph Account": {
-      "turi": "http",
-      "method": "POST",
-      "url": "https://api.telegra.ph/createAccount",
-      "body": "{\"short_name\":\"ZIBROCK\",\"author_name\":\"ZIBROCK araştırma ekibi\"}",
-      "sendBody": true
-    },
-    "Token saqlash": {
-      "turi": "code",
-      "mode": "runOnceForAllItems",
-      "kod": "var res=$input.first().json;var token=(res.result&&res.result.access_token)||\"\";var inp=$(\"Setup birlashtirish\").first().json;return[{json:{kalit:\"telegraph_token\",qiymat:token,_token:token,mavzu_kod:inp.mavzu_kod,test_rejim:inp.test_rejim,video_url:inp.video_url,yt_url:inp.yt_url,faktlar:inp.faktlar,job_id:inp.job_id}}];"
-    },
-    "Token DB yozish": {
-      "turi": "unknown"
+      "kod": "var rows=$input.all().map(function(i){return i.json;});var existing=\"\";for(var i=0;i<rows.length;i++){if(rows[i].kalit===\"telegraph_token\"&&rows[i].qiymat&&rows[i].qiymat.length>10){existing=rows[i].qiymat;break;}}var ki=$(\"Kirish tayyorlash\").first().json;var tok=existing;if(!tok){var resp=await $helpers.httpRequest({method:\"POST\",url:\"https://api.telegra.ph/createAccount\",json:true,body:{short_name:\"ZIBROCK\",author_name:\"ZIBROCK ekibi\"}});tok=(resp.result&&resp.result.access_token)||\"\";}return[{json:{telegraph_token:tok,mavzu_kod:ki.mavzu_kod,test_rejim:ki.test_rejim,video_url:ki.video_url,yt_url:ki.yt_url,faktlar:ki.faktlar,job_id:ki.job_id}}];"
     },
     "Epizod o'qish": {
       "turi": "unknown"
@@ -663,63 +625,18 @@
       "main": [
         [
           {
-            "node": "Token yaratish kerak?",
+            "node": "Epizod o'qish",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Token yaratish kerak?": {
+    "Epizod o'qish": {
       "main": [
         [
-          {
-            "node": "Telegraph Account",
-            "type": "main",
-            "index": 0
-          },
           {
             "node": "CTA o'qish",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Epizod o'qish",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Telegraph Account": {
-      "main": [
-        [
-          {
-            "node": "Token saqlash",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Token saqlash": {
-      "main": [
-        [
-          {
-            "node": "Token DB yozish",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Token DB yozish": {
-      "main": [
-        [
-          {
-            "node": "Epizod o'qish",
             "type": "main",
             "index": 0
           }
@@ -1120,5 +1037,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T19:51:08.744Z"
+  "vaqt": "2026-09-23T20:01:08.802Z"
 }
