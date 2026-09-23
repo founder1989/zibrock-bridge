@@ -15,7 +15,7 @@
         ],
         "additionalFields": {}
       },
-      "webhookId": "be205895-ff16-46eb-89bb-69c514d9ede8",
+      "webhookId": "076805d7-7f83-42d0-93bb-00ee36fb3c90",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -94,7 +94,7 @@
           "text": "Qabul qilindi"
         }
       },
-      "webhookId": "d131ef68-14f9-4f7c-8698-279af48069a0",
+      "webhookId": "b472619f-72fc-4590-84e6-f1f78e8e31a1",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -290,7 +290,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "7adba43e-20d5-4ae5-8a8c-9576c0761042",
+      "webhookId": "f9cdc397-d731-40c8-bf10-5b4f4afb40e7",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -390,7 +390,7 @@
           "message_thread_id": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}"
         }
       },
-      "webhookId": "6e3d5f88-dd21-42b1-8743-667f5ea22ed9",
+      "webhookId": "0ea8f1e0-9265-44e9-a54e-6268b3f57b48",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -504,7 +504,7 @@
       "parameters": {
         "amount": 10
       },
-      "webhookId": "e6733b3f-abb7-4545-ac8d-14372e952777",
+      "webhookId": "e3e24550-c743-471e-884c-c149555c65cb",
       "creds": {}
     },
     "Shotstack - Poll Motion Audio": {
@@ -619,7 +619,7 @@
       "parameters": {
         "amount": 30
       },
-      "webhookId": "6f718a6a-4533-4b03-b9dd-910f43ca147c",
+      "webhookId": "bcf8c37a-3035-4ff2-b4c8-cf4a45911e9b",
       "creds": {}
     },
     "Shotstack - Poll Motion Render": {
@@ -690,7 +690,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "6f1d4236-9759-44fd-bf5f-13ac1ba36e2f",
+      "webhookId": "e5ea1431-9831-4ca1-98df-5c447ba3aad2",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -996,15 +996,18 @@
       "parameters": {},
       "creds": {}
     },
-    "K1 · Yurist (F3)": {
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "id": "0a71be00-aa99-4bc8-b5e1-18a713559230",
+    "K1 · Yurist tekshiruvi": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "6b463a9e-fbe2-4e70-9522-355d8a89f67b",
       "position": [
         -2560,
-        672
+        592
       ],
-      "parameters": {},
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// F3: K1 compliance inline (zb-k1-compliance bilan bir xil mantiq, 1-bo'lim muzlatilgan)\nvar matn=$json.matn||\"\";var variant=$json.variant||\"full\";var faktlar=$json.faktlar||[];\nfunction normTR(s){return String(s||\"\").toLowerCase().replace(/[İ]/g,\"i\").replace(/[I]/g,\"ı\").replace(/ı/g,\"i\").replace(/ğ/g,\"g\").replace(/ş/g,\"s\").replace(/ç/g,\"c\").replace(/ö/g,\"o\").replace(/ü/g,\"u\");}\nvar matnN=normTR(matn);var topilmalar=[];\nvar RED_RAW=[\"garanti eder\",\"garanti ediyoruz\",\"garantili\",\"kesin kar\",\"kesin kazanc\",\"risksiz\",\"zahmetsiz gelir\",\"gunde kazan\",\"ayda kazan\",\"hizli zengin\",\"mutlaka kazanirsin\",\"kesinlikle kazanir\",\"yatirim tavsiyesi\"];\nvar RED=RED_RAW.map(normTR);\nvar ORANGE_RAW=[\"challenge\",\"prop firma\",\"funded\",\"payout\",\"kaldirac\",\"spread\",\"hesap ac\",\"fiyat tablosu\",\"a-book\",\"instant pro\",\"prime\"];\nvar ORANGE=ORANGE_RAW.map(normTR);\nvar EXC_RAW=[\"garanti degil\",\"garanti vermiyoruz\",\"garanti yoktur\"];\nvar EXC=EXC_RAW.map(normTR);\nfor(var ri=0;ri<RED.length;ri++){var rp=RED[ri];var idx=matnN.indexOf(rp);while(idx>=0){var st=Math.max(0,idx-25);var en=Math.min(matnN.length,idx+rp.length+25);var lc=matnN.slice(st,en);var exc=false;for(var ei=0;ei<EXC.length;ei++){if(lc.indexOf(EXC[ei])>=0){exc=true;break;}}if(!exc)topilmalar.push({tur:\"RED\",atama:RED_RAW[ri],parcha:matn.slice(Math.max(0,idx-20),idx+rp.length+20)});idx=matnN.indexOf(rp,idx+1);}}\nif(variant===\"metasafe\"){for(var oi=0;oi<ORANGE.length;oi++){var op=ORANGE[oi];var oidx=matnN.indexOf(op);if(oidx>=0)topilmalar.push({tur:\"ORANGE\",atama:ORANGE_RAW[oi],parcha:matn.slice(Math.max(0,oidx-20),oidx+op.length+20)});}}\nvar fr=[];for(var fi=0;fi<faktlar.length;fi++){var fm=String(faktlar[fi].matn||\"\");var fms=fm.match(new RegExp(\"[0-9]+(?:[.,][0-9]+)?\",\"g\"))||[];for(var fmi=0;fmi<fms.length;fmi++)fr.push(parseFloat(fms[fmi].replace(\",\",\".\")));}\nvar pPat=new RegExp(\"%([0-9]+(?:[,.-][0-9]+)?)\",\"g\");var pm;while((pm=pPat.exec(matn))!==null){var nv=parseFloat(pm[1].replace(\",\",\".\"));var found=false;for(var fk=0;fk<fr.length;fk++){if(Math.abs(fr[fk]-nv)<0.5){found=true;break;}}if(!found&&faktlar.length>0)topilmalar.push({tur:\"IXTIRO_RAQAM\",atama:pm[0],parcha:matn.slice(Math.max(0,pm.index-15),pm.index+pm[0].length+15)});}\nvar holat=topilmalar.length===0?\"PASS\":\"FAIL\";\nreturn{json:{holat:holat,topilmalar:topilmalar}};"
+      },
       "creds": {}
     },
     "RN · Render (F6)": {
@@ -1424,7 +1427,7 @@
           "message_thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "18147db5-9e17-4104-bd86-29acff6aa526",
+      "webhookId": "fcc5312c-9c69-4f5b-9b65-0e8dbf925d5e",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1504,17 +1507,27 @@
         "workflowId": {
           "__rl": true,
           "mode": "id",
-          "value": "Ls4eWDug9Lj5lPVP",
-          "cachedResultName": "zb-k1-compliance"
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
+            "rol": "k1",
             "matn": "={{ $json.merged_response || \"\" }}",
             "variant": "={{ $json.variant || \"full\" }}",
             "faktlar": "={{ [] }}"
           },
           "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
             {
               "id": "matn",
               "displayName": "matn",
@@ -1725,7 +1738,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "89e036c4-ea82-4c47-b06b-02c9a84e4a45",
+      "webhookId": "9613452e-dc60-4928-961f-c693bf6c0675",
       "creds": {}
     },
     "HeyGen Video Status (Bev)": {
@@ -1902,7 +1915,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "f21e448b-a182-40d9-bf4a-0070e919a70b",
+      "webhookId": "2437b690-f0ec-47d5-b16f-3af87922260c",
       "creds": {}
     },
     "Hyperframes status (Bev)": {
@@ -1987,7 +2000,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "03d4f14f-4acf-481d-9aa8-9337acfb75ac",
+      "webhookId": "96ed1605-e908-4354-affd-f74d76bf5119",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2078,17 +2091,27 @@
         "workflowId": {
           "__rl": true,
           "mode": "id",
-          "value": "Ls4eWDug9Lj5lPVP",
-          "cachedResultName": "zb-k1-compliance"
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
+            "rol": "k1",
             "matn": "={{ $json.merged_response || \"\" }}",
             "variant": "={{ $json.variant || \"full\" }}",
             "faktlar": "={{ [] }}"
           },
           "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
             {
               "id": "matn",
               "displayName": "matn",
@@ -2313,7 +2336,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "a0b0b7ae-e944-4267-bd4f-9833128c53f6",
+      "webhookId": "46bd4bf5-17ce-4492-88fe-a30694f9d840",
       "creds": {}
     },
     "HeyGen Video Status (AI)": {
@@ -2490,7 +2513,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "c024a3d9-958c-490d-b82f-b2a1058ef93e",
+      "webhookId": "c08d6ac6-0509-4ae8-bef3-4edac6e9b5d9",
       "creds": {}
     },
     "Hyperframes status (AI)": {
@@ -2608,7 +2631,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "e84ff5c6-8df9-445e-8dd9-82179b4980cd",
+      "webhookId": "c4bc43f3-28b9-45db-9ef9-7f99ff04cb8c",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2630,7 +2653,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "661d7a0c-d8c2-4b62-be4e-be52b588c5a8",
+      "webhookId": "34d10c43-bbeb-4d83-bd84-6e1bc42fa116",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2688,7 +2711,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "04e71596-4879-4d98-87cd-9a3797cd31fc",
+      "webhookId": "80429620-3beb-4b58-9385-2cbda861c57d",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -3143,7 +3166,7 @@
         ],
         [
           {
-            "node": "K1 · Yurist (F3)",
+            "node": "K1 · Yurist tekshiruvi",
             "type": "main",
             "index": 0
           }
@@ -4050,5 +4073,5 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "vaqt": "2026-09-23T22:10:57.397Z"
+  "vaqt": "2026-09-23T22:20:57.273Z"
 }
