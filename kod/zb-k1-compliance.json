@@ -1,0 +1,113 @@
+{
+  "nodes": {
+    "Manual Trigger": {
+      "turi": "unknown"
+    },
+    "Test holatlari": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "// 6 ta test holati\nreturn [\n  { json: { matn: \"Bu yöntem garanti eder\", variant: \"full\", faktlar: [], kutilgan: \"FAIL\" } },\n  { json: { matn: \"Kâr garanti değil, yatırım yaparken dikkatli olun\", variant: \"full\", faktlar: [], kutilgan: \"PASS\" } },\n  { json: { matn: \"Garanti değil. Ama bu sistem garanti eder\", variant: \"full\", faktlar: [], kutilgan: \"FAIL\" } },\n  { json: { matn: \"Günde kazanın, hızlı zengin olun!\", variant: \"full\", faktlar: [], kutilgan: \"FAIL\" } },\n  { json: { matn: \"Challenge al, funded trader bo\", variant: \"metasafe\", faktlar: [], kutilgan: \"FAIL\" } },\n  { json: { matn: \"Trader'ların %62'si kaybediyor\", variant: \"full\", faktlar: [{\"s_id\":\"S01\",\"matn\":\"%74-89 zarar\",\"manba\":\"ESMA\"}], kutilgan: \"FAIL\" } }\n];"
+    },
+    "Kirish tayyorlash": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "return { json: {\n  matn: $json.matn || '',\n  variant: $json.variant || 'full',\n  faktlar: $json.faktlar || [],\n  kutilgan: $json.kutilgan || null\n} };"
+    },
+    "K1 Compliance tekshiruvi": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var matn = $json.matn || '';\nvar variant = $json.variant || 'full';\nvar faktlar = $json.faktlar || [];\n\n// 1. Turkish normalization\nfunction normTR(s) {\n  return String(s || '').toLowerCase()\n    .replace(/İ/g, 'i').replace(/I/g, 'ı')\n    .replace(/ı/g, 'i')\n    .replace(/ğ/g, 'g').replace(/ş/g, 's').replace(/ç/g, 'c')\n    .replace(/ö/g, 'o').replace(/ü/g, 'u');\n}\n\nvar matnN = normTR(matn);\nvar topilmalar = [];\n\n// 2. RED list (normalized)\nvar RED_RAW = [\n  'garanti eder','garanti ediyoruz','garantili',\n  'kesin kar','kesin kazanc','risksiz',\n  'zahmetsiz gelir','gunde kazan','ayda kazan',\n  'hizli zengin','mutlaka kazanirsin','kesinlikle kazanir',\n  'yatirim tavsiyesi'\n];\n// Normalize RED list\nvar RED = RED_RAW.map(normTR);\n\n// ORANGE list (metasafe only)\nvar ORANGE_RAW = [\n  'challenge','prop firma','funded','payout',\n  'kaldirac','spread','hesap ac','fiyat tablosu',\n  'a-book','instant pro','prime'\n];\nvar ORANGE = ORANGE_RAW.map(normTR);\n\n// Exception phrases (normalized)\nvar EXCEPTIONS_RAW = ['garanti degil','garanti vermiyoruz','garanti yoktur'];\nvar EXCEPTIONS = EXCEPTIONS_RAW.map(normTR);\n\n// 3. Check RED list with LOCAL exception (±25 chars)\nfor (var ri = 0; ri < RED.length; ri++) {\n  var redPhrase = RED[ri];\n  var idx = matnN.indexOf(redPhrase);\n  while (idx >= 0) {\n    // Check local exception within ±25 chars\n    var start = Math.max(0, idx - 25);\n    var end = Math.min(matnN.length, idx + redPhrase.length + 25);\n    var localCtx = matnN.slice(start, end);\n    var isExcepted = false;\n    for (var ei = 0; ei < EXCEPTIONS.length; ei++) {\n      if (localCtx.indexOf(EXCEPTIONS[ei]) >= 0) {\n        isExcepted = true;\n        break;\n      }\n    }\n    if (!isExcepted) {\n      topilmalar.push({\n        tur: 'RED',\n        atama: RED_RAW[ri],\n        parcha: matn.slice(Math.max(0, idx - 20), idx + redPhrase.length + 20)\n      });\n    }\n    idx = matnN.indexOf(redPhrase, idx + 1);\n  }\n}\n\n// 4. Check ORANGE list (metasafe only)\nif (variant === 'metasafe') {\n  for (var oi = 0; oi < ORANGE.length; oi++) {\n    var orangePhrase = ORANGE[oi];\n    var oidx = matnN.indexOf(orangePhrase);\n    if (oidx >= 0) {\n      topilmalar.push({\n        tur: 'ORANGE',\n        atama: ORANGE_RAW[oi],\n        parcha: matn.slice(Math.max(0, oidx - 20), oidx + orangePhrase.length + 20)\n      });\n    }\n  }\n}\n\n// 5. Number check: every % number in text must be in faktlar\n// Parse numbers from faktlar\nvar faktlarRaqamlar = [];\nfor (var fi = 0; fi < faktlar.length; fi++) {\n  var fm = String(faktlar[fi].matn || '');\n  // Extract all numbers from faktlar text\n  var fmatches = fm.match(/[0-9]+(?:[.,][0-9]+)?/g) || [];\n  for (var fmi = 0; fmi < fmatches.length; fmi++) {\n    faktlarRaqamlar.push(parseFloat(fmatches[fmi].replace(',', '.')));\n  }\n  // Also check qiymat field\n  if (faktlar[fi].qiymat) {\n    var qVal = String(faktlar[fi].qiymat || '');\n    var qMatch = qVal.match(/[0-9]+(?:[.,][0-9]+)?/g) || [];\n    for (var qi = 0; qi < qMatch.length; qi++) faktlarRaqamlar.push(parseFloat(qMatch[qi].replace(',', '.')));\n  }\n}\n\n// Turkish number words to digits\nvar trNums = {\n  'sifir':0,'bir':1,'iki':2,'uc':3,'dort':4,'bes':5,\n  'alti':6,'yedi':7,'sekiz':8,'dokuz':9,'on':10,\n  'yirmi':20,'otuz':30,'kirk':40,'elli':50,\n  'altmis':60,'yetmis':70,'seksen':80,'doksan':90,\n  'yuz':100,'bin':1000\n};\n\n// Find % numbers in matn\n// Match patterns: %97, %74-89, yüzde doksan yedi etc\nvar percentPattern = new RegExp('%([0-9]+(?:[,.-][0-9]+)?)', 'g');\nvar pm;\nwhile ((pm = percentPattern.exec(matn)) !== null) {\n  var numStr = pm[1].replace(',', '.');\n  var numVal = parseFloat(numStr);\n  // Check if this number (or range component) is in faktlar\n  var found = false;\n  for (var fk = 0; fk < faktlarRaqamlar.length; fk++) {\n    if (Math.abs(faktlarRaqamlar[fk] - numVal) < 0.5) { found = true; break; }\n  }\n  if (!found && faktlar.length > 0) {\n    topilmalar.push({\n      tur: 'IXTIRO_RAQAM',\n      atama: pm[0],\n      parcha: matn.slice(Math.max(0, pm.index - 15), pm.index + pm[0].length + 15)\n    });\n  }\n}\n\nvar holat = topilmalar.length === 0 ? 'PASS' : 'FAIL';\nreturn { json: { holat: holat, topilmalar: topilmalar, matn: matn, variant: variant, kutilgan: $json.kutilgan || null } };"
+    },
+    "Test natijasini formatlash": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var holat = $json.holat;\nvar kutilgan = $json.kutilgan;\nvar ok = (kutilgan === null) || (holat === kutilgan);\nvar emoji = ok ? 'OK' : 'XATO';\nreturn { json: {\n  holat: holat,\n  topilmalar: $json.topilmalar,\n  matn: $json.matn,\n  variant: $json.variant,\n  kutilgan: kutilgan,\n  test_ok: ok,\n  natija: emoji + ' | ' + $json.matn.slice(0, 40) + ' | ' + holat + ' (kutilgan: ' + (kutilgan || 'n/a') + ')'\n} };"
+    },
+    "Execute Workflow Trigger": {
+      "turi": "executeWorkflow",
+      "workflowId": "",
+      "inputs": {
+        "values": [
+          {
+            "name": "matn",
+            "type": "string"
+          },
+          {
+            "name": "variant",
+            "type": "string"
+          },
+          {
+            "name": "faktlar",
+            "type": "array"
+          }
+        ]
+      }
+    },
+    "Natijani qaytarish": {
+      "turi": "unknown"
+    }
+  },
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Test holatlari",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test holatlari": {
+      "main": [
+        [
+          {
+            "node": "Kirish tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirish tayyorlash": {
+      "main": [
+        [
+          {
+            "node": "K1 Compliance tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K1 Compliance tekshiruvi": {
+      "main": [
+        [
+          {
+            "node": "Test natijasini formatlash",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Natijani qaytarish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Kirish tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "vaqt": "2026-09-23T08:30:58.861Z"
+}
