@@ -176,7 +176,7 @@
     "Parse P2": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);var p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){p={raqam:\"\",rang:\"gold\",izoh:\"\",manba_qisqa:\"\",caption_html:\"\"};}var prev=$(\"after_k1_p1_carry\").first?$(\"after_k1_p1_carry\").first().json:$(\"K1 P1 keyin\").item.json;return{json:{...prev,raqam:p.raqam||\"\",rang:p.rang||\"gold\",izoh:p.izoh||\"\",manba_qisqa:p.manba_qisqa||\"\",caption_html:p.caption_html||\"\",p2_holat:\"PASS\"}};"
+      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);var p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){p={raqam:\"\",rang:\"gold\",izoh:\"\",manba_qisqa:\"\",caption_html:\"\"};}var prev=$(\"Ma'lumotlar to'plami\").first().json;return{json:{...prev,raqam:p.raqam||\"\",rang:p.rang||\"gold\",izoh:p.izoh||\"\",manba_qisqa:p.manba_qisqa||\"\",caption_html:p.caption_html||\"\",p2_holat:\"PASS\"}};"
     },
     "K1 P2": {
       "turi": "executeWorkflow",
@@ -1036,5 +1036,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T20:21:09.518Z"
+  "vaqt": "2026-09-23T20:31:09.564Z"
 }
