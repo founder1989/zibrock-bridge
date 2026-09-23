@@ -391,7 +391,7 @@
     },
     "Telegram - Overlay Link (AI)": {
       "turi": "telegram",
-      "text": "={{ \"✅ Videongiz tayyor! (9:16)\\n\\n🎬 Ko'rish uchun: \" + String($json.cropVideoUrl).split(\"&\").join(\"&amp;\") }}",
+      "text": "={{ \"✅ Videongiz tayyor! (9:16)\\n\\n🎬 Crop: \" + String($json.cropVideoUrl).split(\"&\").join(\"&amp;\") + \"\\n\\n🧪 HF asl: \" + String($('Extract HF URL (AI)').item.json.hfVideoUrl).split(\"&\").join(\"&amp;\") }}",
       "chatId": "={{ $(\"Input Merge\").item.json.chatId }}",
       "thread": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
     },
@@ -406,5 +406,5 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-23T05:40:56.188Z"
+  "vaqt": "2026-09-23T05:50:54.396Z"
 }
