@@ -12,7 +12,7 @@
     "Mavzu bo'yicha filtrlash": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var mavzu_kod = $('Kirishni tayyorlash').first().json.mavzu_kod || 'T1';\nvar rows = $input.all().map(function(i) { return i.json; });\nvar filtered = rows.filter(function(r) {\n  var mk = String(r.mavzu_kodlar || '');\n  return mk.indexOf(mavzu_kod) >= 0;\n});\nvar inp = $('Kirishni tayyorlash').first().json;\nreturn [{ json: {\n  faktlar: filtered,\n  mavzu_kod: inp.mavzu_kod,\n  avatar_kod: inp.avatar_kod,\n  foydalanuvchi_matni: inp.foydalanuvchi_matni,\n  fakt_soni: filtered.length\n} }];"
+      "kod": "var mavzu_kod = $('Kirishni tayyorlash').first().json.mavzu_kod || 'T1';\nvar rows = $input.all().map(function(i) { return i.json; });\nvar filtered = rows.filter(function(r) {\n  var mk = String(r.mavzu_kodlar || '');\n  return mk.split(',').map(function(c){return c.trim();}).indexOf(mavzu_kod) >= 0;\n});\nvar inp = $('Kirishni tayyorlash').first().json;\nreturn [{ json: {\n  faktlar: filtered,\n  mavzu_kod: inp.mavzu_kod,\n  avatar_kod: inp.avatar_kod,\n  foydalanuvchi_matni: inp.foydalanuvchi_matni,\n  fakt_soni: filtered.length\n} }];"
     },
     "Fakt bormi?": {
       "turi": "if",
@@ -183,5 +183,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T08:51:10.549Z"
+  "vaqt": "2026-09-23T09:01:10.909Z"
 }
