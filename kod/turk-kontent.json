@@ -197,7 +197,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
-      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json;var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;}var vt=\"GIBRID\";try{vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\";}catch(e){}var ar=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\";return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid, scale: 1.0, offset: { x: 0, y: 0 } }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Bevosita)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: (ar === \"9:16\") ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, test: false, motion_prompt: \"calm professional demeanor, minimal head movement, steady eye contact with camera, occasional natural blink, no hand gestures, neutral expression, no smile\", motion_engine: \"Avatar IV\" }); })() }}",
+      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json;var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;}var vt=\"GIBRID\";try{vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\";}catch(e){}var ar=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\";return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid, scale: 1.0, offset: { x: 0, y: 0 } }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Bevosita)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: (ar === \"9:16\") ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, test: false, motion_prompt: \"calm professional demeanor, minimal head movement, steady eye contact with camera, occasional natural blink, no hand gestures, neutral expression, no smile\", motion_engine: \"Avatar III\" }); })() }}",
       "sendBody": true
     },
     "HeyGen Video Status (Bev)": {
@@ -228,7 +228,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v3/hyperframes/renders",
-      "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: \"1080p\", aspect_ratio: (function(){ try { var K=$(\"KONSTANTALAR\").item.json; var vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\"; return (K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\"; } catch(e){ return \"9:16\"; } })(), title: \"ZIBROCK video - statistika overlay\" }) }}",
+      "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: (function(){ try { var K=$(\"KONSTANTALAR\").item.json; var vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\"; var f=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\"; return (f===\"9:16\") ? \"portrait\" : \"landscape\"; } catch(e){ return \"portrait\"; } })(), title: \"ZIBROCK video - statistika overlay\" }) }}",
       "sendBody": true
     },
     "Hyperframes status (Bev)": {
@@ -313,7 +313,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
-      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json;var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;}var vt=\"GIBRID\";try{vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\";}catch(e){}var ar=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\";return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid, scale: 1.0, offset: { x: 0, y: 0 } }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: (ar === \"9:16\") ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, test: false, motion_prompt: \"calm professional demeanor, minimal head movement, steady eye contact with camera, occasional natural blink, no hand gestures, neutral expression, no smile\", motion_engine: \"Avatar IV\" }); })() }}",
+      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json;var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;}var vt=\"GIBRID\";try{vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\";}catch(e){}var ar=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\";return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid, scale: 1.0, offset: { x: 0, y: 0 } }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: (ar === \"9:16\") ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }, test: false, motion_prompt: \"calm professional demeanor, minimal head movement, steady eye contact with camera, occasional natural blink, no hand gestures, neutral expression, no smile\", motion_engine: \"Avatar III\" }); })() }}",
       "sendBody": true
     },
     "HeyGen Video Status (AI)": {
@@ -344,7 +344,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v3/hyperframes/renders",
-      "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: \"1080p\", aspect_ratio: (function(){ try { var K=$(\"KONSTANTALAR\").item.json; var vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\"; return (K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\"; } catch(e){ return \"9:16\"; } })(), title: \"ZIBROCK video - statistika overlay\" }) }}",
+      "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: (function(){ try { var K=$(\"KONSTANTALAR\").item.json; var vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\"; var f=(K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\"; return (f===\"9:16\") ? \"portrait\" : \"landscape\"; } catch(e){ return \"portrait\"; } })(), title: \"ZIBROCK video - statistika overlay\" }) }}",
       "sendBody": true
     },
     "Hyperframes status (AI)": {
@@ -376,5 +376,5 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-23T04:40:56.134Z"
+  "vaqt": "2026-09-23T04:50:54.369Z"
 }
