@@ -19,7 +19,15 @@
     "Kirish tayyorlash": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var p=$json.paket||$json;var vi=parseInt($json.variant_idx||0);\nvar b=(p.burchaklar&&p.burchaklar.yt_short)||[];var burchak=b[vi]||b[0]||\"YT Shorts burchak\";\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],burchak:burchak,variant_idx:vi,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
+      "kod": "var p=$json.paket||$json;var vi=parseInt($json.variant_idx||0);var b=(p.burchaklar&&p.burchaklar.yt_short)||[];var burchak=b[vi]||b[0]||\"YT Shorts burchak\";return{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],burchak:burchak,variant_idx:vi,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
+    },
+    "Pasport o'qish": {
+      "turi": "unknown"
+    },
+    "Ma'lumot tayyorlash": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;var pas={};try{pas=$(\"Pasport o'qish\").first().json||{};}catch(e){}var minS=parseFloat(pas.uzunlik_min_s||45);var maxS=parseFloat(pas.uzunlik_max_s||60);var minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:inp.faktlar||[],burchak:inp.burchak,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,ilgak_s:parseFloat(pas.ilgak_s||2.0)}}];"
     },
     "Claude - Shorts Skript": {
       "turi": "ai",
@@ -33,12 +41,12 @@
     "Skript parse": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\"}};}\nvar inp=$(\"Kirish tayyorlash\").item.json;\nreturn{json:{hook:p.hook||\"\",tts_matn:p.tts_matn||\"\",sceneBlocks:p.sceneBlocks||[],manba_toliq:p.manba_toliq||\"\",sarlavha:p.sarlavha||\"\",tavsif:p.tavsif||\"\",heshteglar:p.heshteglar||[],faktlar:inp.faktlar,burchak:inp.burchak,variant_idx:inp.variant_idx,job_id:inp.job_id,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,urinish:inp.urinish||1}};"
+      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);var p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\"}};}var ds=$(\"Ma'lumot tayyorlash\").first().json;return{json:{hook:p.hook||\"\",tts_matn:p.tts_matn||\"\",sceneBlocks:p.sceneBlocks||[],manba_toliq:p.manba_toliq||\"\",sarlavha:p.sarlavha||\"\",tavsif:p.tavsif||\"\",heshteglar:p.heshteglar||[\"#shorts\",\"#psikoloji\",\"#disiplin\"],faktlar:ds.faktlar,burchak:ds.burchak,variant_idx:ds.variant_idx,job_id:ds.job_id,avatar_kod:ds.avatar_kod,test_rejim:ds.test_rejim,voice_id:ds.voice_id,talking_photo_id:ds.talking_photo_id,urinish:ds.urinish||1,minSoz:ds.minSoz,maxSoz:ds.maxSoz,ilgak_s:ds.ilgak_s}};"
     },
     "Skript tekshiruvi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wc=words.length;var sarlavha=$json.sarlavha||\"\";var mt=$json.manba_toliq||\"\";var faktlar=$json.faktlar||[];var xatolar=[];\nif(wc<110||wc>150)xatolar.push(\"So'z soni \"+wc+\", 110-150 bolishi kerak\");\nif([...sarlavha].length>60)xatolar.push(\"Sarlavha \"+[...sarlavha].length+\" belgi, max 60\");\nif(!mt.match(new RegExp(\"[0-9]{4}\",\"g\")))xatolar.push(\"manba_toliq'da yil yoq\");\nvar fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}\nvar pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var fk=0;fk<fr.length;fk++){if(fr[fk].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,heshteglar:$json.heshteglar,manba_toliq:mt,sarlavha:sarlavha,tavsif:$json.tavsif,faktlar:faktlar,burchak:$json.burchak,variant_idx:$json.variant_idx,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1}};"
+      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});var wc=words.length;var faktlar=$json.faktlar||[];var xatolar=[];var minSoz=$json.minSoz||110;var maxSoz=$json.maxSoz||150;if(wc<minSoz||wc>maxSoz)xatolar.push(\"So'z soni \"+wc+\", \"+minSoz+\"-\"+maxSoz+\" kerak\");var sar=$json.sarlavha||\"\";if([...sar].length>60)xatolar.push(\"Sarlavha \"+[...sar].length+\" belgi, max 60\");var mt=$json.manba_toliq||\"\";if(!mt.match(new RegExp(\"[0-9]{4}\",\"g\")))xatolar.push(\"manba_toliq'da yil yoq\");if(($json.tavsif||\"\").indexOf(\"kanal\")<0&&($json.tavsif||\"\").indexOf(\"http\")<0)xatolar.push(\"Tavsifda uzun videoya havola yo'q\");var fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}var pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];for(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var k=0;k<fr.length;k++){if(fr[k].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}return{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,heshteglar:$json.heshteglar,manba_toliq:mt,sarlavha:sar,tavsif:$json.tavsif,faktlar:faktlar,burchak:$json.burchak,variant_idx:$json.variant_idx,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1,ilgak_s:$json.ilgak_s}};"
     },
     "K1 Compliance": {
       "turi": "executeWorkflow",
@@ -86,7 +94,7 @@
     "K1 natijasini birlashtirish": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var k1=$json;var sc=$(\"Skript tekshiruvi\").item.json;\nvar k1H=k1.holat||\"FAIL\";var xa=sc.xatolar||[];\nif(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}\nreturn{json:{holat:(sc.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,tts_matn:sc.tts_matn,hook:sc.hook,sceneBlocks:sc.sceneBlocks,heshteglar:sc.heshteglar,manba_toliq:sc.manba_toliq,sarlavha:sc.sarlavha,tavsif:sc.tavsif,faktlar:sc.faktlar,burchak:sc.burchak,variant_idx:sc.variant_idx,job_id:sc.job_id,avatar_kod:sc.avatar_kod,test_rejim:sc.test_rejim,voice_id:sc.voice_id,talking_photo_id:sc.talking_photo_id,urinish:sc.urinish||1}};"
+      "kod": "var k1=$json;var sc=$(\"Skript tekshiruvi\").item.json;var k1H=k1.holat||\"FAIL\";var xa=sc.xatolar||[];if(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}return{json:{holat:(sc.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,tts_matn:sc.tts_matn,hook:sc.hook,sceneBlocks:sc.sceneBlocks,heshteglar:sc.heshteglar,manba_toliq:sc.manba_toliq,sarlavha:sc.sarlavha,tavsif:sc.tavsif,faktlar:sc.faktlar,burchak:sc.burchak,variant_idx:sc.variant_idx,job_id:sc.job_id,avatar_kod:sc.avatar_kod,test_rejim:sc.test_rejim,voice_id:sc.voice_id,talking_photo_id:sc.talking_photo_id,urinish:sc.urinish||1,ilgak_s:sc.ilgak_s}};"
     },
     "PASS?": {
       "turi": "if",
@@ -136,7 +144,7 @@
     },
     "Telegram - Test Preview": {
       "turi": "telegram",
-      "text": "={{ \"🧪 YT Shorts test | \" + $json.burchak + \"\\n\\n\" + $json.tts_matn + \"\\n\\n\" + $json.sarlavha }}",
+      "text": "={{ \"🧪 YT Shorts test | \" + $json.burchak + \"\\n\\n\" + $json.tts_matn.slice(0,250) + \"\\n\\n\" + $json.sarlavha }}",
       "chatId": "-1004462774154",
       "thread": 5,
       "creds": {
@@ -269,11 +277,11 @@
     "Hook vaqti tekshiruvi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var hs=$json.hook_tugash_s||0;var sc=$(\"K1 natijasini birlashtirish\").item.json;\nreturn{json:{video_url:$json.video_url||\"\",hook_tugash_s:hs,jami_s:$json.jami_s||0,hook_ok:hs<=2.0,sarlavha:sc.sarlavha,heshteglar:sc.heshteglar,tavsif:sc.tavsif,burchak:sc.burchak,variant_idx:sc.variant_idx,job_id:sc.job_id}};"
+      "kod": "var hs=$json.hook_tugash_s||0;var sc=$(\"K1 natijasini birlashtirish\").item.json;return{json:{video_url:$json.video_url||\"\",hook_tugash_s:hs,jami_s:$json.jami_s||0,hook_ok:hs<=sc.ilgak_s,sarlavha:sc.sarlavha,heshteglar:sc.heshteglar,burchak:sc.burchak,variant_idx:sc.variant_idx,job_id:sc.job_id}};"
     },
     "Telegram - Ko'rib chiqish (Shorts)": {
       "turi": "telegram",
-      "text": "={{ \"✅ YT Shorts v\" + $json.variant_idx + \" | \" + $json.burchak + \"\\n\\n🎬 \" + $json.video_url + \"\\n\\n\" + ($json.hook_ok?\"\":\"⚠️ Hook \" + $json.hook_tugash_s + \"s > 2s\\n\") + $json.sarlavha + \"\\n\" + $json.heshteglar.join(\" \") }}",
+      "text": "={{ \"✅ YT Shorts v\" + $json.variant_idx + \" | \" + $json.burchak + \"\\n\" + ($json.hook_ok?\"\":\"⚠️ Hook \"+$json.hook_tugash_s+\"s\\n\") + \"\\n🎬 \" + $json.video_url + \"\\n\\n\" + $json.sarlavha + \"\\n\" + $json.heshteglar.join(\" \") }}",
       "chatId": "-1004462774154",
       "thread": 5,
       "creds": {
@@ -283,7 +291,7 @@
     "Qayta urinish?": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,burchak:$json.burchak,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
+      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n}};}return{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,burchak:$json.burchak,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,mavzu_kod:$json.mavzu_kod}};"
     },
     "Eskalatsiya?": {
       "turi": "if",
@@ -310,7 +318,7 @@
     },
     "Telegram - Eskalatsiya": {
       "turi": "telegram",
-      "text": "={{ \"❌ zb-p-shorts: 3 urinishdan keyin FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
+      "text": "={{ \"❌ zb-p-shorts: FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
       "chatId": "-1004462774154",
       "thread": 13,
       "creds": {
@@ -337,6 +345,28 @@
       ]
     },
     "Kirish tayyorlash": {
+      "main": [
+        [
+          {
+            "node": "Pasport o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pasport o'qish": {
+      "main": [
+        [
+          {
+            "node": "Ma'lumot tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ma'lumot tayyorlash": {
       "main": [
         [
           {
@@ -493,7 +523,7 @@
       "main": [
         [
           {
-            "node": "Claude - Shorts Skript",
+            "node": "Ma'lumot tayyorlash",
             "type": "main",
             "index": 0
           }
@@ -512,5 +542,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T08:40:59.130Z"
+  "vaqt": "2026-09-23T08:50:59.128Z"
 }
