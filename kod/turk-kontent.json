@@ -12,7 +12,7 @@
     "KONSTANTALAR": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}},avatarlar:{a1:{nom:\"ZIBROCK A1 Ekspert - neytral\",talking_photo_id:\"44e201e343754e2699e8cfe067ea308c\",ovoz:\"a1\"},a1s:{nom:\"ZIBROCK A1 Ekspert - tabassum\",talking_photo_id:\"9fdf918f3b37495bbab917b789b44729\",ovoz:\"a1\"},a2:{nom:\"ZIBROCK A2 Treyder - navy\",talking_photo_id:\"e6a2032867424558b776ad038e358319\",ovoz:\"a2\"}},joriy_avatar:\"a1\",mavzular:{T1:{nom:\"Yo'qotish statistikasi\",avatar:\"a1\",tur:\"GIBRID\"},T2:{nom:\"Raqamlar va tadqiqot\",avatar:\"a1\",tur:\"GIBRID\"},T3:{nom:\"Trading psixologiyasi\",avatar:\"a2\",tur:\"STUDIO\"},T4:{nom:\"Xatolar va tuzoqlar\",avatar:\"a2\",tur:\"STUDIO\"},T5:{nom:\"Risk boshqaruvi\",avatar:\"a2\",tur:\"STUDIO\"},T6:{nom:\"Intizom\",avatar:\"a2\",tur:\"STUDIO\"},T7:{nom:\"Bozor mexanikasi\",avatar:\"a1\",tur:\"GIBRID\"},T8:{nom:\"Haqiqiy shaxs\",avatar:null,tur:\"REAL\"},T9:{nom:\"Neyrobiologiya\",avatar:\"a1\",tur:\"GIBRID\"},T10:{nom:\"Mahsulot va qoidalar\",avatar:\"a2\",tur:\"STUDIO\"}},video_turlari:{GIBRID:{ekran:\"raqam markazda + avatar burchakda doira\",format:\"9:16\"},STUDIO:{ekran:\"avatar to'liq ekran\",format:\"9:16\"},MOTION:{ekran:\"faqat raqam va grafik\",format:\"9:16\"},REAL:{ekran:\"haqiqiy suratga olish\",format:\"16:9\"}},mahsulotlar:{yt_long:{platforma:\"youtube\",format:\"16:9\",olcham:[1920,1080],uzunlik:[300,480],ilgak_s:3,vada_s:15,sahna_almashinuvi_s:25,qayta_ilgak_s:75,variant:\"full\",subtitr:true,maqsad:{ushlab_turish:0.45,s30_qolgan:0.60}},yt_short:{platforma:\"youtube\",format:\"9:16\",olcham:[1080,1920],uzunlik:[45,60],ilgak_s:2,variant:\"full\",subtitr:true,maqsad:{tugatish:0.65}},tiktok:{platforma:\"tiktok\",format:\"9:16\",olcham:[1080,1920],uzunlik:[15,30],ilgak_s:1.5,variant:\"metasafe\",subtitr:true,xeshteg_soni:4,fyp_taqiq:true,maqsad:{tugatish:0.70}},reel:{platforma:\"instagram\",format:\"9:16\",olcham:[1080,1920],uzunlik:[15,20],ilgak_s:1.7,variant:\"metasafe\",subtitr:true,loop:true,sends_cta:true,maqsad:{tomosha_s:10,sends_per_reach:0.01}},carousel:{platforma:\"instagram\",format:\"4:5\",olcham:[1080,1350],slayd:[5,8],slayd_1_ogirlik:0.80,variant:\"metasafe\",maqsad:{saqlash_nisbati:0.03}},tg_post:{platforma:\"telegram\",format:\"matn\",belgi:[500,900],variant:\"full\",manba_toliq:true}},nashr_jadvali:{yt_long:{kun:1,soat:\"09:00\"},tiktok_1:{kun:1,soat:\"12:00\"},reel_1:{kun:1,soat:\"20:00\"},carousel:{kun:2,soat:\"10:00\"},tiktok_2:{kun:2,soat:\"19:00\"},yt_short_1:{kun:3,soat:\"11:00\"}},analitika:{ilgak:{yt_long:{vaqt_s:3,qoida:\"raqam yoki savol, kirish YO'Q\"},yt_short:{vaqt_s:2,qoida:\"raqam ekranda darhol\"},tiktok:{vaqt_s:1.5,qoida:\"raqam darhol, gapirmasdan\"},reel:{vaqt_s:1.7,qoida:\"harakat o'rtasidan boshlanadi\"},carousel:{vaqt_s:0,qoida:\"1-slayd: raqam + savol, 80% natija\"},tg_post:{vaqt_s:0,qoida:\"birinchi qator ilgak\"}},ritm:{yt_long:{sahna_s:25,qayta_ilgak_s:75,broll_s:12},yt_short:{sahna_s:8},tiktok:{sahna_s:5},reel:{sahna_s:5},carousel:{slayd:7},tg_post:{}},cta:{yt_long:\"Tam versiyon ve kaynaklar kanalda\",yt_short:\"Devami uzun videoda\",tiktok:\"Sizce hangisi? Yoruma yazin\",reel:\"Bunu bilmesi gereken birine gonderin\",carousel:\"Kaydedin - sonra lazim olacak\",tg_post:\"Kaynak asagida\"},uzunlik_qoida:{yt_long:{min:300,max:480,sabab:\"5-8 daqiqa, uzunroq ushlab turishni pasaytiradi\"},yt_short:{min:45,max:60},tiktok:{min:15,max:30,sabab:\"15-30 s da tugatish 72%\"},reel:{min:15,max:20,sabab:\"o'rtacha tomosha 8,5 s\"},carousel:{min:5,max:8,sabab:\"slayd soni, 5 dan kam bo'lsa algoritm signal olmaydi\"},tg_post:{min:500,max:900,sabab:\"belgi\"}},maqsadlar:{yt_long:{ctr:0.05,ushlab_turish:0.45,s30_qolgan:0.60},yt_short:{tugatish:0.65},tiktok:{tugatish:0.70,s3_qolgan:0.70},reel:{tomosha_s:10,sends_per_reach:0.01},carousel:{saqlash_nisbati:0.03,tugatish:0.60},tg_post:{oqish:0.40}},thumbnail:{matn_sozlar_min:3,matn_sozlar_max:5,kontrast_min:4.5,elementlar_max:3,fon:\"#0A1727\",asosiy_element:\"raqam\",yuz_ifoda:\"jiddiy, ekstremal EMAS\",taqiqlar:[\"oq fon\",\"pastel rang\",\"pastki o'ng burchakda matn\",\"4 dan ortiq so'z\",\"clickbait\"]},taqiqlar:{trend_audio:true,clickbait:true,ekstremal_ifoda:true,fyp_xeshteg:true,tez_ovoz:true,manbasiz_raqam:true},ilgak_formulalari:[{nom:\"togridan raqam\",misol:\"%97\",moslik:\"eng yuqori\"},{nom:\"kechiktirilgan ochilish\",misol:\"3 ta tadqiqot. Bitta xulosa.\",moslik:\"eng yuqori\"},{nom:\"kutilmagan taqqos\",misol:\"$310 va $2.560\",moslik:\"yuqori\"},{nom:\"bilim boshligi\",misol:\"Traderlarning %97 i bilmaydi\",moslik:\"orta\"}],metasafe_taqiq:[\"challenge\",\"prop\",\"funded\",\"CFD\",\"forex\",\"kaldıraç\",\"kazanç garantisi\",\"hesap\",\"fiyat\"]}};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular,video_turlari:K.video_turlari,mahsulotlar:K.mahsulotlar,nashr_jadvali:K.nashr_jadvali,analitika:K.analitika})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular,video_turlari:K.video_turlari,mahsulotlar:K.mahsulotlar,nashr_jadvali:K.nashr_jadvali,analitika:K.analitika}});\nreturn out;"
+      "kod": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}},avatarlar:{a1:{nom:\"ZIBROCK A1 Ekspert - neytral\",talking_photo_id:\"44e201e343754e2699e8cfe067ea308c\",ovoz:\"a1\"},a1s:{nom:\"ZIBROCK A1 Ekspert - tabassum\",talking_photo_id:\"9fdf918f3b37495bbab917b789b44729\",ovoz:\"a1\"},a2:{nom:\"ZIBROCK A2 Treyder - navy\",talking_photo_id:\"e6a2032867424558b776ad038e358319\",ovoz:\"a2\"}},joriy_avatar:\"a1\",mavzular:{T1:{nom:\"Rakamlar ne diyor\",avatar:\"a1\",tur:\"GIBRID\"},T2:{nom:\"Sektör rakamları\",avatar:\"a1\",tur:\"GIBRID\"},T3:{nom:\"Bilgi değil. Kimya.\",avatar:\"a2\",tur:\"STUDIO\"},T4:{nom:\"Dopamin\",avatar:\"a2\",tur:\"STUDIO\"},T5:{nom:\"Kortizol\",avatar:\"a2\",tur:\"STUDIO\"},T6:{nom:\"Bir günlük erime\",avatar:\"a2\",tur:\"STUDIO\"},T7:{nom:\"14 araştırma\",avatar:\"a1\",tur:\"GIBRID\"},T8:{nom:\"$870.000\",avatar:null,tur:\"REAL\"},T9:{nom:\"Dört kilit\",avatar:\"a1\",tur:\"GIBRID\"},T10:{nom:\"Prime / Instant Pro\",avatar:\"a2\",tur:\"STUDIO\"}},video_turlari:{GIBRID:{ekran:\"raqam markazda + avatar burchakda doira\",format:\"9:16\"},STUDIO:{ekran:\"avatar to'liq ekran\",format:\"9:16\"},MOTION:{ekran:\"faqat raqam va grafik\",format:\"9:16\"},REAL:{ekran:\"haqiqiy suratga olish\",format:\"16:9\"}},mahsulotlar:{yt_long:{platforma:\"youtube\",format:\"16:9\",olcham:[1920,1080],uzunlik:[300,480],ilgak_s:3,vada_s:15,sahna_almashinuvi_s:25,qayta_ilgak_s:75,variant:\"full\",subtitr:true,maqsad:{ushlab_turish:0.45,s30_qolgan:0.60}},yt_short:{platforma:\"youtube\",format:\"9:16\",olcham:[1080,1920],uzunlik:[45,60],ilgak_s:2,variant:\"full\",subtitr:true,maqsad:{tugatish:0.65}},tiktok:{platforma:\"tiktok\",format:\"9:16\",olcham:[1080,1920],uzunlik:[15,30],ilgak_s:1.5,variant:\"metasafe\",subtitr:true,xeshteg_soni:4,fyp_taqiq:true,maqsad:{tugatish:0.70}},reel:{platforma:\"instagram\",format:\"9:16\",olcham:[1080,1920],uzunlik:[15,20],ilgak_s:1.7,variant:\"metasafe\",subtitr:true,loop:true,sends_cta:true,maqsad:{tomosha_s:10,sends_per_reach:0.01}},carousel:{platforma:\"instagram\",format:\"4:5\",olcham:[1080,1350],slayd:[5,8],slayd_1_ogirlik:0.80,variant:\"metasafe\",maqsad:{saqlash_nisbati:0.03}},tg_post:{platforma:\"telegram\",format:\"matn\",belgi:[500,900],variant:\"full\",manba_toliq:true}},nashr_jadvali:{yt_long:{kun:1,soat:\"09:00\"},tiktok_1:{kun:1,soat:\"12:00\"},reel_1:{kun:1,soat:\"20:00\"},carousel:{kun:2,soat:\"10:00\"},tiktok_2:{kun:2,soat:\"19:00\"},yt_short_1:{kun:3,soat:\"11:00\"}},analitika:{ilgak:{yt_long:{vaqt_s:3,qoida:\"raqam yoki savol, kirish YO'Q\"},yt_short:{vaqt_s:2,qoida:\"raqam ekranda darhol\"},tiktok:{vaqt_s:1.5,qoida:\"raqam darhol, gapirmasdan\"},reel:{vaqt_s:1.7,qoida:\"harakat o'rtasidan boshlanadi\"},carousel:{vaqt_s:0,qoida:\"1-slayd: raqam + savol, 80% natija\"},tg_post:{vaqt_s:0,qoida:\"birinchi qator ilgak\"}},ritm:{yt_long:{sahna_s:25,qayta_ilgak_s:75,broll_s:12},yt_short:{sahna_s:8},tiktok:{sahna_s:5},reel:{sahna_s:5},carousel:{slayd:7},tg_post:{}},cta:{yt_long:\"Tam versiyon ve kaynaklar kanalda\",yt_short:\"Devami uzun videoda\",tiktok:\"Sizce hangisi? Yoruma yazin\",reel:\"Bunu bilmesi gereken birine gonderin\",carousel:\"Kaydedin - sonra lazim olacak\",tg_post:\"Kaynak asagida\"},uzunlik_qoida:{yt_long:{min:300,max:480,sabab:\"5-8 daqiqa, uzunroq ushlab turishni pasaytiradi\"},yt_short:{min:45,max:60},tiktok:{min:15,max:30,sabab:\"15-30 s da tugatish 72%\"},reel:{min:15,max:20,sabab:\"o'rtacha tomosha 8,5 s\"},carousel:{min:5,max:8,sabab:\"slayd soni, 5 dan kam bo'lsa algoritm signal olmaydi\"},tg_post:{min:500,max:900,sabab:\"belgi\"}},maqsadlar:{yt_long:{ctr:0.05,ushlab_turish:0.45,s30_qolgan:0.60},yt_short:{tugatish:0.65},tiktok:{tugatish:0.70,s3_qolgan:0.70},reel:{tomosha_s:10,sends_per_reach:0.01},carousel:{saqlash_nisbati:0.03,tugatish:0.60},tg_post:{oqish:0.40}},thumbnail:{matn_sozlar_min:3,matn_sozlar_max:5,kontrast_min:4.5,elementlar_max:3,fon:\"#0A1727\",asosiy_element:\"raqam\",yuz_ifoda:\"jiddiy, ekstremal EMAS\",taqiqlar:[\"oq fon\",\"pastel rang\",\"pastki o'ng burchakda matn\",\"4 dan ortiq so'z\",\"clickbait\"]},taqiqlar:{trend_audio:true,clickbait:true,ekstremal_ifoda:true,fyp_xeshteg:true,tez_ovoz:true,manbasiz_raqam:true},ilgak_formulalari:[{nom:\"togridan raqam\",misol:\"%97\",moslik:\"eng yuqori\"},{nom:\"kechiktirilgan ochilish\",misol:\"3 ta tadqiqot. Bitta xulosa.\",moslik:\"eng yuqori\"},{nom:\"kutilmagan taqqos\",misol:\"$310 va $2.560\",moslik:\"yuqori\"},{nom:\"bilim boshligi\",misol:\"Traderlarning %97 i bilmaydi\",moslik:\"orta\"}],metasafe_taqiq:[\"challenge\",\"prop\",\"funded\",\"CFD\",\"forex\",\"kaldıraç\",\"kazanç garantisi\",\"hesap\",\"fiyat\"]}};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular,video_turlari:K.video_turlari,mahsulotlar:K.mahsulotlar,nashr_jadvali:K.nashr_jadvali,analitika:K.analitika})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular,video_turlari:K.video_turlari,mahsulotlar:K.mahsulotlar,nashr_jadvali:K.nashr_jadvali,analitika:K.analitika}});\nreturn out;"
     },
     "Telegram Kirish Filtri": {
       "turi": "code",
@@ -486,9 +486,52 @@
       "kod": "function numToTr(n){\n  n=Math.floor(Math.abs(n));\n  if(n===0)return 'sıfır';\n  var b=['','bir','iki','üç','dört','beş','altı','yedi','sekiz','dokuz'];\n  var o=['','on','yirmi','otuz','kırk','elli','altmış','yetmiş','seksen','doksan'];\n  var r='';\n  if(n>=1000000000){r+=numToTr(Math.floor(n/1000000000))+' milyar ';n=n%1000000000;}\n  if(n>=1000000){r+=numToTr(Math.floor(n/1000000))+' milyon ';n=n%1000000;}\n  if(n>=1000){var t=Math.floor(n/1000);r+=(t===1?'':numToTr(t)+' ')+'bin ';n=n%1000;}\n  if(n>=100){var h=Math.floor(n/100);r+=(h===1?'':b[h]+' ')+'yüz ';n=n%100;}\n  if(n>=20){r+=o[Math.floor(n/10)];n=n%10;if(n>0){r+=' '+b[n];n=0;}}\n  else if(n>=10){r+='on'+(n>10?' '+b[n-10]:'');n=0;}\n  if(n>0)r+=(r.trim()?' ':'')+b[n];\n  return r.trim();\n}\nfunction toTr(text){\n  text=text.replace(/(\\d+)[,.](\\d+)/g,function(m,a,b2){return numToTr(parseInt(a,10))+' virgül '+numToTr(parseInt(b2,10));});\n  text=text.replace(/%(\\d+)/g,function(m,num){return 'yüzdе '+numToTr(parseInt(num,10));});\n  text=text.replace(/(\\d+)%/g,function(m,num){return 'yüzdе '+numToTr(parseInt(num,10));});\n  text=text.replace(/\\b\\d+\\b/g,function(m){var n=parseInt(m,10);return isNaN(n)?m:numToTr(n);});\n  return text;\n}\nfunction extractColorSpans(text){\n  var spans=[];var out='';var i=0;\n  var COLORS=['GOLD','CLAY','SAGE'];\n  function tryOpen(pos){\n    if(!text[pos]||text[pos]!='['||!text[pos+1]||text[pos+1]!='[')return null;\n    for(var ci=0;ci<COLORS.length;ci++){\n      var c=COLORS[ci];var full='[['+c+']]';\n      if(text.slice(pos,pos+full.length)===full)return{color:c,end:pos+full.length};\n    }\n    return null;\n  }\n  while(i<text.length){\n    var o=tryOpen(i);\n    if(o){\n      var cl='[[/'+o.color+']]';\n      var ci=text.indexOf(cl,o.end);\n      if(ci!==-1){\n        var s=out.length;\n        out+=text.slice(o.end,ci);\n        spans.push({startChar:s,endChar:out.length,color:o.color,text:text.slice(o.end,ci)});\n        i=ci+cl.length;continue;\n      }\n    }\n    if(text[i]==='['&&text[i+1]==='['){i+=2;continue;}\n    if(text[i]===']'&&text[i+1]===']'){i+=2;continue;}\n    out+=text[i];i++;\n  }\n  var seen={};\n  var filtered=spans.filter(function(s){\n    var blk=Math.floor(s.startChar/200);\n    if(seen[blk])return false;seen[blk]=true;return true;\n  });\n  return{plain:out,spans:filtered};\n}\nvar text=$('Faqat skript matnini ajratish').item.json.text||'';\nvar colonIndex=text.indexOf(':');\nvar firstPart=colonIndex!==-1?text.substring(0,colonIndex).trim().toLowerCase():'';\nvar script=(['gapirtir'].indexOf(firstPart)!==-1&&colonIndex!==-1)?text.substring(colonIndex+1).trim():text.trim();\nvar sceneBlocks=[];var sahnaIdx=script.indexOf('---SAHNA---');if(sahnaIdx!==-1){var sahnaPart=script.substring(sahnaIdx+11).trim();script=script.substring(0,sahnaIdx).trim();sahnaPart.split('\\n').forEach(function(ln){ln=ln.trim();if(!ln)return;var parts=ln.split('|');if(parts.length<3)return;var st=parseFloat(parts[0]);var du=parseFloat(parts[1]);var ty=parts[2].trim();var pr={};if(parts[3]){parts[3].split(';').forEach(function(kv){var kvp=kv.split('=');if(kvp.length===2)pr[kvp[0].trim()]=kvp[1].trim();});}if(!isNaN(st)&&!isNaN(du)&&ty){sceneBlocks.push({start:st,duration:du,type:ty,params:pr});}});}var platfRx=/^(?:instagram\\s*reels?|tiktok|youtube\\s*shorts?|youtube)[^.!?:]{0,30}[.:]s*/i;\nvar platfMatch=script.match(platfRx);\nif(platfMatch){script=script.substring(platfMatch[0].length).trim();}\nscript=toTr(script);\nvar extr=extractColorSpans(script);\nvar plainScript=extr.plain;\nvar coloredSpans=extr.spans;\nvar warmup=\"Şimdi başlıyoruz. \";\nvar pa={};\ntry{pa=$('Platforma Aniqlash (Bev)').item.json;}catch(e){}\nvar video_turi_sa='STUDIO';try{var _vtm=(raw||script).match(/VIDEO_TURIs*:s*(MOTION|STUDIO|REAL)/i);if(_vtm)video_turi_sa=_vtm[1].toUpperCase();else{var _vtm2=$('Platforma Aniqlash (Bev)').item.json.video_turi;if(_vtm2)video_turi_sa=_vtm2;}}catch(_e_vt){}\nreturn{json:{merged_response:warmup+plainScript,coloredSpans:coloredSpans,previous_text:warmup,videoWidth:pa.videoWidth||1920,videoHeight:pa.videoHeight||1080,aspectRatio:pa.aspectRatio||'16:9',isVertical:pa.isVertical||false,sceneBlocks:sceneBlocks,video_turi:video_turi_sa}};"
     },
     "K1 Compliance (Bev)": {
+      "turi": "executeWorkflow",
+      "workflowId": "Ls4eWDug9Lj5lPVP",
+      "inputs": {
+        "mappingMode": "defineBelow",
+        "value": {
+          "matn": "={{ $json.merged_response || \"\" }}",
+          "variant": "={{ $json.variant || \"full\" }}",
+          "faktlar": "={{ [] }}"
+        },
+        "schema": [
+          {
+            "id": "matn",
+            "displayName": "matn",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "string"
+          },
+          {
+            "id": "variant",
+            "displayName": "variant",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "string"
+          },
+          {
+            "id": "faktlar",
+            "displayName": "faktlar",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "array"
+          }
+        ],
+        "attemptToConvertTypes": false,
+        "convertFieldsToString": false
+      }
+    },
+    "K1 Natija (Bev)": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var item=$input.first().json;\nvar text=(item.merged_response||'').toLowerCase();\nvar variant=(item.variant||'full').toLowerCase();\nvar RED=['garanti eder','kesin kar','risksiz','zahmetsiz gelir','gunde kazanin','ayda kazanin','hizli zengin'];\nvar ORANGE=['challenge','prop firma','funded','payout','kaldıraç','spread','hesap ac','fiyat tablosu','a-book'];\nvar EXC=['garanti etmiyor','garanti degil','garanti vermiyor'];\nvar hasExc=EXC.some(function(e){return text.indexOf(e)>=0;});\nvar fail=null;\nfor(var i=0;i<RED.length&&!fail;i++){if(text.indexOf(RED[i])>=0&&!hasExc){fail={tur:'RED',atama:RED[i]};}}\nif(!fail&&variant==='metasafe'){for(var i=0;i<ORANGE.length&&!fail;i++){if(text.indexOf(ORANGE[i])>=0&&!hasExc){fail={tur:'ORANGE',atama:ORANGE[i]};}}}\nvar hasSrc=text.indexOf('manba(lar)')>=0||text.indexOf('source')>=0;\nvar hasNum=text.indexOf('%')>=0;\nif(!fail&&hasNum&&!hasSrc){fail={tur:'MANBA',atama:'raqam bor, manba yoq'};}\nif(fail){return[{json:{...item,compliance:'FAIL',tur:fail.tur,atama:fail.atama,chatId:item.chatId||'',xabar:'❌ Compliance FAIL: '+fail.tur+' — \"'+fail.atama+'\"'}}];}\nreturn[{json:{...item,compliance:'PASS'}}];"
+      "kod": "var k1Holat=($input.first().json.holat||'FAIL');var orig=$('Skriptni Ajratish').first().json;var topilmalar=$input.first().json.topilmalar||[];if(k1Holat==='FAIL'){return[{json:{...orig,compliance:'FAIL',tur:(topilmalar[0]&&topilmalar[0].tur)||'K1',atama:(topilmalar[0]&&topilmalar[0].atama)||'',chatId:orig.chatId||'',xabar:'❌ K1 FAIL: '+(topilmalar[0]&&topilmalar[0].atama||'')}}];}return[{json:{...orig,compliance:'PASS'}}];"
     },
     "Compliance OK? (Bev)": {
       "turi": "if",
@@ -709,9 +752,52 @@
       "kod": "function numToTr(n){\n  n=Math.floor(Math.abs(n));\n  if(n===0)return 'sıfır';\n  var b=['','bir','iki','üç','dört','beş','altı','yedi','sekiz','dokuz'];\n  var o=['','on','yirmi','otuz','kırk','elli','altmış','yetmiş','seksen','doksan'];\n  var r='';\n  if(n>=1000000000){r+=numToTr(Math.floor(n/1000000000))+' milyar ';n=n%1000000000;}\n  if(n>=1000000){r+=numToTr(Math.floor(n/1000000))+' milyon ';n=n%1000000;}\n  if(n>=1000){var t=Math.floor(n/1000);r+=(t===1?'':numToTr(t)+' ')+'bin ';n=n%1000;}\n  if(n>=100){var h=Math.floor(n/100);r+=(h===1?'':b[h]+' ')+'yüz ';n=n%100;}\n  if(n>=20){r+=o[Math.floor(n/10)];n=n%10;if(n>0){r+=' '+b[n];n=0;}}\n  else if(n>=10){r+='on'+(n>10?' '+b[n-10]:'');n=0;}\n  if(n>0)r+=(r.trim()?' ':'')+b[n];\n  return r.trim();\n}\nfunction toTr(text){\n  text=text.replace(/(\\d+)[,.](\\d+)/g,function(m,a,b2){return numToTr(parseInt(a,10))+' virgül '+numToTr(parseInt(b2,10));});\n  text=text.replace(/%(\\d+)/g,function(m,num){return 'yüzdе '+numToTr(parseInt(num,10));});\n  text=text.replace(/(\\d+)%/g,function(m,num){return 'yüzdе '+numToTr(parseInt(num,10));});\n  text=text.replace(/\\b\\d+\\b/g,function(m){var n=parseInt(m,10);return isNaN(n)?m:numToTr(n);});\n  return text;\n}\nfunction extractColorSpans(text){\n  var spans=[];var out='';var i=0;\n  var COLORS=['GOLD','CLAY','SAGE'];\n  function tryOpen(pos){\n    if(!text[pos]||text[pos]!='['||!text[pos+1]||text[pos+1]!='[')return null;\n    for(var ci=0;ci<COLORS.length;ci++){\n      var c=COLORS[ci];var full='[['+c+']]';\n      if(text.slice(pos,pos+full.length)===full)return{color:c,end:pos+full.length};\n    }\n    return null;\n  }\n  while(i<text.length){\n    var o=tryOpen(i);\n    if(o){\n      var cl='[[/'+o.color+']]';\n      var ci=text.indexOf(cl,o.end);\n      if(ci!==-1){\n        var s=out.length;\n        out+=text.slice(o.end,ci);\n        spans.push({startChar:s,endChar:out.length,color:o.color,text:text.slice(o.end,ci)});\n        i=ci+cl.length;continue;\n      }\n    }\n    if(text[i]==='['&&text[i+1]==='['){i+=2;continue;}\n    if(text[i]===']'&&text[i+1]===']'){i+=2;continue;}\n    out+=text[i];i++;\n  }\n  var seen={};\n  var filtered=spans.filter(function(s){\n    var blk=Math.floor(s.startChar/200);\n    if(seen[blk])return false;seen[blk]=true;return true;\n  });\n  return{plain:out,spans:filtered};\n}\nvar raw=$json.merged_response||($json.content&&$json.content[0]?$json.content[0].text:'');\nvar script=raw;\nvar skriptIdx=raw.indexOf('---SKRIPT---');\nif(skriptIdx!==-1){script=raw.substring(skriptIdx+12);}\nvar manbaIdx=script.search(/\\n[*]{0,2}MANBA/);\nif(manbaIdx!==-1){script=script.substring(0,manbaIdx);}\nvar statIdx=script.indexOf('\\nSTAT_NUMBER:');\nif(statIdx!==-1){script=script.substring(0,statIdx);}\nscript=toTr(script);\nvar extr=extractColorSpans(script);\nvar plainScript=extr.plain;\nvar coloredSpans=extr.spans;\nplainScript=plainScript.replace(/^---\\s*$/gm,'');\nplainScript=plainScript.replace(/[*]{0,2}\\[[^\\]]+\\][*]{0,2}/g,'');\nplainScript=plainScript.replace(/\\*\\*/g,'');\nplainScript=plainScript.replace(/\\*([^*\\n]+)\\*/g,'$1');\nplainScript=plainScript.replace(/\\(pauza\\)/gi,'');\nplainScript=plainScript.replace(/\\n{3,}/g,'\\n\\n').trim();\nvar warmup=\"Şimdi başlıyoruz. \";\nvar sceneBlocks=[];var sahnaIdx2=raw.indexOf('---SAHNA---');if(sahnaIdx2!==-1){var sahnaPart2=raw.substring(sahnaIdx2+11).trim();sahnaPart2.split('\\n').forEach(function(ln){ln=ln.trim();if(!ln||ln==='---')return;var parts=ln.split('|');if(parts.length<3)return;var st=parseFloat(parts[0]);var du=parseFloat(parts[1]);var ty=parts[2].trim();var pr={};if(parts[3]){parts[3].split(';').forEach(function(kv){var kvp=kv.split('=');if(kvp.length===2)pr[kvp[0].trim()]=kvp[1].trim();});}if(!isNaN(st)&&!isNaN(du)&&ty){sceneBlocks.push({start:st,duration:du,type:ty,params:pr});}});}\nvar video_turi_st='STUDIO';try{var _vtm3=raw.match(/VIDEO_TURIs*:s*(MOTION|STUDIO|REAL)/i);if(_vtm3)video_turi_st=_vtm3[1].toUpperCase();}catch(_e_vt3){}\nreturn{json:{merged_response:warmup+plainScript,coloredSpans:coloredSpans,previous_text:warmup,sceneBlocks:sceneBlocks,video_turi:video_turi_st}};"
     },
     "K1 Compliance (AI)": {
+      "turi": "executeWorkflow",
+      "workflowId": "Ls4eWDug9Lj5lPVP",
+      "inputs": {
+        "mappingMode": "defineBelow",
+        "value": {
+          "matn": "={{ $json.merged_response || \"\" }}",
+          "variant": "={{ $json.variant || \"full\" }}",
+          "faktlar": "={{ [] }}"
+        },
+        "schema": [
+          {
+            "id": "matn",
+            "displayName": "matn",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "string"
+          },
+          {
+            "id": "variant",
+            "displayName": "variant",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "string"
+          },
+          {
+            "id": "faktlar",
+            "displayName": "faktlar",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "array"
+          }
+        ],
+        "attemptToConvertTypes": false,
+        "convertFieldsToString": false
+      }
+    },
+    "K1 Natija (AI)": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var item=$input.first().json;\nvar text=(item.merged_response||'').toLowerCase();\nvar variant=(item.variant||'full').toLowerCase();\nvar RED=['garanti eder','kesin kar','risksiz','zahmetsiz gelir','gunde kazanin','ayda kazanin','hizli zengin'];\nvar ORANGE=['challenge','prop firma','funded','payout','kaldıraç','spread','hesap ac','fiyat tablosu','a-book'];\nvar EXC=['garanti etmiyor','garanti degil','garanti vermiyor'];\nvar hasExc=EXC.some(function(e){return text.indexOf(e)>=0;});\nvar fail=null;\nfor(var i=0;i<RED.length&&!fail;i++){if(text.indexOf(RED[i])>=0&&!hasExc){fail={tur:'RED',atama:RED[i]};}}\nif(!fail&&variant==='metasafe'){for(var i=0;i<ORANGE.length&&!fail;i++){if(text.indexOf(ORANGE[i])>=0&&!hasExc){fail={tur:'ORANGE',atama:ORANGE[i]};}}}\nvar hasSrc=text.indexOf('manba(lar)')>=0||text.indexOf('source')>=0;\nvar hasNum=text.indexOf('%')>=0;\nif(!fail&&hasNum&&!hasSrc){fail={tur:'MANBA',atama:'raqam bor, manba yoq'};}\nif(fail){return[{json:{...item,compliance:'FAIL',tur:fail.tur,atama:fail.atama,chatId:item.chatId||'',xabar:'❌ Compliance FAIL: '+fail.tur+' — \"'+fail.atama+'\"'}}];}\nreturn[{json:{...item,compliance:'PASS'}}];"
+      "kod": "var k1Holat=($input.first().json.holat||'FAIL');var orig=$('Skriptni Tozalash (AI)').first().json;var topilmalar=$input.first().json.topilmalar||[];if(k1Holat==='FAIL'){return[{json:{...orig,compliance:'FAIL',tur:(topilmalar[0]&&topilmalar[0].tur)||'K1',atama:(topilmalar[0]&&topilmalar[0].atama)||'',chatId:orig.chatId||'',xabar:'❌ K1 FAIL: '+(topilmalar[0]&&topilmalar[0].atama||'')}}];}return[{json:{...orig,compliance:'PASS'}}];"
     },
     "Compliance OK? (AI)": {
       "turi": "if",
@@ -1503,6 +1589,17 @@
       "main": [
         [
           {
+            "node": "K1 Natija (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K1 Natija (Bev)": {
+      "main": [
+        [
+          {
             "node": "Compliance OK? (Bev)",
             "type": "main",
             "index": 0
@@ -1796,6 +1893,17 @@
       ]
     },
     "K1 Compliance (AI)": {
+      "main": [
+        [
+          {
+            "node": "K1 Natija (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "K1 Natija (AI)": {
       "main": [
         [
           {
@@ -2099,5 +2207,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T08:50:57.251Z"
+  "vaqt": "2026-09-23T09:00:57.371Z"
 }
