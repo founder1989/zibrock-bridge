@@ -115,7 +115,7 @@
     "Ma'lumotlar to'plami": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var base=$(\"Ready Bridge\").first().json;var epizodlar=[];try{epizodlar=$(\"Epizod o'qish\").all().map(function(i){return i.json;});}catch(e){}var ctaMatn=\"\";var ctaKod=\"TR-C-0\";try{var cr=$(\"CTA o'qish\").first().json||{};ctaMatn=cr.matn||\"\";ctaKod=cr.kod||\"TR-C-0\";}catch(e){}if([\"T1\",\"T2\",\"T3\"].indexOf(base.mavzu_kod)>=0){ctaMatn=\"\";ctaKod=\"TR-C-0\";}return[{json:{...base,epizodlar:epizodlar,ctaMatn:ctaMatn,ctaKod:ctaKod}}];"
+      "kod": "var base=$(\"Setup birlashtirish\").first().json;var epizodlar=[];try{epizodlar=$(\"Epizod o'qish\").all().map(function(i){return i.json;});}catch(e){}var ctaMatn=\"\";var ctaKod=\"TR-C-0\";try{var cr=$(\"CTA o'qish\").first().json||{};ctaMatn=cr.matn||\"\";ctaKod=cr.kod||\"TR-C-0\";}catch(e){}if([\"T1\",\"T2\",\"T3\"].indexOf(base.mavzu_kod)>=0){ctaMatn=\"\";ctaKod=\"TR-C-0\";}return[{json:{...base,epizodlar:epizodlar,ctaMatn:ctaMatn,ctaKod:ctaKod}}];"
     },
     "Claude - P1 Sorovnoma": {
       "turi": "ai",
@@ -1120,5 +1120,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T19:41:09.123Z"
+  "vaqt": "2026-09-23T19:51:08.744Z"
 }
