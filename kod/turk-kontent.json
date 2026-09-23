@@ -15,7 +15,7 @@
         ],
         "additionalFields": {}
       },
-      "webhookId": "076805d7-7f83-42d0-93bb-00ee36fb3c90",
+      "webhookId": "642f2cd2-d547-445b-90b9-9d71d3245212",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -94,7 +94,7 @@
           "text": "Qabul qilindi"
         }
       },
-      "webhookId": "b472619f-72fc-4590-84e6-f1f78e8e31a1",
+      "webhookId": "2b24c2c3-50e9-474d-8255-81093cae024e",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -290,7 +290,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "f9cdc397-d731-40c8-bf10-5b4f4afb40e7",
+      "webhookId": "fe3b04a2-92aa-4f96-951a-ce9af3791c0a",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -390,7 +390,7 @@
           "message_thread_id": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}"
         }
       },
-      "webhookId": "0ea8f1e0-9265-44e9-a54e-6268b3f57b48",
+      "webhookId": "5b79e5df-87b4-4122-a366-90fc96ecd5e1",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -410,7 +410,7 @@
         "genericAuthType": "httpTemplatedCustomAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ text: $json.narration, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
+        "jsonBody": "={{ JSON.stringify({ text: $json.narration, model_id: \"eleven_v3\", language_code: \"tr\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
         "options": {}
       },
       "creds": {
@@ -504,7 +504,7 @@
       "parameters": {
         "amount": 10
       },
-      "webhookId": "e3e24550-c743-471e-884c-c149555c65cb",
+      "webhookId": "6665e442-ea6a-44de-a253-1ae7b9b3c05c",
       "creds": {}
     },
     "Shotstack - Poll Motion Audio": {
@@ -619,7 +619,7 @@
       "parameters": {
         "amount": 30
       },
-      "webhookId": "bcf8c37a-3035-4ff2-b4c8-cf4a45911e9b",
+      "webhookId": "d9beb9f2-23ad-4c20-b1a3-a6f069e59019",
       "creds": {}
     },
     "Shotstack - Poll Motion Render": {
@@ -690,7 +690,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "e5ea1431-9831-4ca1-98df-5c447ba3aad2",
+      "webhookId": "d686dafa-9cbb-4654-b8e8-3e302d5bd2e1",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -964,6 +964,28 @@
                 ],
                 "combinator": "and"
               }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "korrektor",
+                    "leftValue": "={{ $json.rol }}",
+                    "rightValue": "korrektor",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
             }
           ]
         },
@@ -985,15 +1007,34 @@
       "parameters": {},
       "creds": {}
     },
-    "AN · Analitik (F4)": {
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "id": "8453afaf-c963-4def-90ed-1b3dcd0e1759",
+    "AN · s_jadval": {
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "id": "f8544a3b-a624-489f-9073-2b0b165744d2",
       "position": [
         -2560,
-        480
+        1680
       ],
-      "parameters": {},
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "aCAywvM84bUMJHQR",
+          "cachedResultName": "s_jadval"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "faol",
+              "keyValue": "true"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "executeOnce": true,
       "creds": {}
     },
     "K1 · Yurist tekshiruvi": {
@@ -1294,6 +1335,20 @@
       "parameters": {},
       "creds": {}
     },
+    "R3 · Korrektor + Til Darvozasi": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "c17f8cb5-6b9e-4826-837a-5f6cf478c3c1",
+      "position": [
+        -2560,
+        2352
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "var matn=$json.matn||\"\";var variant=$json.variant||\"full\";var mahsulot_kod=$json.mahsulot_kod||\"\";var pasport=$json.pasport||{};var avtotuzatish=[];var result_matn=matn;\nvar belgi_max=parseInt(pasport.belgi_max||0);\nif(belgi_max>0&&result_matn.length>belgi_max){var cropped=result_matn.slice(0,belgi_max);var lastDot=Math.max(cropped.lastIndexOf(\". \"),cropped.lastIndexOf(\"! \"),cropped.lastIndexOf(\"? \"));if(lastDot>belgi_max*0.7){cropped=cropped.slice(0,lastDot+1);avtotuzatish.push(\"Caption qisqartirildi: \"+result_matn.length+\"→\"+cropped.length);result_matn=cropped;}}\nvar heshteg_max=5;var heshteglar=(result_matn.match(new RegExp(\"#\\S+\",\"g\"))||[]);\nif(heshteglar.length>heshteg_max){heshteglar.slice(heshteg_max).forEach(function(h){result_matn=result_matn.replace(h,\"\").replace(/  +/,\" \").trim();});avtotuzatish.push(\"Heshteg qisqartirildi\");}\nif(result_matn.indexOf(\"«\")>=0||result_matn.indexOf(\"»\")>=0){result_matn=result_matn.replace(new RegExp(\"«\",\"g\"),\"\").replace(new RegExp(\"»\",\"g\"),\"\");avtotuzatish.push(\"Qo'shtirnoqlar olib tashlandi\");}\nif(variant===\"metasafe\"&&(mahsulot_kod===\"tiktok\"||mahsulot_kod===\"reel\")){var hadLink=result_matn.match(new RegExp(\"https?://\\S+\",\"g\"));if(hadLink){result_matn=result_matn.replace(new RegExp(\"https?://\\S+\",\"g\"),\"\").replace(/  +/,\" \").trim();avtotuzatish.push(\"Havola olib tashlandi\");}}\nresult_matn=result_matn.replace(new RegExp(\"\n{3,}\",\"g\"),\"\n\n\");\nvar uzbek_words=[\"va \",\" bilan \",\" uchun \",\" emas \",\" qilish \",\" bo'ladi \",\" bo'lsa \",\" kerak \"];\nvar uzbek_chars_count=(result_matn.match(new RegExp(\"[o’g’ʻʼ]\",\"g\"))||[]).length;\nvar uzbek_words_count=0;\nuzbek_words.forEach(function(uw){if(result_matn.toLowerCase().indexOf(uw)>=0)uzbek_words_count++;});\nvar turkish_chars=(result_matn.match(new RegExp(\"[çğışöüÇĞİŞÖÜ]\",\"g\"))||[]).length;\nvar total_letters=(result_matn.match(new RegExp(\"[a-zA-ZçğışöüÇĞİŞÖÜ]\",\"g\"))||[]).length;\nvar turkish_ratio=total_letters>0?turkish_chars/total_letters:0;\nvar til_xato=false;\nif(uzbek_chars_count>=3)til_xato=true;\nif(uzbek_words_count>=2)til_xato=true;\nif(total_letters>50&&turkish_ratio<0.005)til_xato=true;\nif(til_xato){return{json:{holat:\"FAIL\",tur:\"TIL_XATO\",xabar:\"Matn turkcha emas.\",matn_original:matn,matn_korr:matn,avtotuzatish:avtotuzatish,uzbek_chars_count:uzbek_chars_count,uzbek_words_count:uzbek_words_count,turkish_ratio:turkish_ratio}};}\nvar xatolar=[];\nvar uzunlik_min_s=parseFloat(pasport.uzunlik_min_s||0);var uzunlik_max_s=parseFloat(pasport.uzunlik_max_s||0);\nif(uzunlik_min_s>0&&uzunlik_max_s>0){var soz_soni=result_matn.split(new RegExp(\"\\s+\")).filter(function(w){return w.length>0;}).length;var min_soz=Math.round(uzunlik_min_s*2.2);var max_soz=Math.round(uzunlik_max_s*2.6);if(soz_soni<min_soz)xatolar.push(\"So'z soni \"+soz_soni+\", min \"+min_soz);if(soz_soni>max_soz)xatolar.push(\"So'z soni \"+soz_soni+\", max \"+max_soz);}\nvar belgi_min=parseInt(pasport.belgi_min||0);\nif(belgi_min>0&&result_matn.length<belgi_min)xatolar.push(\"Caption \"+result_matn.length+\" belgi, min \"+belgi_min);\nif(belgi_max>0&&result_matn.length>belgi_max)xatolar.push(\"Caption \"+result_matn.length+\" belgi, max \"+belgi_max);\nreturn{json:Object.assign({},$json,{holat:xatolar.length===0?\"PASS\":\"FAIL\",tur:xatolar.length===0?\"\":\"KORREKTOR_FAIL\",xatolar:xatolar,matn_korr:result_matn,avtotuzatish:avtotuzatish})};"
+      },
+      "creds": {}
+    },
     "Extract From Agent": {
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -1322,6 +1377,38 @@
         "options": {}
       },
       "creds": {}
+    },
+    "XM · Xato markazi": {
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "id": "1ecc6265-2d03-471c-9b00-0d5d05dc62e8",
+      "position": [
+        -6816,
+        2080
+      ],
+      "parameters": {},
+      "creds": {}
+    },
+    "XM · Xato thread 13": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "id": "27a1ccc2-4afc-48ee-b1f3-23b212ad5292",
+      "position": [
+        -6592,
+        2080
+      ],
+      "parameters": {
+        "chatId": "-1004462774154",
+        "text": "={{ \"❌ Xato: \" + ($json.workflow && $json.workflow.name || \"n8n\") + \" | Node: \" + ($json.execution && $json.execution.lastNodeExecuted || \"?\") + \"\\nXabar: \" + ($json.error && $json.error.message || JSON.stringify($json)) }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "message_thread_id": 13
+        }
+      },
+      "webhookId": "920e90ed-26be-458a-98d1-fa5841a6009a",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "Input Merge": {
       "type": "n8n-nodes-base.merge",
@@ -1427,7 +1514,7 @@
           "message_thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "fcc5312c-9c69-4f5b-9b65-0e8dbf925d5e",
+      "webhookId": "de6e6c5b-f3f2-4bf7-924d-0fc8c229737d",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1653,7 +1740,7 @@
         "genericAuthType": "httpTemplatedCustomAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ text: $(\"Skriptni Ajratish\").item.json.merged_response, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
+        "jsonBody": "={{ JSON.stringify({ text: $(\"Skriptni Ajratish\").item.json.merged_response, model_id: \"eleven_v3\", language_code: \"tr\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
         "options": {}
       },
       "creds": {
@@ -1738,7 +1825,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "9613452e-dc60-4928-961f-c693bf6c0675",
+      "webhookId": "1d69bf7d-7fa6-4bc3-9237-1016b43ad5c4",
       "creds": {}
     },
     "HeyGen Video Status (Bev)": {
@@ -1915,7 +2002,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "2437b690-f0ec-47d5-b16f-3af87922260c",
+      "webhookId": "9e355b54-8ac7-4085-a1ac-4f0bed3acd82",
       "creds": {}
     },
     "Hyperframes status (Bev)": {
@@ -2000,7 +2087,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "96ed1605-e908-4354-affd-f74d76bf5119",
+      "webhookId": "ae35a13b-2e18-4da8-81d0-b110cb376408",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2251,7 +2338,7 @@
         "genericAuthType": "httpTemplatedCustomAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ text: $(\"Platforma Aniqlash\").item.json.merged_response, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
+        "jsonBody": "={{ JSON.stringify({ text: $(\"Platforma Aniqlash\").item.json.merged_response, model_id: \"eleven_v3\", language_code: \"tr\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
         "options": {}
       },
       "creds": {
@@ -2336,7 +2423,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "46bd4bf5-17ce-4492-88fe-a30694f9d840",
+      "webhookId": "122bd3e7-4dcb-4ba8-8631-14ca54111425",
       "creds": {}
     },
     "HeyGen Video Status (AI)": {
@@ -2513,7 +2600,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "c08d6ac6-0509-4ae8-bef3-4edac6e9b5d9",
+      "webhookId": "09ae2bed-efb7-47ba-8897-a4629251651c",
       "creds": {}
     },
     "Hyperframes status (AI)": {
@@ -2631,7 +2718,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "c4bc43f3-28b9-45db-9ef9-7f99ff04cb8c",
+      "webhookId": "de8b81e8-005a-4781-8c1a-5f20df3d1770",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2653,7 +2740,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "34d10c43-bbeb-4d83-bd84-6e1bc42fa116",
+      "webhookId": "f19d74b7-4117-4eed-bf9f-3adc9695a0ac",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2684,34 +2771,393 @@
       },
       "creds": {}
     },
-    "XM · Xato markazi": {
-      "type": "n8n-nodes-base.errorTrigger",
-      "typeVersion": 1,
-      "id": "1ecc6265-2d03-471c-9b00-0d5d05dc62e8",
+    "R3 · Natija: PASS?": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "id": "841002b1-4670-42bd-adcc-3f2157a0a2a5",
       "position": [
-        -6816,
-        2080
+        -2336,
+        2368
       ],
-      "parameters": {},
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "r3-pass",
+              "leftValue": "={{ $json.holat }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
       "creds": {}
     },
-    "XM · Xato thread 13": {
+    "R3 · TIL_XATO → thread 13": {
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
-      "id": "27a1ccc2-4afc-48ee-b1f3-23b212ad5292",
+      "id": "b4cdbdef-7631-405e-8249-8262a598cc1a",
       "position": [
-        -6592,
-        2080
+        -2112,
+        2368
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ \"❌ Xato: \" + ($json.workflow && $json.workflow.name || \"n8n\") + \" | Node: \" + ($json.execution && $json.execution.lastNodeExecuted || \"?\") + \"\\nXabar: \" + ($json.error && $json.error.message || JSON.stringify($json)) }}",
+        "text": "={{ \"🔴 TIL_XATO · \" + ($json.mahsulot_kod||\"?\") + \"\\nMatn turkcha emas.\\nO'zbek chars: \" + $json.uzbek_chars_count + \" | So'z: \" + $json.uzbek_words_count + \"\\nTurkcha nisbat: \" + (($json.turkish_ratio||0)*100).toFixed(1) + \"%\" }}",
         "additionalFields": {
           "appendAttribution": false,
           "message_thread_id": 13
         }
       },
-      "webhookId": "80429620-3beb-4b58-9385-2cbda861c57d",
+      "webhookId": "a3868656-7d05-4fcc-983a-184f6be010f0",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "AN · hooklar": {
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "id": "398a7008-05ad-4872-92ff-cf20937d7afb",
+      "position": [
+        -2336,
+        2048
+      ],
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "h93mhMwvU3wZBbZt",
+          "cachedResultName": "hooklar"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "mavzu_kod",
+              "keyValue": "={{ $(\"OR · Bo'lim marshruti\").item.json.mavzu_kod || \"\" }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "creds": {}
+    },
+    "AN · cta_mavzu": {
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "id": "f77a5014-61d6-4e92-b791-e9ddb6180ac6",
+      "position": [
+        -2112,
+        688
+      ],
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "J68Jpzm86CSkZRDw",
+          "cachedResultName": "cta_mavzu"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "mavzu_kod",
+              "keyValue": "={{ $(\"OR · Bo'lim marshruti\").item.json.mavzu_kod || \"\" }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "creds": {}
+    },
+    "AN · pasport": {
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "id": "8169401a-28c5-4ee5-881b-82b0517a5887",
+      "position": [
+        -1888,
+        688
+      ],
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "I7kWm60euuBUBuw6",
+          "cachedResultName": "mahsulot_pasport"
+        },
+        "returnAll": true
+      },
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "creds": {}
+    },
+    "AN · epizodlar": {
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "id": "aa482521-b21a-45b3-8ca1-bd8977402479",
+      "position": [
+        -1664,
+        688
+      ],
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "TShvzNplxaIIy66F",
+          "cachedResultName": "epizod_bloklar"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "mavzu_kod",
+              "keyValue": "={{ $(\"OR · Bo'lim marshruti\").item.json.mavzu_kod || \"\" }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "creds": {}
+    },
+    "AN · tg_baza": {
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "id": "b8b1b3c4-a41e-45d2-999f-c71a9d5e8f7a",
+      "position": [
+        -1440,
+        688
+      ],
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "HYE6WlZS2WDFdpz1",
+          "cachedResultName": "tg_postlar"
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "creds": {}
+    },
+    "AN · thumbnail_spec": {
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "id": "00c78b57-977a-4e42-9f71-6286dd904a11",
+      "position": [
+        -1216,
+        688
+      ],
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "JFBo1qwyAjsM70gh",
+          "cachedResultName": "thumbnail"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "mavzu_kod",
+              "keyValue": "={{ $(\"OR · Bo'lim marshruti\").item.json.mavzu_kod || \"\" }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "creds": {}
+    },
+    "AN · Kontekst birlashtirish": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "33dedcc1-4eff-4500-ae8b-e632b6f453bf",
+      "position": [
+        -992,
+        688
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "var mavzu_kod = $(\"OR · Bo'lim marshruti\").item.json.mavzu_kod || \"\";\nvar avatar_kod = $(\"OR · Bo'lim marshruti\").item.json.avatar_kod || \"a1\";\n// s_jadval: mavzu_kod bo'yicha filter\nvar s_all = $(\"AN · s_jadval\").all().map(function(i){return i.json;});\nvar faktlar = s_all.filter(function(r){\n  var mk = String(r.mavzu_kodlar || \"\");\n  return mk.split(\",\").map(function(c){return c.trim();}).indexOf(mavzu_kod) >= 0;\n});\n// hooklar\nvar hooklar_raw = [];\ntry{ hooklar_raw = $(\"AN · hooklar\").all().map(function(i){return i.json;}); }catch(e){}\n// cta_mavzu\nvar cta_raw = [];\ntry{ cta_raw = $(\"AN · cta_mavzu\").all().map(function(i){return i.json;}); }catch(e){}\n// pasport\nvar pasport_raw = [];\ntry{ pasport_raw = $(\"AN · pasport\").all().map(function(i){return i.json;}); }catch(e){}\n// epizodlar\nvar epizod_raw = [];\ntry{ epizod_raw = $(\"AN · epizodlar\").all().map(function(i){return i.json;}); }catch(e){}\n// tg_baza\nvar tg_baza = \"\";\ntry{ tg_baza = $(\"AN · tg_baza\").first().json.matn || \"\"; }catch(e){}\n// thumbnail_spec\nvar thumb_spec = {};\ntry{ thumb_spec = $(\"AN · thumbnail_spec\").first().json || {}; }catch(e){}\n// Hooks xaritasi\nvar hooks_map = {};\nhooklar_raw.forEach(function(h,i){\n  if(h.tiktok) hooks_map[\"tiktok_\"+i] = h.tiktok;\n  if(h.instagram) hooks_map[\"reel_\"+i] = h.instagram;\n  if(h.youtube) hooks_map[\"yt_short_\"+i] = h.youtube;\n});\n// CTA xaritasi\nvar cta_map = {};\ncta_raw.forEach(function(ct){\n  if(ct.mahsulot_kod) cta_map[ct.mahsulot_kod] = {kod:ct.kod,matn:ct.matn||\"\",endcard:ct.endcard||\"\",qadam:ct.qadam||\"\"};\n});\n// Pasport xaritasi\nvar pasport_map = {};\npasport_raw.forEach(function(p){if(p.mahsulot_kod) pasport_map[p.mahsulot_kod] = p;});\n// job_id\nvar now = new Date();\nvar sana = now.toISOString().slice(0,10).replace(new RegExp(\"-\",\"g\"),\"\");\nvar rand = Math.random().toString(36).slice(2,6).toUpperCase();\nvar job_id = mavzu_kod + \"-\" + sana + \"-\" + rand;\nreturn [{json:{\n  job_id: job_id,\n  mavzu_kod: mavzu_kod,\n  avatar_kod: avatar_kod,\n  faktlar: faktlar,\n  fakt_soni: faktlar.length,\n  hooks_map: hooks_map,\n  cta_map: cta_map,\n  pasport_map: pasport_map,\n  epizodlar: epizod_raw,\n  tg_post_baza: tg_baza,\n  thumbnail_spec: thumb_spec\n}}];"
+      },
+      "creds": {}
+    },
+    "AN · Claude Brif": {
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "id": "a64bf54b-ecb7-446b-bc57-43d2a0bcb008",
+      "position": [
+        -768,
+        1200
+      ],
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ \"Mavzu: \" + $json.mavzu_kod + \"\\nFAKTLAR (\" + $json.fakt_soni + \" ta):\\n\" + JSON.stringify($json.faktlar.map(function(f){return {s_id:f.s_id, matn:f.matn_tr, qiymat:f.qiymat, birlik:f.birlik, manba:f.manba, meta_tiktok:f.meta_tiktok||\"\", daraja:f.daraja||\"A\"};}), null, 1) }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 2000,
+          "system": "Sen ZIBROCK uchun turkcha kontent burchaklarini yaratuvchisan.\nQOIDA: RAQAM IXTIRO QILINMAYDI. Har raqam faqat berilgan faktlar[] dan olinadi.\n\nQuyidagi formatda JSON qaytargin (JSON.parse ishlaydigan, markdown belgisiz):\n{\n  \"burchaklar\": {\n    \"tiktok\": [\"burchak_0\",\"burchak_1\",\"burchak_2\",\"burchak_3\"],\n    \"reel\": [\"burchak_0\",\"burchak_1\"],\n    \"yt_short\": [\"burchak_0\",\"burchak_1\",\"burchak_2\"],\n    \"yt_long\": \"bitta burchak\",\n    \"carousel\": \"bitta burchak\",\n    \"tg_paket\": \"bitta burchak\",\n    \"thumbnail\": \"bitta burchak\"\n  },\n  \"sarlavha\": \"mavzu sarlavhasi turkcha\",\n  \"keyingi_mavzu_koprik\": \"keyingi mavzuga o'tish gapi turkcha 1 gap\"\n}\n\nQoidalar:\n- Barcha burchaklar turkcha, qisqa (<=10 so'z), raqam bilan boshlanishi afzal\n- 13 ta burchak BIR-BIRINI TAKRORLAMASIN, har biri boshqa savolni ochsin\n- tiktok:4, reel:2, yt_short:3, yt_long:1, carousel:1, tg_paket:1, thumbnail:1\n- Raqam ishlatilsa u faktlar[]da bo'lishi shart\n- meta_tiktok=\"taqiq\" bo'lgan faktlar metasafe mahsulotlarda ishlatilmasin\nFaqat JSON qaytargin."
+        }
+      },
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
+    },
+    "AN · Brif parse": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "024aae67-02a3-4fb8-835f-8a5e7e33247b",
+      "position": [
+        -544,
+        688
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "var raw = $json.content && $json.content[0] && $json.content[0].text || JSON.stringify($json);\nvar parsed;\ntry {\n  var s = raw.indexOf(\"{\"); var e = raw.lastIndexOf(\"}\");\n  parsed = JSON.parse(raw.slice(s, e+1));\n} catch(err) {\n  return {json:{xato:true, tur:\"PARSE_FAIL\", xabar:String(err)}};\n}\nvar ctx = $(\"AN · Kontekst birlashtirish\").first().json;\nreturn {json: Object.assign({}, ctx, {\n  burchaklar: parsed.burchaklar || {},\n  sarlavha: parsed.sarlavha || \"\",\n  keyingi_mavzu_koprik: parsed.keyingi_mavzu_koprik || \"\",\n  brif_xato: false\n})};"
+      },
+      "creds": {}
+    },
+    "AN · Brif tekshiruvi": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "234d5b30-705b-430d-8edd-743ae5419fcc",
+      "position": [
+        -320,
+        688
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "var b = $json.burchaklar || {}; var xatolar = [];\nif (!b.tiktok || b.tiktok.length !== 4) xatolar.push(\"tiktok: 4 ta kerak, topildi: \" + (b.tiktok ? b.tiktok.length : 0));\nif (!b.reel || b.reel.length !== 2) xatolar.push(\"reel: 2 ta kerak\");\nif (!b.yt_short || b.yt_short.length !== 3) xatolar.push(\"yt_short: 3 ta kerak\");\nif (!b.yt_long) xatolar.push(\"yt_long yo'q\");\nif (!b.carousel) xatolar.push(\"carousel yo'q\");\nif (!b.tg_paket) xatolar.push(\"tg_paket yo'q\");\nif (!b.thumbnail) xatolar.push(\"thumbnail yo'q\");\n// Raqam tekshiruvi\nvar faktlar = $json.faktlar || [];\nvar fr = [];\nfaktlar.forEach(function(f){ var m = String(f.qiymat||f.matn_tr||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[]; fr = fr.concat(m); });\nvar allText = JSON.stringify(b);\nvar pctM = allText.match(new RegExp(\"%([0-9]+)\",\"g\")) || [];\npctM.forEach(function(pm){ var n = pm.replace(\"%\",\"\"); var found = false; for(var k=0;k<fr.length;k++){if(fr[k].indexOf(n)>=0){found=true;break;}} if(!found) xatolar.push(\"Ixtiro raqam: \"+pm); });\nreturn {json: Object.assign({}, $json, {holat: xatolar.length===0?\"PASS\":\"FAIL\", tekshiruv_xatolar: xatolar})};"
+      },
+      "creds": {}
+    },
+    "AN · PASS?": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "id": "e169aeed-6697-457c-b224-8fd83e915bc5",
+      "position": [
+        -96,
+        688
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "brif-pass",
+              "leftValue": "={{ $json.holat }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "creds": {}
+    },
+    "AN · Brif → thread 3": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "id": "3315cd46-573f-4523-885d-04ff8a72d1ab",
+      "position": [
+        128,
+        608
+      ],
+      "parameters": {
+        "chatId": "-1004462774154",
+        "text": "={{ \"📊 <b>BRIF · \" + $json.mavzu_kod + \" · \" + $json.sarlavha + \"</b>\\n\\n\" + \"✅ Faktlar: \" + $json.fakt_soni + \" ta\\n\" + \"🎯 Burchaklar: TikTok×\" + ($json.burchaklar.tiktok||[]).length + \" Reels×\" + ($json.burchaklar.reel||[]).length + \" Shorts×\" + ($json.burchaklar.yt_short||[]).length + \" YT×1 KR×1 TG×1 TH×1\\n\\n\" + \"📌 TikTok: \" + ($json.burchaklar.tiktok||[]).join(\" | \") + \"\\n📌 Reels: \" + ($json.burchaklar.reel||[]).join(\" | \") + \"\\n📌 YT Shorts: \" + ($json.burchaklar.yt_short||[]).join(\" | \") + \"\\n📌 YT Long: \" + ($json.burchaklar.yt_long||\"\") + \"\\n📌 Karusel: \" + ($json.burchaklar.carousel||\"\") + \"\\n📌 TG Paket: \" + ($json.burchaklar.tg_paket||\"\") + \"\\n📌 Thumbnail: \" + ($json.burchaklar.thumbnail||\"\") + \"\\n\\nKo'prik: \" + ($json.keyingi_mavzu_koprik||\"\") + \"\\n\\n🆔 \" + $json.job_id }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML",
+          "message_thread_id": 3
+        }
+      },
+      "webhookId": "a86a2afb-6676-48d2-846c-0e04a7aa1594",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "AN · Brif FAIL → thread 13": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "id": "0bb7a301-435a-4bb8-ae63-e59fa69b3eb2",
+      "position": [
+        128,
+        800
+      ],
+      "parameters": {
+        "chatId": "-1004462774154",
+        "text": "={{ \"❌ AN· Brif FAIL · \" + $json.mavzu_kod + \"\\nXatolar: \" + JSON.stringify($json.tekshiruv_xatolar) }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "message_thread_id": 13
+        }
+      },
+      "webhookId": "c421647c-b278-4a80-be22-fc6f03caa66e",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "AN · Fakt yo'q → thread 13": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "id": "177af6c4-c799-4252-9ccd-5f77f0a0dd39",
+      "position": [
+        -6816,
+        2688
+      ],
+      "parameters": {
+        "chatId": "-1004462774154",
+        "text": "={{ \"⚠️ AN· s_jadval’da \" + $(\"OR · Bo'lim marshruti\").item.json.mavzu_kod + \" uchun fakt yo'q. Eskalatsiya.\" }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "message_thread_id": 13
+        }
+      },
+      "webhookId": "b30c1031-c01f-43ba-aa78-6e4d14c11092",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -3159,7 +3605,7 @@
         ],
         [
           {
-            "node": "AN · Analitik (F4)",
+            "node": "AN · s_jadval",
             "type": "main",
             "index": 0
           }
@@ -3201,7 +3647,25 @@
         ],
         [
           {
+            "node": "R3 · Korrektor + Til Darvozasi",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Extract From Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · s_jadval": {
+      "main": [
+        [
+          {
+            "node": "AN · hooklar",
             "type": "main",
             "index": 0
           }
@@ -3261,6 +3725,17 @@
         ]
       ]
     },
+    "R3 · Korrektor + Til Darvozasi": {
+      "main": [
+        [
+          {
+            "node": "R3 · Natija: PASS?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Extract From Agent": {
       "main": [
         [
@@ -3268,6 +3743,17 @@
             "node": "Input Merge",
             "type": "main",
             "index": 1
+          }
+        ]
+      ]
+    },
+    "XM · Xato markazi": {
+      "main": [
+        [
+          {
+            "node": "XM · Xato thread 13",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -3995,11 +4481,146 @@
         ]
       ]
     },
-    "XM · Xato markazi": {
+    "R3 · Natija: PASS?": {
       "main": [
         [
           {
-            "node": "XM · Xato thread 13",
+            "node": "R3 · Natija: PASS?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "R3 · TIL_XATO → thread 13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · hooklar": {
+      "main": [
+        [
+          {
+            "node": "AN · cta_mavzu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · cta_mavzu": {
+      "main": [
+        [
+          {
+            "node": "AN · pasport",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · pasport": {
+      "main": [
+        [
+          {
+            "node": "AN · epizodlar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · epizodlar": {
+      "main": [
+        [
+          {
+            "node": "AN · tg_baza",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · tg_baza": {
+      "main": [
+        [
+          {
+            "node": "AN · thumbnail_spec",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · thumbnail_spec": {
+      "main": [
+        [
+          {
+            "node": "AN · Kontekst birlashtirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · Kontekst birlashtirish": {
+      "main": [
+        [
+          {
+            "node": "AN · Claude Brif",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · Claude Brif": {
+      "main": [
+        [
+          {
+            "node": "AN · Brif parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · Brif parse": {
+      "main": [
+        [
+          {
+            "node": "AN · Brif tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · Brif tekshiruvi": {
+      "main": [
+        [
+          {
+            "node": "AN · PASS?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AN · PASS?": {
+      "main": [
+        [
+          {
+            "node": "AN · Brif → thread 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AN · Brif FAIL → thread 13",
             "type": "main",
             "index": 0
           }
@@ -4073,5 +4694,5 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "vaqt": "2026-09-23T22:40:57.291Z"
+  "vaqt": "2026-09-23T22:50:57.439Z"
 }
