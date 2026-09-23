@@ -15,7 +15,49 @@
     "Kirish tayyorlash": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var p=$json.paket||$json;\nvar burchak=(p.burchaklar&&p.burchaklar.carousel&&p.burchaklar.carousel[0])||\"Karusel burchak\";\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],burchak:burchak,urinish:1}};"
+      "kod": "var p=$json.paket||$json;var burchak=(p.burchaklar&&p.burchaklar.carousel&&p.burchaklar.carousel[0])||\"Karusel burchak\";return{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],burchak:burchak,urinish:1}};"
+    },
+    "Pasport o'qish": {
+      "turi": "unknown"
+    },
+    "Karusel baza o'qish": {
+      "turi": "unknown"
+    },
+    "Ma'lumot tayyorlash": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;var pas={};try{pas=$(\"Pasport o'qish\").first().json||{};}catch(e){}var slaydSoni=parseInt(pas.slayd||7);var bazaSlaydlar=[];var bazaBor=false;try{var bazaRow=$(\"Karusel baza o'qish\").first().json||{};if(bazaRow.slaydlar){bazaSlaydlar=JSON.parse(bazaRow.slaydlar||\"[]\");bazaBor=bazaSlaydlar.length>0;if(bazaBor)slaydSoni=bazaSlaydlar.length;}}catch(e){}return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,test_rejim:inp.test_rejim,faktlar:inp.faktlar||[],burchak:inp.burchak,urinish:inp.urinish||1,slaydSoni:slaydSoni,bazaSlaydlar:bazaSlaydlar,bazaBor:bazaBor}}];"
+    },
+    "Baza karusel bormi?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "baza",
+            "leftValue": "={{ $json.bazaBor }}",
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "Baza karuselni qabul qilish": {
+      "turi": "unknown"
+    },
+    "Slaydlarni birlashtirish": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var ds=$(\"Ma'lumot tayyorlash\").first().json;var slaydlar=$json.slaydlar||$json.bazaSlaydlar||[];var caption=$json.caption||\"\";var heshteglar=$json.heshteglar||[\"#psikoloji\",\"#disiplin\",\"#istatistik\",\"#bilim\",\"#davranisalfinans\"];var faktlar=$json.faktlar||ds.faktlar||[];var xatolar=[];var slaydSoni=ds.slaydSoni||7;if(slaydlar.length!==slaydSoni)xatolar.push(\"Slayd soni \"+slaydlar.length+\", \"+slaydSoni+\" kerak\");if(slaydlar.length>0){var s1=slaydlar[0].title||\"\";var s1w=s1.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});if(s1w.length>8)xatolar.push(\"1-slayd sarlavha \"+s1w.length+\" soz, max 8\");}var fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}var allText=JSON.stringify(slaydlar);var pm=allText.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];for(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var fk=0;fk<fr.length;fk++){if(fr[fk].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}return{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,slaydlar:slaydlar,caption:caption,heshteglar:heshteglar,faktlar:faktlar,burchak:$json.burchak||ds.burchak,job_id:$json.job_id||ds.job_id,mavzu_kod:$json.mavzu_kod||ds.mavzu_kod,test_rejim:$json.test_rejim||ds.test_rejim,urinish:$json.urinish||1}};"
     },
     "Claude - Karusel": {
       "turi": "ai",
@@ -29,60 +71,7 @@
     "Karusel parse": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\"}};}\nvar inp=$(\"Kirish tayyorlash\").item.json;\nreturn{json:{slaydlar:p.slaydlar||[],caption:p.caption||\"\",heshteglar:p.heshteglar||[],faktlar:inp.faktlar,burchak:inp.burchak,job_id:inp.job_id,test_rejim:inp.test_rejim,urinish:inp.urinish||1}};"
-    },
-    "Karusel tekshiruvi": {
-      "turi": "code",
-      "mode": "runOnceForEachItem",
-      "kod": "var slaydlar=$json.slaydlar||[];var faktlar=$json.faktlar||[];var xatolar=[];\nif(slaydlar.length!==7)xatolar.push(\"Slayd soni \"+slaydlar.length+\", 7 bolishi kerak\");\n// Check 1-slayd ≤8 soz\nif(slaydlar.length>0){var s1=slaydlar[0].title||\"\";var s1w=s1.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});if(s1w.length>8)xatolar.push(\"1-slayd sarlavha \"+s1w.length+\" soz, max 8\");}\n// Check all slides ≤25 soz\nfor(var i=1;i<slaydlar.length-1;i++){var st=slaydlar[i].title||\"\";var sb=slaydlar[i].body||\"\";var comb=(st+\" \"+sb).split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});if(comb.length>25)xatolar.push(\"Slayd \"+(i+1)+\" \"+comb.length+\" soz, max 25\");}\n// Numbers check\nvar fr=[];for(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)fr.push(m[j]);}\nvar allText=JSON.stringify(slaydlar);var pm=allText.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var f=false;for(var fk=0;fk<fr.length;fk++){if(fr[fk].indexOf(n)>=0){f=true;break;}}if(!f)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,slaydlar:slaydlar,caption:$json.caption,heshteglar:$json.heshteglar,faktlar:faktlar,burchak:$json.burchak,job_id:$json.job_id,test_rejim:$json.test_rejim,urinish:$json.urinish||1}};"
-    },
-    "K1 Compliance": {
-      "turi": "executeWorkflow",
-      "workflowId": "Ls4eWDug9Lj5lPVP",
-      "inputs": {
-        "mappingMode": "defineBelow",
-        "value": {
-          "matn": "={{ JSON.stringify($json.slaydlar) }}",
-          "variant": "metasafe",
-          "faktlar": "={{ $json.faktlar }}"
-        },
-        "schema": [
-          {
-            "id": "matn",
-            "displayName": "matn",
-            "required": false,
-            "defaultMatch": false,
-            "display": true,
-            "canBeUsedToMatch": true,
-            "type": "string"
-          },
-          {
-            "id": "variant",
-            "displayName": "variant",
-            "required": false,
-            "defaultMatch": false,
-            "display": true,
-            "canBeUsedToMatch": true,
-            "type": "string"
-          },
-          {
-            "id": "faktlar",
-            "displayName": "faktlar",
-            "required": false,
-            "defaultMatch": false,
-            "display": true,
-            "canBeUsedToMatch": true,
-            "type": "array"
-          }
-        ],
-        "attemptToConvertTypes": false,
-        "convertFieldsToString": false
-      }
-    },
-    "K1 natijasini birlashtirish": {
-      "turi": "code",
-      "mode": "runOnceForEachItem",
-      "kod": "var k1=$json;var cv=$(\"Karusel tekshiruvi\").item.json;\nvar k1H=k1.holat||\"FAIL\";var xa=cv.xatolar||[];\nif(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}\nreturn{json:{holat:(cv.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,slaydlar:cv.slaydlar,caption:cv.caption,heshteglar:cv.heshteglar,faktlar:cv.faktlar,burchak:cv.burchak,job_id:cv.job_id,test_rejim:cv.test_rejim,urinish:cv.urinish||1}};"
+      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);var p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\"}};}var ds=$(\"Ma'lumot tayyorlash\").first().json;return{json:{slaydlar:p.slaydlar||[],caption:p.caption||\"\",heshteglar:[\"#psikoloji\",\"#disiplin\",\"#istatistik\",\"#bilim\",\"#davranisalfinans\"],faktlar:ds.faktlar,burchak:ds.burchak,job_id:ds.job_id,mavzu_kod:ds.mavzu_kod,test_rejim:ds.test_rejim,urinish:ds.urinish||1,slaydSoni:ds.slaydSoni}};"
     },
     "PASS?": {
       "turi": "if",
@@ -130,19 +119,19 @@
         "combinator": "and"
       }
     },
-    "Karusel ma'lumotlarini tayyorlash": {
-      "turi": "code",
-      "mode": "runOnceForEachItem",
-      "kod": "var inp=$json;\nvar carouselId=\"crs-\"+inp.job_id+\"-\"+Date.now().toString(36);\n// Convert slaydlar to carousel format\nvar slides=(inp.slaydlar||[]).map(function(s,i){\n  var sl={n:s.n||i+1,layout:s.layout||\"content\",title:s.title||\"\"};\n  if(s.subtitle)sl.subtitle=s.subtitle;\n  if(s.body)sl.body=s.body;\n  if(s.button)sl.button=s.button;\n  return sl;\n});\nvar brand={\n  brand_name:\"ZIBROCK\",handle:\"@zibrock_turkiye\",logo_url:\"\",\n  color_ground:\"#0A1727\",color_ground_line:\"#1A2A37\",color_tile:\"#D6AD62\",\n  color_porcelain:\"#F7F5F0\",color_gold:\"#D6AD62\",color_ink:\"#0A1727\",\n  color_muted_dark:\"#9CA3AF\",color_muted_light:\"#6B7280\",\n  font_display:\"Sora\",font_body:\"Inter\",\n  font_css_url:\"https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Inter:wght@600&display=block\",\n  output_format:\"png\",motif_key:\"instrument\"\n};\nvar carousel={language:\"tr\",slides:slides,caption:inp.caption||\"\",hashtags:inp.heshteglar||[]};\nreturn{json:{brand:brand,carousel:carousel,carouselId:carouselId,caption:inp.caption,heshteglar:inp.heshteglar,job_id:inp.job_id}};"
-    },
     "Telegram - Test Preview": {
       "turi": "telegram",
-      "text": "={{ \"🧪 Karusel test | \" + $json.burchak + \"\\n\\n7 slayd tayyor.\\n\" + $json.caption + \"\\n\" + $json.heshteglar.join(\" \") }}",
+      "text": "={{ \"🧪 Karusel test | \" + $json.mavzu_kod + \"\\n\\n\" + $json.slaydlar.length + \" slayd (baza: \" + ($json.bazaBor?\"ha\":\"yoq\") + \")\\n\" + $json.caption + \"\\n\" + $json.heshteglar.join(\" \") }}",
       "chatId": "-1004462774154",
       "thread": 9,
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
+    },
+    "Render ma'lumotlarini tayyorlash": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var inp=$json;var carouselId=\"crs-\"+inp.job_id+\"-\"+Date.now().toString(36);var slides=(inp.slaydlar||[]).map(function(s,i){var sl={n:s.n||i+1,layout:s.layout||\"content\",title:s.title||\"\"};if(s.subtitle)sl.subtitle=s.subtitle;if(s.body)sl.body=s.body;if(s.button)sl.button=s.button;return sl;});var brand={brand_name:\"ZIBROCK\",handle:\"@zibrock_turkiye\",logo_url:\"\",color_ground:\"#0A1727\",color_ground_line:\"#1A2A37\",color_tile:\"#D6AD62\",color_porcelain:\"#F7F5F0\",color_gold:\"#D6AD62\",color_ink:\"#0A1727\",color_muted_dark:\"#9CA3AF\",color_muted_light:\"#6B7280\",font_display:\"Sora\",font_body:\"Inter\",font_css_url:\"https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Inter:wght@600&display=block\",output_format:\"png\",motif_key:\"instrument\"};var carousel={language:\"tr\",slides:slides,caption:inp.caption||\"\",hashtags:inp.heshteglar||[]};return{json:{brand:brand,carousel:carousel,carouselId:carouselId,caption:inp.caption,heshteglar:inp.heshteglar,job_id:inp.job_id}};"
     },
     "carousel-render": {
       "turi": "executeWorkflow",
@@ -199,7 +188,7 @@
     "Qayta urinish?": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,burchak:$json.burchak,faktlar:$json.faktlar,test_rejim:$json.test_rejim}};"
+      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n}};}return{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,burchak:$json.burchak,faktlar:$json.faktlar,test_rejim:$json.test_rejim,mavzu_kod:$json.mavzu_kod,slaydSoni:$json.slaydSoni,bazaSlaydlar:$json.bazaSlaydlar,bazaBor:$json.bazaBor}};"
     },
     "Eskalatsiya?": {
       "turi": "if",
@@ -226,7 +215,7 @@
     },
     "Telegram - Eskalatsiya": {
       "turi": "telegram",
-      "text": "={{ \"❌ zb-p-karusel: 3 urinishdan keyin FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
+      "text": "={{ \"❌ zb-p-karusel: FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
       "chatId": "-1004462774154",
       "thread": 13,
       "creds": {
@@ -256,7 +245,74 @@
       "main": [
         [
           {
+            "node": "Pasport o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pasport o'qish": {
+      "main": [
+        [
+          {
+            "node": "Karusel baza o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Karusel baza o'qish": {
+      "main": [
+        [
+          {
+            "node": "Ma'lumot tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ma'lumot tayyorlash": {
+      "main": [
+        [
+          {
+            "node": "Baza karusel bormi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baza karusel bormi?": {
+      "main": [
+        [
+          {
+            "node": "Baza karuselni qabul qilish",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "PASS?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Claude - Karusel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baza karuselni qabul qilish": {
+      "main": [
+        [
+          {
+            "node": "Slaydlarni birlashtirish",
             "type": "main",
             "index": 0
           }
@@ -278,40 +334,7 @@
       "main": [
         [
           {
-            "node": "Karusel tekshiruvi",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Karusel tekshiruvi": {
-      "main": [
-        [
-          {
-            "node": "K1 Compliance",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "K1 Compliance": {
-      "main": [
-        [
-          {
-            "node": "K1 natijasini birlashtirish",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "K1 natijasini birlashtirish": {
-      "main": [
-        [
-          {
-            "node": "PASS?",
+            "node": "Slaydlarni birlashtirish",
             "type": "main",
             "index": 0
           }
@@ -340,28 +363,23 @@
       "main": [
         [
           {
-            "node": "Karusel ma'lumotlarini tayyorlash",
+            "node": "Telegram - Test Preview",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Karusel ma'lumotlarini tayyorlash",
+            "node": "Render ma'lumotlarini tayyorlash",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Karusel ma'lumotlarini tayyorlash": {
+    "Render ma'lumotlarini tayyorlash": {
       "main": [
         [
-          {
-            "node": "Telegram - Test Preview",
-            "type": "main",
-            "index": 0
-          },
           {
             "node": "carousel-render",
             "type": "main",
@@ -414,7 +432,7 @@
       "main": [
         [
           {
-            "node": "Claude - Karusel",
+            "node": "Baza karusel bormi?",
             "type": "main",
             "index": 0
           }
@@ -433,5 +451,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T08:41:02.024Z"
+  "vaqt": "2026-09-23T08:51:01.873Z"
 }
