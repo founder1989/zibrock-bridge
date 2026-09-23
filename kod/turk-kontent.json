@@ -15,7 +15,7 @@
         ],
         "additionalFields": {}
       },
-      "webhookId": "642f2cd2-d547-445b-90b9-9d71d3245212",
+      "webhookId": "51149245-624d-458a-bc4f-880059d8a364",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -94,7 +94,7 @@
           "text": "Qabul qilindi"
         }
       },
-      "webhookId": "2b24c2c3-50e9-474d-8255-81093cae024e",
+      "webhookId": "9ed91c9b-8503-4fa8-8631-9d27828b8a93",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -290,7 +290,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "fe3b04a2-92aa-4f96-951a-ce9af3791c0a",
+      "webhookId": "396fb4d9-663d-4e8e-9b7e-5f545946a9de",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -390,7 +390,7 @@
           "message_thread_id": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}"
         }
       },
-      "webhookId": "5b79e5df-87b4-4122-a366-90fc96ecd5e1",
+      "webhookId": "81ef9b95-1f00-4ba6-8884-49816c843f20",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -504,7 +504,7 @@
       "parameters": {
         "amount": 10
       },
-      "webhookId": "6665e442-ea6a-44de-a253-1ae7b9b3c05c",
+      "webhookId": "5a4d6e61-92ab-46a6-8ed2-0dbc5642ee10",
       "creds": {}
     },
     "Shotstack - Poll Motion Audio": {
@@ -619,7 +619,7 @@
       "parameters": {
         "amount": 30
       },
-      "webhookId": "d9beb9f2-23ad-4c20-b1a3-a6f069e59019",
+      "webhookId": "bfd1f919-4703-4b15-b7b6-b844f64dac6a",
       "creds": {}
     },
     "Shotstack - Poll Motion Render": {
@@ -690,7 +690,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "d686dafa-9cbb-4654-b8e8-3e302d5bd2e1",
+      "webhookId": "74e23c77-c3c9-4a19-913b-4424bdc46aba",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1345,7 +1345,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "var matn=$json.matn||\"\";var variant=$json.variant||\"full\";var mahsulot_kod=$json.mahsulot_kod||\"\";var pasport=$json.pasport||{};var avtotuzatish=[];var result_matn=matn;\nvar belgi_max=parseInt(pasport.belgi_max||0);\nif(belgi_max>0&&result_matn.length>belgi_max){var cropped=result_matn.slice(0,belgi_max);var lastDot=Math.max(cropped.lastIndexOf(\". \"),cropped.lastIndexOf(\"! \"),cropped.lastIndexOf(\"? \"));if(lastDot>belgi_max*0.7){cropped=cropped.slice(0,lastDot+1);avtotuzatish.push(\"Caption qisqartirildi: \"+result_matn.length+\"→\"+cropped.length);result_matn=cropped;}}\nvar heshteg_max=5;var heshteglar=(result_matn.match(new RegExp(\"#\\S+\",\"g\"))||[]);\nif(heshteglar.length>heshteg_max){heshteglar.slice(heshteg_max).forEach(function(h){result_matn=result_matn.replace(h,\"\").replace(/  +/,\" \").trim();});avtotuzatish.push(\"Heshteg qisqartirildi\");}\nif(result_matn.indexOf(\"«\")>=0||result_matn.indexOf(\"»\")>=0){result_matn=result_matn.replace(new RegExp(\"«\",\"g\"),\"\").replace(new RegExp(\"»\",\"g\"),\"\");avtotuzatish.push(\"Qo'shtirnoqlar olib tashlandi\");}\nif(variant===\"metasafe\"&&(mahsulot_kod===\"tiktok\"||mahsulot_kod===\"reel\")){var hadLink=result_matn.match(new RegExp(\"https?://\\S+\",\"g\"));if(hadLink){result_matn=result_matn.replace(new RegExp(\"https?://\\S+\",\"g\"),\"\").replace(/  +/,\" \").trim();avtotuzatish.push(\"Havola olib tashlandi\");}}\nresult_matn=result_matn.replace(new RegExp(\"\n{3,}\",\"g\"),\"\n\n\");\nvar uzbek_words=[\"va \",\" bilan \",\" uchun \",\" emas \",\" qilish \",\" bo'ladi \",\" bo'lsa \",\" kerak \"];\nvar uzbek_chars_count=(result_matn.match(new RegExp(\"[o’g’ʻʼ]\",\"g\"))||[]).length;\nvar uzbek_words_count=0;\nuzbek_words.forEach(function(uw){if(result_matn.toLowerCase().indexOf(uw)>=0)uzbek_words_count++;});\nvar turkish_chars=(result_matn.match(new RegExp(\"[çğışöüÇĞİŞÖÜ]\",\"g\"))||[]).length;\nvar total_letters=(result_matn.match(new RegExp(\"[a-zA-ZçğışöüÇĞİŞÖÜ]\",\"g\"))||[]).length;\nvar turkish_ratio=total_letters>0?turkish_chars/total_letters:0;\nvar til_xato=false;\nif(uzbek_chars_count>=3)til_xato=true;\nif(uzbek_words_count>=2)til_xato=true;\nif(total_letters>50&&turkish_ratio<0.005)til_xato=true;\nif(til_xato){return{json:{holat:\"FAIL\",tur:\"TIL_XATO\",xabar:\"Matn turkcha emas.\",matn_original:matn,matn_korr:matn,avtotuzatish:avtotuzatish,uzbek_chars_count:uzbek_chars_count,uzbek_words_count:uzbek_words_count,turkish_ratio:turkish_ratio}};}\nvar xatolar=[];\nvar uzunlik_min_s=parseFloat(pasport.uzunlik_min_s||0);var uzunlik_max_s=parseFloat(pasport.uzunlik_max_s||0);\nif(uzunlik_min_s>0&&uzunlik_max_s>0){var soz_soni=result_matn.split(new RegExp(\"\\s+\")).filter(function(w){return w.length>0;}).length;var min_soz=Math.round(uzunlik_min_s*2.2);var max_soz=Math.round(uzunlik_max_s*2.6);if(soz_soni<min_soz)xatolar.push(\"So'z soni \"+soz_soni+\", min \"+min_soz);if(soz_soni>max_soz)xatolar.push(\"So'z soni \"+soz_soni+\", max \"+max_soz);}\nvar belgi_min=parseInt(pasport.belgi_min||0);\nif(belgi_min>0&&result_matn.length<belgi_min)xatolar.push(\"Caption \"+result_matn.length+\" belgi, min \"+belgi_min);\nif(belgi_max>0&&result_matn.length>belgi_max)xatolar.push(\"Caption \"+result_matn.length+\" belgi, max \"+belgi_max);\nreturn{json:Object.assign({},$json,{holat:xatolar.length===0?\"PASS\":\"FAIL\",tur:xatolar.length===0?\"\":\"KORREKTOR_FAIL\",xatolar:xatolar,matn_korr:result_matn,avtotuzatish:avtotuzatish})};"
+        "jsCode": "var matn = $json.matn || \"\";\nvar variant = $json.variant || \"full\";\nvar mahsulot_kod = $json.mahsulot_kod || \"\";\nvar pasport = $json.pasport || {};\nvar avtotuzatish = [];\nvar result_matn = matn;\n// Avtotuzatish: caption limit\nvar belgi_max = parseInt(pasport.belgi_max || 0);\nif (belgi_max > 0 && result_matn.length > belgi_max) {\n  result_matn = result_matn.slice(0, belgi_max);\n  avtotuzatish.push(\"Caption qisqartirildi\");\n}\n// Til darvozasi\nvar uzbek_words = [\"va \", \" bilan \", \" uchun \", \" emas \", \" qilish \", \" boladi \", \" bolsa \", \" kerak \"];\nvar low = result_matn.toLowerCase();\nvar uzbek_count = 0;\nfor (var ui = 0; ui < uzbek_words.length; ui++) {\n  if (low.indexOf(uzbek_words[ui]) >= 0) uzbek_count++;\n}\nvar apostrophe_count = 0;\nfor (var ci = 0; ci < result_matn.length; ci++) {\n  var code = result_matn.charCodeAt(ci);\n  if (code === 39 || code === 0x2019 || code === 0x02BB || code === 0x02BC) apostrophe_count++;\n}\nvar turkish_count = 0;\nvar total_alpha = 0;\nfor (var ti = 0; ti < result_matn.length; ti++) {\n  var ch = result_matn.charAt(ti);\n  if (/[a-zA-Z]/.test(ch)) total_alpha++;\n  if (\"çğışöüÇĞİŞÖÜ\".indexOf(ch) >= 0) turkish_count++;\n}\nvar turkish_ratio = total_alpha > 0 ? turkish_count / total_alpha : 0;\nvar til_xato = (uzbek_count >= 2) || (apostrophe_count >= 3) || (total_alpha > 50 && turkish_ratio < 0.005);\nif (til_xato) {\n  return {json:{holat:\"FAIL\",tur:\"TIL_XATO\",xabar:\"Matn turkcha emas.\",matn_original:matn,matn_korr:matn,avtotuzatish:avtotuzatish,uzbek_count:uzbek_count,apostrophe_count:apostrophe_count,turkish_ratio:turkish_ratio}};\n}\n// Kod hakam\nvar xatolar = [];\nvar uzunlik_min_s = parseFloat(pasport.uzunlik_min_s || 0);\nvar uzunlik_max_s = parseFloat(pasport.uzunlik_max_s || 0);\nif (uzunlik_min_s > 0 && uzunlik_max_s > 0) {\n  var soz_arr = result_matn.split(\" \");\n  var soz_soni = 0;\n  for (var si = 0; si < soz_arr.length; si++) { if (soz_arr[si].length > 0) soz_soni++; }\n  var min_soz = Math.round(uzunlik_min_s * 2.2);\n  var max_soz = Math.round(uzunlik_max_s * 2.6);\n  if (soz_soni < min_soz) xatolar.push(\"Soz soni \" + soz_soni + \", min \" + min_soz);\n  if (soz_soni > max_soz) xatolar.push(\"Soz soni \" + soz_soni + \", max \" + max_soz);\n}\nreturn {json: Object.assign({}, $json, {holat: xatolar.length === 0 ? \"PASS\" : \"FAIL\", tur: xatolar.length === 0 ? \"\" : \"KORREKTOR_FAIL\", xatolar: xatolar, matn_korr: result_matn, avtotuzatish: avtotuzatish})};"
       },
       "creds": {}
     },
@@ -1405,7 +1405,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "920e90ed-26be-458a-98d1-fa5841a6009a",
+      "webhookId": "ebcc787e-6005-4810-9fc2-abf87207f256",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1514,7 +1514,7 @@
           "message_thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
         }
       },
-      "webhookId": "de6e6c5b-f3f2-4bf7-924d-0fc8c229737d",
+      "webhookId": "b84a1a2c-2587-4e47-aa61-46eecc910de2",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1825,7 +1825,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "1d69bf7d-7fa6-4bc3-9237-1016b43ad5c4",
+      "webhookId": "239adca8-40b5-4944-806f-ab3f9f1dd469",
       "creds": {}
     },
     "HeyGen Video Status (Bev)": {
@@ -2002,7 +2002,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "9e355b54-8ac7-4085-a1ac-4f0bed3acd82",
+      "webhookId": "0dce1e69-7c66-4e42-b973-17d2af5c8b4f",
       "creds": {}
     },
     "Hyperframes status (Bev)": {
@@ -2087,7 +2087,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "ae35a13b-2e18-4da8-81d0-b110cb376408",
+      "webhookId": "0b7695fe-e651-4827-948a-b0736ae9f1d7",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2423,7 +2423,7 @@
       "parameters": {
         "amount": 20
       },
-      "webhookId": "122bd3e7-4dcb-4ba8-8631-14ca54111425",
+      "webhookId": "e07db71d-5170-45ec-9473-b8b53af0e108",
       "creds": {}
     },
     "HeyGen Video Status (AI)": {
@@ -2600,7 +2600,7 @@
       "parameters": {
         "amount": 15
       },
-      "webhookId": "09ae2bed-efb7-47ba-8897-a4629251651c",
+      "webhookId": "7f8bbd34-d04b-4eda-8ecf-2d13a39ae60e",
       "creds": {}
     },
     "Hyperframes status (AI)": {
@@ -2718,7 +2718,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
         }
       },
-      "webhookId": "de8b81e8-005a-4781-8c1a-5f20df3d1770",
+      "webhookId": "80967f2d-0073-40bd-9f41-85ea9d88ea1f",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2740,7 +2740,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "f19d74b7-4117-4eed-bf9f-3adc9695a0ac",
+      "webhookId": "5de11460-a0bf-48a7-a300-deb64074f015",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -2819,7 +2819,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "a3868656-7d05-4fcc-983a-184f6be010f0",
+      "webhookId": "3473813d-f01f-4aad-b477-350c0429cd66",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -3115,7 +3115,7 @@
           "message_thread_id": 3
         }
       },
-      "webhookId": "a86a2afb-6676-48d2-846c-0e04a7aa1594",
+      "webhookId": "23d338f2-096b-40a2-8eea-68467a245a80",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -3136,7 +3136,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "c421647c-b278-4a80-be22-fc6f03caa66e",
+      "webhookId": "815add67-030f-4c82-b811-99a12697c90b",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -3157,7 +3157,7 @@
           "message_thread_id": 13
         }
       },
-      "webhookId": "b30c1031-c01f-43ba-aa78-6e4d14c11092",
+      "webhookId": "5a82cc5b-8f26-4c63-a265-49d5862100c6",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -4694,5 +4694,5 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "vaqt": "2026-09-23T22:50:57.439Z"
+  "vaqt": "2026-09-23T23:00:57.448Z"
 }
