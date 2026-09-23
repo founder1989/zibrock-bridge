@@ -19,12 +19,26 @@
     "Kirish tayyorlash": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var p=$json.paket||$json;var vi=parseInt($json.variant_idx||0);\nvar burchaklar=p.burchaklar&&p.burchaklar.tiktok||[];\nvar burchak=burchaklar[vi]||burchaklar[0]||\"Trader kayıp istatistikleri\";\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],burchak:burchak,variant_idx:vi,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
+      "kod": "var p=$json.paket||$json;var vi=parseInt($json.variant_idx||0);\nreturn{json:{job_id:p.job_id||\"UNKNOWN\",mavzu_kod:p.mavzu_kod||\"T1\",avatar_kod:p.avatar_kod||\"a1\",test_rejim:p.test_rejim||false,faktlar:p.faktlar||[],variant_idx:vi,urinish:1,voice_id:p.voice_id||\"7VqWGAWwo2HMrylfKrcm\",talking_photo_id:p.talking_photo_id||\"08617ecb814d40be876db3b1c7b83da0\"}};"
     },
-    "Claude - TikTok Skript": {
+    "Pasport o'qish": {
+      "turi": "unknown"
+    },
+    "Hook o'qish": {
+      "turi": "unknown"
+    },
+    "CTA o'qish": {
+      "turi": "unknown"
+    },
+    "Ma'lumot manbalarini birlashtirish": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var inp=$(\"Kirish tayyorlash\").first().json;\n// Pasport\nvar pas={};\ntry{pas=$(\"Pasport o'qish\").first().json||{};}catch(e){}\nvar minS=parseFloat(pas.uzunlik_min_s||15);var maxS=parseFloat(pas.uzunlik_max_s||30);\nvar minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\nvar ilgak_s=parseFloat(pas.ilgak_s||1.5);\n\n// Hook jadvaldan\nvar hookMatn=\"\";\ntry{var hRow=$(\"Hook o'qish\").first().json||{};hookMatn=hRow.tiktok||hRow.matn||\"\";}catch(e){}\nif(!hookMatn){hookMatn=inp.faktlar&&inp.faktlar[0]?inp.faktlar[0].matn.slice(0,60):\"Dikkat!\";}\n\n// CTA jadvaldan\nvar ctaKod=\"TR-C-0\";var ctaMatn=\"\";\ntry{var ctaRow=$(\"CTA o'qish\").first().json||{};ctaKod=ctaRow.kod||\"TR-C-0\";ctaMatn=ctaRow.matn||\"\";}catch(e){}\nvar noVerbalCta=[\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0;\nif(noVerbalCta){ctaKod=\"TR-C-0\";ctaMatn=\"\";}\n\n// meta_tiktok tekshiruvi\nvar faktlar=inp.faktlar||[];\nvar filteredFaktlar=[];var qaytaOgoh=false;\nfor(var i=0;i<faktlar.length;i++){\n  var f=faktlar[i];\n  var mt=String(f.meta_tiktok||\"\").toLowerCase();\n  if(mt===\"taqiq\")continue; // metasafe'da ishlatilmaydi\n  if(f.daraja===\"C\")qaytaOgoh=true;\n  filteredFaktlar.push(f);\n}\n\nreturn[{json:{\n  job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,\n  faktlar:filteredFaktlar,variant_idx:inp.variant_idx,urinish:inp.urinish||1,\n  voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,\n  minSoz:minSoz,maxSoz:maxSoz,ilgak_s:ilgak_s,\n  hookMatn:hookMatn,ctaKod:ctaKod,ctaMatn:ctaMatn,\n  qaytaOgoh:qaytaOgoh\n}}];"
+    },
+    "Claude - TikTok Tana": {
       "turi": "ai",
       "model": "claude-sonnet-4-6",
-      "maxTokens": 800,
+      "maxTokens": 600,
       "system": "",
       "creds": {
         "anthropicApi": "Anthropic account 2"
@@ -33,12 +47,12 @@
     "Skript parse": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar parsed;\ntry{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");parsed=JSON.parse(raw.slice(s,e+1));}\ncatch(err){return{json:{xato:true,tur:\"PARSE_FAIL\",xabar:String(err)}};}\nvar inp=$(\"Kirish tayyorlash\").item.json;\nreturn{json:{hook:parsed.hook||\"\",tts_matn:parsed.tts_matn||\"\",sceneBlocks:parsed.sceneBlocks||[],manba:parsed.manba||\"\",tavsif:parsed.tavsif||\"\",heshteglar:parsed.heshteglar||[],faktlar:inp.faktlar,burchak:inp.burchak,variant_idx:inp.variant_idx,job_id:inp.job_id,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,urinish:inp.urinish||1}};"
+      "kod": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);\nvar p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){return{json:{xato:true,tur:\"PARSE_FAIL\"}};}\nvar ds=$(\"Ma'lumot manbalarini birlashtirish\").first().json;\nvar fullTts=ds.hookMatn+\" \"+( p.tts_tana||\"\");\nreturn{json:{hook:ds.hookMatn,tts_matn:fullTts,tts_tana:p.tts_tana||\"\",sceneBlocks:p.sceneBlocks||[],manba:p.manba||\"\",tavsif:p.tavsif||\"\",heshteglar:[\"#psikoloji\",\"#disiplin\",\"#istatistik\",\"#bilim\",\"#davranisalfinans\"],faktlar:ds.faktlar,mavzu_kod:ds.mavzu_kod,variant_idx:ds.variant_idx,job_id:ds.job_id,avatar_kod:ds.avatar_kod,test_rejim:ds.test_rejim,voice_id:ds.voice_id,talking_photo_id:ds.talking_photo_id,urinish:ds.urinish||1,minSoz:ds.minSoz,maxSoz:ds.maxSoz,ilgak_s:ds.ilgak_s,ctaKod:ds.ctaKod,qaytaOgoh:ds.qaytaOgoh}};"
     },
     "Skript tekshiruvi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wordCount=words.length;var hook=$json.hook||\"\";var hookWords=hook.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar heshteglar=$json.heshteglar||[];var faktlar=$json.faktlar||[];\nvar xatolar=[];\nif(wordCount<38||wordCount>75)xatolar.push(\"So z soni \"+wordCount+\", 38-75 bolishi kerak\");\nif(hookWords.length>4)xatolar.push(\"Ilgak \"+hookWords.length+\" so z, max 4\");\nif(heshteglar.length!==4)xatolar.push(\"Heshteg soni \"+heshteglar.length+\", 4 bolishi kerak\");\n// Check numbers in faktlar\nvar faktRaqamlar=[];\nfor(var fi=0;fi<faktlar.length;fi++){var m=String(faktlar[fi].matn||\"\").match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<m.length;j++)faktRaqamlar.push(m[j]);}\nvar pctM=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pctM.length;pi++){var num=pctM[pi].replace(\"%\",\"\");var found=false;for(var fk=0;fk<faktRaqamlar.length;fk++){if(faktRaqamlar[fk].indexOf(num)>=0){found=true;break;}}if(!found)xatolar.push(\"Ixtiro raqam: \"+pctM[pi]+\" faktlarda yoq\");}\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,heshteglar:heshteglar,manba:$json.manba,tavsif:$json.tavsif,faktlar:faktlar,burchak:$json.burchak,variant_idx:$json.variant_idx,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1}};"
+      "kod": "var tts=$json.tts_matn||\"\";var words=tts.split(new RegExp(\"\\\\s+\",\"g\")).filter(function(w){return w.length>0;});\nvar wc=words.length;var faktlar=$json.faktlar||[];var xatolar=[];\n// Q2: Pasportdan olingan chegaralar\nvar minSoz=$json.minSoz||38;var maxSoz=$json.maxSoz||75;\nif(wc<minSoz||wc>maxSoz)xatolar.push(\"So'z soni \"+wc+\", \"+minSoz+\"-\"+maxSoz+\" bolishi kerak\");\nif($json.heshteglar.length!==5)xatolar.push(\"Heshteg soni noto'g'ri (5 ta kerak)\");\n// Kapta ≤100\nvar tavsif=$json.tavsif||\"\";\nif(tavsif.length>100)xatolar.push(\"Caption \"+tavsif.length+\" belgi, max 100\");\nif(tavsif.indexOf(\"http\")>=0||tavsif.indexOf(\"t.me\")>=0)xatolar.push(\"Captionda havola bor\");\n// Raqamlar N-ID tekshiruvi\nvar faktIds={};for(var fi=0;fi<faktlar.length;fi++){var qv=String(faktlar[fi].qiymat||faktlar[fi].matn||\"\");var nm=qv.match(new RegExp(\"[0-9]+\",\"g\"))||[];for(var j=0;j<nm.length;j++)faktIds[nm[j]]=faktlar[fi].s_id||\"?\";}\nvar pm=tts.match(new RegExp(\"%([0-9]+)\",\"g\"))||[];\nfor(var pi=0;pi<pm.length;pi++){var n=pm[pi].replace(\"%\",\"\");var found=false;for(var k in faktIds){if(k.indexOf(n)>=0){found=true;break;}}if(!found)xatolar.push(\"Ixtiro raqam: \"+pm[pi]);}\nvar ogohlantirish=$json.qaytaOgoh?\"QAYTA TEKSHIR: daraja C fakt bor\":\"\";\nreturn{json:{holat:xatolar.length===0?\"PASS\":\"FAIL\",xatolar:xatolar,ogohlantirish:ogohlantirish,tts_matn:tts,hook:$json.hook,sceneBlocks:$json.sceneBlocks,heshteglar:$json.heshteglar,manba:$json.manba,tavsif:tavsif,faktlar:faktlar,mavzu_kod:$json.mavzu_kod,variant_idx:$json.variant_idx,job_id:$json.job_id,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id,urinish:$json.urinish||1,ilgak_s:$json.ilgak_s}};"
     },
     "K1 Compliance": {
       "turi": "executeWorkflow",
@@ -86,7 +100,7 @@
     "K1 natijasini birlashtirish": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var k1=$json;\nvar script=$(\"Skript tekshiruvi\").item.json;\nvar k1Holat=k1.holat||\"FAIL\";\nvar xatolar=script.xatolar||[];\nif(k1Holat===\"FAIL\"){xatolar=xatolar.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}\nreturn{json:{holat:(script.holat===\"PASS\"&&k1Holat===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xatolar,tts_matn:script.tts_matn,hook:script.hook,sceneBlocks:script.sceneBlocks,heshteglar:script.heshteglar,manba:script.manba,tavsif:script.tavsif,faktlar:script.faktlar,burchak:script.burchak,variant_idx:script.variant_idx,job_id:script.job_id,avatar_kod:script.avatar_kod,test_rejim:script.test_rejim,voice_id:script.voice_id,talking_photo_id:script.talking_photo_id,urinish:script.urinish||1}};"
+      "kod": "var k1=$json;var sc=$(\"Skript tekshiruvi\").item.json;\nvar k1H=k1.holat||\"FAIL\";var xa=sc.xatolar||[];\nif(k1H===\"FAIL\"){xa=xa.concat((k1.topilmalar||[]).map(function(t){return\"K1 \"+t.tur+\": \"+t.atama;}));}\nreturn{json:{holat:(sc.holat===\"PASS\"&&k1H===\"PASS\")?\"PASS\":\"FAIL\",xatolar:xa,ogohlantirish:sc.ogohlantirish,tts_matn:sc.tts_matn,hook:sc.hook,sceneBlocks:sc.sceneBlocks,heshteglar:sc.heshteglar,manba:sc.manba,tavsif:sc.tavsif,faktlar:sc.faktlar,mavzu_kod:sc.mavzu_kod,variant_idx:sc.variant_idx,job_id:sc.job_id,avatar_kod:sc.avatar_kod,test_rejim:sc.test_rejim,voice_id:sc.voice_id,talking_photo_id:sc.talking_photo_id,urinish:sc.urinish||1,ilgak_s:sc.ilgak_s}};"
     },
     "PASS?": {
       "turi": "if",
@@ -136,7 +150,7 @@
     },
     "Telegram - Test Preview": {
       "turi": "telegram",
-      "text": "={{ \"🧪 TikTok test | \" + $json.burchak + \"\\n\\n\" + $json.tts_matn + \"\\n\\n\" + $json.heshteglar.join(\" \") }}",
+      "text": "={{ \"🧪 TikTok test | \" + $json.mavzu_kod + \" v\" + $json.variant_idx + \"\\n\\nHook: \" + $json.hook + \"\\n\\nTana: \" + $json.tts_matn.slice(0,200) + \"\\n\\n\" + $json.heshteglar.join(\" \") }}",
       "chatId": "-1004462774154",
       "thread": 7,
       "creds": {
@@ -269,11 +283,11 @@
     "Hook vaqti tekshiruvi": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var hook_s=$json.hook_tugash_s||0;\nvar video_url=$json.video_url||\"\";\nvar holat_eskalatsiya=hook_s>1.5;\nvar script=$(\"K1 natijasini birlashtirish\").item.json;\nreturn{json:{video_url:video_url,hook_tugash_s:hook_s,jami_s:$json.jami_s||0,holat:$json.holat||\"\",hook_ok:!holat_eskalatsiya,tts_matn:script.tts_matn,hook:script.hook,heshteglar:script.heshteglar,tavsif:script.tavsif,manba:script.manba,burchak:script.burchak,variant_idx:script.variant_idx,job_id:script.job_id}};"
+      "kod": "var hs=$json.hook_tugash_s||0;var sc=$(\"K1 natijasini birlashtirish\").item.json;\nvar hookOk=hs<=sc.ilgak_s;\nreturn{json:{video_url:$json.video_url||\"\",hook_tugash_s:hs,jami_s:$json.jami_s||0,hook_ok:hookOk,tts_matn:sc.tts_matn,hook:sc.hook,tavsif:sc.tavsif,heshteglar:sc.heshteglar,ogohlantirish:sc.ogohlantirish,mavzu_kod:sc.mavzu_kod,variant_idx:sc.variant_idx,job_id:sc.job_id}};"
     },
     "Telegram - Ko'rib chiqish (TikTok)": {
       "turi": "telegram",
-      "text": "={{ \"✅ TikTok v\" + $json.variant_idx + \" | \" + $json.burchak + \"\\n\\n🎬 \" + $json.video_url + \"\\n\\n\" + ($json.hook_ok ? \"\" : \"⚠️ Hook \" + $json.hook_tugash_s + \"s > 1.5s\\n\") + $json.tavsif + \"\\n\\n\" + $json.heshteglar.join(\" \") }}",
+      "text": "={{ \"✅ TikTok v\" + $json.variant_idx + \" | \" + $json.mavzu_kod + \"\\n\" + ($json.ogohlantirish?\"⚠️ \"+$json.ogohlantirish+\"\\n\":\"\") + \"\\n🎬 \" + $json.video_url + \"\\n\\n\" + ($json.hook_ok?\"\":\"⚠️ Hook \" + $json.hook_tugash_s + \"s > ilgak\\n\") + $json.tavsif + \"\\n\\n\" + $json.heshteglar.join(\" \") }}",
       "chatId": "-1004462774154",
       "thread": 7,
       "creds": {
@@ -283,7 +297,7 @@
     "Qayta urinish?": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var n=$json.urinish||1;\nif(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,burchak:$json.burchak,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
+      "kod": "var n=$json.urinish||1;if(n>=3){return{json:{eskalatsiya:true,xatolar:$json.xatolar,job_id:$json.job_id,urinish:n,ogohlantirish:$json.ogohlantirish}};}\nreturn{json:{qayta:true,urinish:n+1,xatolar:$json.xatolar,job_id:$json.job_id,mavzu_kod:$json.mavzu_kod,faktlar:$json.faktlar,avatar_kod:$json.avatar_kod,test_rejim:$json.test_rejim,variant_idx:$json.variant_idx,voice_id:$json.voice_id,talking_photo_id:$json.talking_photo_id}};"
     },
     "Eskalatsiya?": {
       "turi": "if",
@@ -310,7 +324,7 @@
     },
     "Telegram - Eskalatsiya": {
       "turi": "telegram",
-      "text": "={{ \"❌ zb-p-tiktok: 3 urinishdan keyin FAIL\\nJob: \" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
+      "text": "={{ \"❌ zb-p-tiktok: 3 urinishdan keyin FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) + ($json.ogohlantirish?\"\\n\"+$json.ogohlantirish:\"\") }}",
       "chatId": "-1004462774154",
       "thread": 13,
       "creds": {
@@ -340,14 +354,58 @@
       "main": [
         [
           {
-            "node": "Claude - TikTok Skript",
+            "node": "Pasport o'qish",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Claude - TikTok Skript": {
+    "Pasport o'qish": {
+      "main": [
+        [
+          {
+            "node": "Hook o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hook o'qish": {
+      "main": [
+        [
+          {
+            "node": "CTA o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTA o'qish": {
+      "main": [
+        [
+          {
+            "node": "Ma'lumot manbalarini birlashtirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ma'lumot manbalarini birlashtirish": {
+      "main": [
+        [
+          {
+            "node": "Claude - TikTok Tana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - TikTok Tana": {
       "main": [
         [
           {
@@ -493,7 +551,7 @@
       "main": [
         [
           {
-            "node": "Claude - TikTok Skript",
+            "node": "Ma'lumot manbalarini birlashtirish",
             "type": "main",
             "index": 0
           }
@@ -512,5 +570,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T08:31:03.143Z"
+  "vaqt": "2026-09-23T08:41:07.712Z"
 }
