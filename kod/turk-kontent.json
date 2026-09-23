@@ -9,7 +9,7 @@
     "KONSTANTALAR": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}},avatarlar:{a1:{nom:\"ZIBROCK A1 Ekspert\",talking_photo_id:\"69deef3c46d040ada847ebb6649e2f32\",rol:\"statistika, ilmiy manba, kitob\",ovoz:\"a1\"},a2:{nom:\"ZIBROCK A2 Treyder\",talking_photo_id:\"ed4a236dc01643b89381aaab1d79da9c\",rol:\"ambassador, mahsulot, qoidalar\",ovoz:\"a2\"}},joriy_avatar:\"a1\"};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar}});\nreturn out;"
+      "kod": "var K={telegram:{guruh_id:'-1004462774154',bot_username:'@ZibrockMarketingAgentbot',forum:true,dm_ruxsat:true,threads:{umumiy:1,youtube_long:3,youtube_shorts:5,tiktok:7,instagram_reels:9,instagram_carousel:9,telegram:11,xatolar:13},kanal:'https://t.me/zibrock_turkiye'},ovozlar:{a1:{nom:\"Fatih Yildirim\",voice_id:\"7VqWGAWwo2HMrylfKrcm\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true},a2:{nom:\"Umit Dogan\",voice_id:\"dDcfsSsiSzmphdMGCECb\",speed:1.00,stability:0.50,similarity_boost:0.75,style:0.15,speaker_boost:true}},avatarlar:{a1:{nom:\"ZIBROCK A1 Ekspert\",talking_photo_id:\"69deef3c46d040ada847ebb6649e2f32\",rol:\"statistika, ilmiy manba, kitob\",ovoz:\"a1\"},a2:{nom:\"ZIBROCK A2 Treyder\",talking_photo_id:\"ed4a236dc01643b89381aaab1d79da9c\",rol:\"ambassador, mahsulot, qoidalar\",ovoz:\"a2\"}},joriy_avatar:\"a1\",mavzular:{T1:{nom:\"Yo'qotish statistikasi\",avatar:\"a1\",tur:\"GIBRID\"},T2:{nom:\"Raqamlar va tadqiqot\",avatar:\"a1\",tur:\"GIBRID\"},T3:{nom:\"Trading psixologiyasi\",avatar:\"a2\",tur:\"STUDIO\"},T4:{nom:\"Xatolar va tuzoqlar\",avatar:\"a2\",tur:\"STUDIO\"},T5:{nom:\"Risk boshqaruvi\",avatar:\"a2\",tur:\"STUDIO\"},T6:{nom:\"Intizom\",avatar:\"a2\",tur:\"STUDIO\"},T7:{nom:\"Bozor mexanikasi\",avatar:\"a1\",tur:\"GIBRID\"},T8:{nom:\"Haqiqiy shaxs\",avatar:null,tur:\"REAL\"},T9:{nom:\"Neyrobiologiya\",avatar:\"a1\",tur:\"GIBRID\"},T10:{nom:\"Mahsulot va qoidalar\",avatar:\"a2\",tur:\"STUDIO\"}}};\nvar items=$input.all();var out=[];\nfor(var i=0;i<items.length;i++){out.push({json:Object.assign({},items[i].json,{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular})});}\nif(out.length===0)out.push({json:{telegram:K.telegram,ovozlar:K.ovozlar,avatarlar:K.avatarlar,joriy_avatar:K.joriy_avatar,mavzular:K.mavzular}});\nreturn out;"
     },
     "Telegram Kirish Filtri": {
       "turi": "code",
@@ -21,6 +21,11 @@
       "text": "",
       "chatId": "",
       "thread": null
+    },
+    "Mavzu va Avatar Aniqlash": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var K=$(\"KONSTANTALAR\").item.json;\nvar txt=String($json.text||\"\");\nvar m=txt.match(/^T([0-9]{1,2})[: ]/i);\nvar mavzuKod=m?(\"T\"+m[1]):null;\nvar am=txt.match(/avatar *= *(a[12])/i);\nvar majburiy=am?am[1].toLowerCase():null;\nif(!mavzuKod){\n  var t=txt.toLowerCase();\n  if(/istatistik|yüzde|%|oran|araştırma|veri|esma|amf|usp/.test(t)){mavzuKod=\"T1\";}\n  else if(/kural|risk|stop|hesap|challenge|prime|instant/.test(t)){mavzuKod=\"T10\";}\n  else if(/psikoloji|korku|disiplin|duygu|beyin|kortizol/.test(t)){mavzuKod=\"T3\";}\n  else{mavzuKod=\"T1\";}\n}\nvar mv=K.mavzular[mavzuKod]||K.mavzular.T1;\nvar avatarKod=majburiy||mv.avatar||\"a1\";\nvar videoTuri=mv.tur||\"GIBRID\";\nif(txt.indexOf(\"/motion\")===0){videoTuri=\"GIBRID\";}\nreturn{json:Object.assign({},$json,{mavzu_kod:mavzuKod,avatar_kod:avatarKod,video_turi:videoTuri,talking_photo_id:K.avatarlar[avatarKod].talking_photo_id,voice_id:K.ovozlar[K.avatarlar[avatarKod].ovoz].voice_id})};"
     },
     "Extract Motion Data": {
       "turi": "code",
@@ -53,7 +58,7 @@
     "ElevenLabs - Motion TTS": {
       "turi": "http",
       "method": "POST",
-      "url": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; return \"https://api.elevenlabs.io/v1/text-to-speech/\"+K.ovozlar[K.avatarlar[a].ovoz].voice_id+\"/with-timestamps\"; })() }}",
+      "url": "={{ (function(){ var vid=\"\";try{vid=$(\"Mavzu va Avatar Aniqlash\").item.json.voice_id;}catch(e){}if(!vid){var K=$(\"KONSTANTALAR\").item.json;var a=K.joriy_avatar||\"a1\";vid=K.ovozlar[K.avatarlar[a].ovoz].voice_id;} return \"https://api.elevenlabs.io/v1/text-to-speech/\"+vid+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $json.narration, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
       "sendBody": true
     },
@@ -167,7 +172,7 @@
     "ElevenLabs - Audio (Bevosita)": {
       "turi": "http",
       "method": "POST",
-      "url": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; return \"https://api.elevenlabs.io/v1/text-to-speech/\"+K.ovozlar[K.avatarlar[a].ovoz].voice_id+\"/with-timestamps\"; })() }}",
+      "url": "={{ (function(){ var vid=\"\";try{vid=$(\"Mavzu va Avatar Aniqlash\").item.json.voice_id;}catch(e){}if(!vid){var K=$(\"KONSTANTALAR\").item.json;var a=K.joriy_avatar||\"a1\";vid=K.ovozlar[K.avatarlar[a].ovoz].voice_id;} return \"https://api.elevenlabs.io/v1/text-to-speech/\"+vid+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $(\"Skriptni Ajratish\").item.json.merged_response, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
       "sendBody": true
     },
@@ -187,7 +192,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
-      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; var tpid=K.avatarlar[a].talking_photo_id; return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Bevosita)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: ($(\"Skriptni Ajratish\").item.json.isVertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }), test: false, motion_prompt: \"strong expressive facial emotions, intense eyebrow raises, surprised and concerned expressions, leaning forward with urgency, passionate and energetic delivery, dynamic natural hand gestures, wide eyes for emphasis\", custom_motion_prompt: \"gentle natural head movement, occasional soft blink, warm subtle smile, slow gentle camera dolly-in toward the presenter, natural hand gestures matching speech rhythm\", enhance_custom_motion_prompt: true }); })() }}",
+      "body": "={{ (function(){ var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var K=$(\"KONSTANTALAR\").item.json;var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;} return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Bevosita)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: ($(\"Skriptni Ajratish\").item.json.isVertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }), test: false, motion_prompt: \"strong expressive facial emotions, intense eyebrow raises, surprised and concerned expressions, leaning forward with urgency, passionate and energetic delivery, dynamic natural hand gestures, wide eyes for emphasis\", custom_motion_prompt: \"gentle natural head movement, occasional soft blink, warm subtle smile, slow gentle camera dolly-in toward the presenter, natural hand gestures matching speech rhythm\", enhance_custom_motion_prompt: true }); })() }}",
       "sendBody": true
     },
     "HeyGen Video Status (Bev)": {
@@ -283,7 +288,7 @@
     "ElevenLabs - Audio (Asosiy)": {
       "turi": "http",
       "method": "POST",
-      "url": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; return \"https://api.elevenlabs.io/v1/text-to-speech/\"+K.ovozlar[K.avatarlar[a].ovoz].voice_id+\"/with-timestamps\"; })() }}",
+      "url": "={{ (function(){ var vid=\"\";try{vid=$(\"Mavzu va Avatar Aniqlash\").item.json.voice_id;}catch(e){}if(!vid){var K=$(\"KONSTANTALAR\").item.json;var a=K.joriy_avatar||\"a1\";vid=K.ovozlar[K.avatarlar[a].ovoz].voice_id;} return \"https://api.elevenlabs.io/v1/text-to-speech/\"+vid+\"/with-timestamps\"; })() }}",
       "body": "={{ JSON.stringify({ text: $(\"Platforma Aniqlash\").item.json.merged_response, model_id: \"eleven_v3\", output_format: \"mp3_44100_192\", voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }, speed: 1.00 }) }}",
       "sendBody": true
     },
@@ -303,7 +308,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v2/video/generate",
-      "body": "={{ (function(){ var K=$(\"KONSTANTALAR\").item.json; var a=K.joriy_avatar||\"a1\"; var tpid=K.avatarlar[a].talking_photo_id; return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: ($(\"Platforma Aniqlash\").item.json.isVertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }), test: false, motion_prompt: \"strong expressive facial emotions, intense eyebrow raises, surprised and concerned expressions, leaning forward with urgency, passionate and energetic delivery, dynamic natural hand gestures, wide eyes for emphasis\", custom_motion_prompt: \"gentle natural head movement, occasional soft blink, warm subtle smile, slow gentle camera dolly-in toward the presenter, natural hand gestures matching speech rhythm\", enhance_custom_motion_prompt: true }); })() }}",
+      "body": "={{ (function(){ var tpid=\"\";try{tpid=$(\"Mavzu va Avatar Aniqlash\").item.json.talking_photo_id;}catch(e){}if(!tpid){var K=$(\"KONSTANTALAR\").item.json;var a=K.joriy_avatar||\"a1\";tpid=K.avatarlar[a].talking_photo_id;} return JSON.stringify({ video_inputs: [{ character: { type: \"talking_photo\", talking_photo_id: tpid }, voice: { type: \"audio\", audio_url: $(\"HeyGen - Audio Upload (Asosiy)\").item.json.data.url } }], background: { type: \"color\", value: \"#0A1727\" }, dimension: ($(\"Platforma Aniqlash\").item.json.isVertical ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 }), test: false, motion_prompt: \"strong expressive facial emotions, intense eyebrow raises, surprised and concerned expressions, leaning forward with urgency, passionate and energetic delivery, dynamic natural hand gestures, wide eyes for emphasis\", custom_motion_prompt: \"gentle natural head movement, occasional soft blink, warm subtle smile, slow gentle camera dolly-in toward the presenter, natural hand gestures matching speech rhythm\", enhance_custom_motion_prompt: true }); })() }}",
       "sendBody": true
     },
     "HeyGen Video Status (AI)": {
@@ -366,5 +371,5 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-23T00:10:56.039Z"
+  "vaqt": "2026-09-23T00:20:56.124Z"
 }
