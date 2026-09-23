@@ -223,7 +223,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v3/hyperframes/renders",
-      "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: \"1080p\", aspect_ratio: $(\"Skriptni Ajratish\").item.json.aspectRatio || \"16:9\", title: \"ZIBROCK video - statistika overlay\" }) }}",
+      "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: \"1080p\", aspect_ratio: (function(){ try { var K=$(\"KONSTANTALAR\").item.json; var vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\"; return (K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\"; } catch(e){ return \"9:16\"; } })(), title: \"ZIBROCK video - statistika overlay\" }) }}",
       "sendBody": true
     },
     "Hyperframes status (Bev)": {
@@ -339,7 +339,7 @@
       "turi": "http",
       "method": "POST",
       "url": "https://api.heygen.com/v3/hyperframes/renders",
-      "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: \"1080p\", aspect_ratio: $(\"Platforma Aniqlash\").item.json.aspectRatio || \"16:9\", title: \"ZIBROCK video - statistika overlay\" }) }}",
+      "body": "={{ JSON.stringify({ project: { type: \"asset_id\", asset_id: ($json.data.asset_id || $json.asset_id || \"\") }, format: \"mp4\", resolution: \"1080p\", aspect_ratio: (function(){ try { var K=$(\"KONSTANTALAR\").item.json; var vt=$(\"Mavzu va Avatar Aniqlash\").item.json.video_turi||\"GIBRID\"; return (K.video_turlari[vt]&&K.video_turlari[vt].format)||\"9:16\"; } catch(e){ return \"9:16\"; } })(), title: \"ZIBROCK video - statistika overlay\" }) }}",
       "sendBody": true
     },
     "Hyperframes status (AI)": {
@@ -371,5 +371,5 @@
       "kod": "const j = $input.first().json;\nconst n = (j.urinish || 0) + 1;\nif (n > 40) {\n  return [{ json: { ...j, xato: true, tur: \"TIMEOUT\", xabar: \"Render 13 daqiqadan oshdi. Jarayon tugatildi.\" } }];\n}\nreturn [{ json: { ...j, urinish: n } }];"
     }
   },
-  "vaqt": "2026-09-23T02:20:54.351Z"
+  "vaqt": "2026-09-23T02:30:56.018Z"
 }
