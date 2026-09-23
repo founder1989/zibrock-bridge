@@ -151,11 +151,10 @@
       }
     },
     "So'rovnoma yuborish": {
-      "turi": "http",
-      "method": "POST",
-      "url": "https://api.telegram.org/bot{accessToken}/sendPoll",
-      "body": "={{ JSON.stringify({chat_id:\"-1004462774154\",message_thread_id:11,question:$json.question,options:$json.options.map(function(o){return{text:o};}),type:\"quiz\",correct_option_id:$json.correct_option_id,explanation:$json.explanation,is_anonymous:true}) }}",
-      "sendBody": true,
+      "turi": "telegram",
+      "text": "={{ \"📊 <b>\" + $(\"K1 P1 keyin\").item.json.question + \"</b>\\n\\n\" + ($(\"K1 P1 keyin\").item.json.options||[\"A\",\"B\",\"C\",\"D\"]).map(function(o,i){return(i===$(\"K1 P1 keyin\").item.json.correct_option_id?\"✅ \":\"   \")+o;}).join(\"\\n\") + \"\\n\\n<tg-spoiler>\" + ($(\"K1 P1 keyin\").item.json.explanation||\"\") + \"</tg-spoiler>\" }}",
+      "chatId": "-1004462774154",
+      "thread": 11,
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
@@ -1037,5 +1036,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-23T20:11:10.548Z"
+  "vaqt": "2026-09-23T20:21:09.518Z"
 }
