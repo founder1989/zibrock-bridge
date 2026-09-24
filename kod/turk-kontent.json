@@ -8847,7 +8847,7 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ \"🖼 Thumbnail | \" + $(\"TH · Thumbnail HTML qurish\").item.json.burchak + \" | \" + $json.htmls.variant + \"\\n\\nHTML tayyor\" }}",
+        "text": "={{ \"🖼 Thumbnail | \" + $(\"TH · Thumbnail HTML qurish\").item.json.burchak + \" | \" + $json.variant + \"\\n\\nHTML tayyor\" }}",
         "additionalFields": {
           "appendAttribution": false,
           "message_thread_id": 3
@@ -8901,7 +8901,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "return { json: $(\"AN · Brif tekshiruvi\").item.json };"
+        "jsCode": "var b = Object.assign({}, $(\"AN · Brif tekshiruvi\").item.json);\nvar bosh = function (v) { return v === undefined || v === null || v === \"\"; };\nb.faktlar = (b.faktlar || []).map(function (f) { var g = Object.assign({}, f); if (bosh(g.matn)) g.matn = g.matn_tr; if (bosh(g.qiymat)) g.qiymat = g.matn_tr; return g; });\nreturn { json: b };"
       },
       "creds": {}
     },
@@ -8936,6 +8936,48 @@
           "combinator": "and"
         },
         "options": {}
+      },
+      "creds": {}
+    },
+    "TT · Avtotuzatish": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "67bd1476-9ad8-47d5-959c-0e64c8295e9a",
+      "position": [
+        -656,
+        800
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// TT · Avtotuzatish — heshteg, caption/tavsif uzunligi, « » (so'z soniga tegmaydi)\nvar j = Object.assign({}, $json);\nif (j.xato) { return { json: j }; }\nvar tuz = [];\nvar RUX = [\"#psikoloji\",\"#disiplin\",\"#istatistik\",\"#bilim\",\"#davranisalfinans\"];\nvar MAX_H = 4;\nvar pas = {}; try { pas = $(\"TT · Pasport o'qish\").first().json || {}; } catch (e) {}\nvar bm = parseInt(pas.belgi_max || 0, 10) || 0;\nvar TEK = 100;\nvar CAP_MAX = (bm > 0 && TEK > 0) ? Math.min(bm, TEK) : (bm > 0 ? bm : TEK);\nvar lc = function (s) { return String(s).trim().toLowerCase(); };\nif (Array.isArray(j.heshteglar)) {\n  var h0 = j.heshteglar.slice(); var h = [];\n  var ruxLc = RUX.map(lc);\n  h0.forEach(function (x) { var t = String(x || \"\").trim(); if (!t) return; if (t.charAt(0) !== \"#\") t = \"#\" + t; var k = ruxLc.indexOf(lc(t)); if (k < 0) return; if (h.map(lc).indexOf(lc(t)) >= 0) return; h.push(RUX[k]); });\n  h = h.slice(0, MAX_H);\n  if (JSON.stringify(h) !== JSON.stringify(h0)) { tuz.push(\"heshteglar \" + h0.length + \" → \" + h.length); j.heshteglar = h; }\n}\nvar qisqa = function (s, max) {\n  s = String(s || \"\"); if (s.length <= max) return s;\n  var ch = Array.from(s); var cut = \"\"; for (var i = 0; i < ch.length; i++) { if ((cut + ch[i]).length > max) break; cut += ch[i]; }\n  var best = -1; for (var k = 0; k < cut.length; k++) { var c = cut.charAt(k); if ((c === \".\" || c === \"!\" || c === \"?\" || c === \"…\") && (k === cut.length - 1 || /\\s/.test(cut.charAt(k + 1)))) best = k; }\n  if (best >= 0) return cut.slice(0, best + 1).trim();\n  var sp = cut.lastIndexOf(\" \"); return (sp > 0 ? cut.slice(0, sp) : cut).trim();\n};\nif (CAP_MAX > 0 && typeof j.tavsif === \"string\" && j.tavsif.length > CAP_MAX) { var c0 = j.tavsif.length; j.tavsif = qisqa(j.tavsif, CAP_MAX); tuz.push(\"tavsif \" + c0 + \" → \" + j.tavsif.length + \" belgi (max \" + CAP_MAX + \")\"); }\nif (typeof j.tts_matn === \"string\" && /[«»]/.test(j.tts_matn)) { j.tts_matn = j.tts_matn.replace(/[«»]/g, \"\"); tuz.push(\"tts_matn: « » olib tashlandi\"); }\nj.avtotuzatish = tuz;\nreturn { json: j };"
+      },
+      "creds": {}
+    },
+    "RL · Avtotuzatish": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "26e888ce-99c0-4823-9294-8ec217938972",
+      "position": [
+        -656,
+        992
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// RL · Avtotuzatish — heshteg, caption/tavsif uzunligi, « » (so'z soniga tegmaydi)\nvar j = Object.assign({}, $json);\nif (j.xato) { return { json: j }; }\nvar tuz = [];\nvar RUX = [\"#psikoloji\",\"#disiplin\",\"#istatistik\",\"#bilim\",\"#davranisalfinans\"];\nvar MAX_H = 5;\nvar pas = {}; try { pas = $(\"RL · Pasport o'qish\").first().json || {}; } catch (e) {}\nvar bm = parseInt(pas.belgi_max || 0, 10) || 0;\nvar TEK = 125;\nvar CAP_MAX = (bm > 0 && TEK > 0) ? Math.min(bm, TEK) : (bm > 0 ? bm : TEK);\nvar lc = function (s) { return String(s).trim().toLowerCase(); };\nif (Array.isArray(j.heshteglar)) {\n  var h0 = j.heshteglar.slice(); var h = [];\n  var ruxLc = RUX.map(lc);\n  h0.forEach(function (x) { var t = String(x || \"\").trim(); if (!t) return; if (t.charAt(0) !== \"#\") t = \"#\" + t; var k = ruxLc.indexOf(lc(t)); if (k < 0) return; if (h.map(lc).indexOf(lc(t)) >= 0) return; h.push(RUX[k]); });\n  h = h.slice(0, MAX_H);\n  if (JSON.stringify(h) !== JSON.stringify(h0)) { tuz.push(\"heshteglar \" + h0.length + \" → \" + h.length); j.heshteglar = h; }\n}\nvar qisqa = function (s, max) {\n  s = String(s || \"\"); if (s.length <= max) return s;\n  var ch = Array.from(s); var cut = \"\"; for (var i = 0; i < ch.length; i++) { if ((cut + ch[i]).length > max) break; cut += ch[i]; }\n  var best = -1; for (var k = 0; k < cut.length; k++) { var c = cut.charAt(k); if ((c === \".\" || c === \"!\" || c === \"?\" || c === \"…\") && (k === cut.length - 1 || /\\s/.test(cut.charAt(k + 1)))) best = k; }\n  if (best >= 0) return cut.slice(0, best + 1).trim();\n  var sp = cut.lastIndexOf(\" \"); return (sp > 0 ? cut.slice(0, sp) : cut).trim();\n};\nif (CAP_MAX > 0 && typeof j.caption === \"string\" && j.caption.length > CAP_MAX) { var c0 = j.caption.length; j.caption = qisqa(j.caption, CAP_MAX); tuz.push(\"caption \" + c0 + \" → \" + j.caption.length + \" belgi (max \" + CAP_MAX + \")\"); }\nif (typeof j.tts_matn === \"string\" && /[«»]/.test(j.tts_matn)) { j.tts_matn = j.tts_matn.replace(/[«»]/g, \"\"); tuz.push(\"tts_matn: « » olib tashlandi\"); }\nj.avtotuzatish = tuz;\nreturn { json: j };"
+      },
+      "creds": {}
+    },
+    "SH · Avtotuzatish": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "a011a0d8-121a-4937-853c-862c6788c0d3",
+      "position": [
+        -1104,
+        1184
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// SH · Avtotuzatish — heshteg, caption/tavsif uzunligi, « » (so'z soniga tegmaydi)\nvar j = Object.assign({}, $json);\nif (j.xato) { return { json: j }; }\nvar tuz = [];\nvar RUX = [\"#shorts\",\"#psikoloji\",\"#disiplin\"];\nvar MAX_H = 3;\nvar pas = {}; try { pas = $(\"SH · Pasport o'qish\").first().json || {}; } catch (e) {}\nvar bm = parseInt(pas.belgi_max || 0, 10) || 0;\nvar TEK = 0;\nvar CAP_MAX = (bm > 0 && TEK > 0) ? Math.min(bm, TEK) : (bm > 0 ? bm : TEK);\nvar lc = function (s) { return String(s).trim().toLowerCase(); };\nif (Array.isArray(j.heshteglar)) {\n  var h0 = j.heshteglar.slice(); var h = [];\n  var ruxLc = RUX.map(lc);\n  h0.forEach(function (x) { var t = String(x || \"\").trim(); if (!t) return; if (t.charAt(0) !== \"#\") t = \"#\" + t; var k = ruxLc.indexOf(lc(t)); if (k < 0) return; if (h.map(lc).indexOf(lc(t)) >= 0) return; h.push(RUX[k]); });\n  h = h.slice(0, MAX_H);\n  if (JSON.stringify(h) !== JSON.stringify(h0)) { tuz.push(\"heshteglar \" + h0.length + \" → \" + h.length); j.heshteglar = h; }\n}\nvar qisqa = function (s, max) {\n  s = String(s || \"\"); if (s.length <= max) return s;\n  var ch = Array.from(s); var cut = \"\"; for (var i = 0; i < ch.length; i++) { if ((cut + ch[i]).length > max) break; cut += ch[i]; }\n  var best = -1; for (var k = 0; k < cut.length; k++) { var c = cut.charAt(k); if ((c === \".\" || c === \"!\" || c === \"?\" || c === \"…\") && (k === cut.length - 1 || /\\s/.test(cut.charAt(k + 1)))) best = k; }\n  if (best >= 0) return cut.slice(0, best + 1).trim();\n  var sp = cut.lastIndexOf(\" \"); return (sp > 0 ? cut.slice(0, sp) : cut).trim();\n};\nif (CAP_MAX > 0 && typeof j.tavsif === \"string\" && j.tavsif.length > CAP_MAX) { var c0 = j.tavsif.length; j.tavsif = qisqa(j.tavsif, CAP_MAX); tuz.push(\"tavsif \" + c0 + \" → \" + j.tavsif.length + \" belgi (max \" + CAP_MAX + \")\"); }\nif (typeof j.tts_matn === \"string\" && /[«»]/.test(j.tts_matn)) { j.tts_matn = j.tts_matn.replace(/[«»]/g, \"\"); tuz.push(\"tts_matn: « » olib tashlandi\"); }\nj.avtotuzatish = tuz;\nreturn { json: j };"
       },
       "creds": {}
     }
@@ -10857,7 +10899,7 @@
       "main": [
         [
           {
-            "node": "TT · Skript tekshiruvi",
+            "node": "TT · Avtotuzatish",
             "type": "main",
             "index": 0
           }
@@ -11105,7 +11147,7 @@
       "main": [
         [
           {
-            "node": "RL · Skript tekshiruvi",
+            "node": "RL · Avtotuzatish",
             "type": "main",
             "index": 0
           }
@@ -11342,7 +11384,7 @@
       "main": [
         [
           {
-            "node": "SH · Skript tekshiruvi",
+            "node": "SH · Avtotuzatish",
             "type": "main",
             "index": 0
           }
@@ -11767,11 +11809,6 @@
         [
           {
             "node": "KR · Baza karuselni qabul qilish",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "KR · PASS?",
             "type": "main",
             "index": 0
           }
@@ -12215,19 +12252,18 @@
             "node": "TG · Label 3",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "TG · Label 3": {
-      "main": [
-        [
+          },
           {
             "node": "TG · Maqola yuborish",
             "type": "main",
             "index": 0
           }
         ]
+      ]
+    },
+    "TG · Label 3": {
+      "main": [
+        []
       ]
     },
     "TG · Maqola yuborish": {
@@ -12261,6 +12297,11 @@
             "index": 0
           },
           {
+            "node": "TG · Video yuborish",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "TG · Post5 mavzu?",
             "type": "main",
             "index": 0
@@ -12277,13 +12318,7 @@
     },
     "TG · Label 4 Video": {
       "main": [
-        [
-          {
-            "node": "TG · Video yuborish",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "TG · Video yuborish": {
@@ -12355,19 +12390,18 @@
             "node": "TG · Label 5",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "TG · Label 5": {
-      "main": [
-        [
+          },
           {
             "node": "TG · Manbalar yuborish",
             "type": "main",
             "index": 0
           }
         ]
+      ]
+    },
+    "TG · Label 5": {
+      "main": [
+        []
       ]
     },
     "TH · Kirish tayyorlash": {
@@ -12471,6 +12505,61 @@
           }
         ]
       ]
+    },
+    "TT · Avtotuzatish": {
+      "main": [
+        [
+          {
+            "node": "TT · Skript tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RL · Avtotuzatish": {
+      "main": [
+        [
+          {
+            "node": "RL · Skript tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SH · Avtotuzatish": {
+      "main": [
+        [
+          {
+            "node": "SH · Skript tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · Yakuniy matn": {
+      "main": [
+        [
+          {
+            "node": "YT · K1 Compliance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KR · Slaydlarni birlashtirish": {
+      "main": [
+        [
+          {
+            "node": "KR · PASS?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodeGroups": [
@@ -12549,7 +12638,8 @@
         "e4a74c6d-7dd1-4d08-a263-a63822888260",
         "f320fd09-4810-4ddd-bce3-eaeddec04f50",
         "87bfa0b1-9fb7-4b65-9371-50db96baaba7",
-        "01589cc0-6a29-4221-ac74-6164851679df"
+        "01589cc0-6a29-4221-ac74-6164851679df",
+        "67bd1476-9ad8-47d5-959c-0e64c8295e9a"
       ],
       "description": "Brifdan TikTok content → R3 til tekshiruvi → K1 compliance → R2b tuzatish → R7 preview (thread 7)"
     },
@@ -12580,7 +12670,8 @@
         "67698a1a-3ec7-4057-8648-c6d85e44943c",
         "510b528e-6ca3-4c0d-a851-c83f7ed78bef",
         "e87853ae-7644-4ea8-ad3d-71507e5fe58e",
-        "2cb937db-1e39-4f40-8d7b-6d580fba41c7"
+        "2cb937db-1e39-4f40-8d7b-6d580fba41c7",
+        "26e888ce-99c0-4823-9294-8ec217938972"
       ],
       "description": "Brifdan Reels content → tekshiruv → R7 preview (thread 9)"
     },
@@ -12608,7 +12699,8 @@
         "b85ce463-337a-4985-ab32-e467e880543b",
         "740e1f30-ff25-405d-bf3e-764ce2cfa914",
         "5bef1c6e-d1d9-404d-8840-4f95c5053a90",
-        "5586b091-25e1-408c-ba87-b241497195fa"
+        "5586b091-25e1-408c-ba87-b241497195fa",
+        "a011a0d8-121a-4937-853c-862c6788c0d3"
       ],
       "description": "Brifdan YT Shorts content → tekshiruv → R7 preview (thread 5)"
     },
@@ -12805,7 +12897,7 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "versionId": "11cd18d8-d1c2-44b7-b0b5-bf304c29b15f",
-  "updatedAt": "2026-09-24T03:19:21.708Z",
-  "vaqt": "2026-09-24T03:19:27.233Z"
+  "versionId": "e8980996-e8ac-41e9-baf5-0a2acbe085e1",
+  "updatedAt": "2026-09-24T03:38:05.570Z",
+  "vaqt": "2026-09-24T03:38:11.016Z"
 }
