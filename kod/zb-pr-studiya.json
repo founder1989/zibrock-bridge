@@ -71,11 +71,19 @@
         "cloudflareApi": "Cloudflare account"
       }
     },
-    "PR · STORYBOARD (qurilsin)": {
-      "turi": "unknown"
+    "PR · STORYBOARD": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "// PR · STORYBOARD — har sahnaning kalit kadri (animatsiya tugagan holat) → bitta uzun HTML. Vizual ko'rinishi komponentlar jadvalidagi statik shablondan.\nvar j = $(\"PR · NAZORATCHI\").first().json;\nvar M = $(\"PR · MANBA VIZUALLARI\").first().json.manba || { kartalar: {}, sahifalar: [] };\nvar K = $(\"PR · komponentlar\").all().map(function(i){ return i.json; });\nvar V = j.vizual_tizim, T = V.tokenlar, Q = j.qoidalar, mk = j.mahsulot_kod;\nvar S = j.reja.sahnalar, N = S.length;\nvar FW = mk === \"yt_long\" ? 1920 : 1080, FH = mk === \"yt_long\" ? 1080 : 1920;\nvar XZ = ((Q.platforma || {})[mk] || {}).xavfsiz_zona || { tepa: 0, past: 0, chap: 0, ong: 0 };\nvar MAXH = 16000; // bitta skrinshot balandligi chegarasi (brauzer teksturasi)\nvar COLS = Math.max(1, Math.ceil(N * FH / MAXH)), ROWS = Math.ceil(N / COLS);\nvar belgi = (V.akkaunt[j.akkaunt] || {}).belgi || \"\";\n// Sahifa skrinshotlari (Cloudflare url) → data URI\nvar rasm = {};\nvar inp = $input.all();\nfor (var k = 0; k < inp.length; k++) { if (inp[k].binary && inp[k].binary.data && M.sahifalar[k]) { var buf = await this.helpers.getBinaryDataBuffer(k, \"data\"); M.sahifalar[k].s_idlar.forEach(function(id){ rasm[id] = { src: \"data:image/png;base64,\" + buf.toString(\"base64\"), url: M.sahifalar[k].url }; }); } }\nfunction e(s){ return String(s == null ? \"\" : s).split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\").split('\"').join(\"&quot;\"); }\nfunction shablon(h, d){ h = String(h || \"\"); h = h.replace(/\\{\\{#(\\w+)\\}\\}([\\s\\S]*?)\\{\\{\\/\\1\\}\\}/g, function(m, k2, ichki){ return (d[k2] || []).map(function(it){ return shablon(ichki, Object.assign({}, d, it)); }).join(\"\"); }); return h.replace(/\\{\\{\\s*([\\w.]+)\\s*\\}\\}/g, function(m, k2){ if (k2.indexOf(\"t.\") === 0) return T[k2.slice(2)] == null ? \"\" : T[k2.slice(2)]; return e(d[k2]); }); }\n// V_* → statik juftlik (statik qator izohi: \"video juftligi: V_X\")\nvar JUFT = {};\nK.filter(function(r){ return r.rejim === \"statik\" && r.html_shablon; }).forEach(function(r){ var m = String(r.izoh || \"\").match(/V_[A-Z_]+/); if (m) { (JUFT[m[0]] = JUFT[m[0]] || []).push(r); } });\nfunction harakatQator(kod){ return K.filter(function(r){ return r.rejim === \"harakat\" && r.kod === kod && r.html_shablon; })[0]; }\nfunction statik(kod, afzal){ var l = JUFT[kod] || []; return (afzal && l.filter(function(r){ return r.kod === afzal; })[0]) || l[0] || null; }\nfunction rang(sem){ sem = String(sem || \"\"); if (sem === \"zarar\" || sem === \"clay\" || sem === T.zarar) return T.zarar; if (sem === \"ijobiy\" || sem === \"sage\" || sem === T.ijobiy) return T.ijobiy; return T.urgu; }\nfunction fakt(id){ return (j.faktlar || []).filter(function(f){ return f.s_id === id; })[0] || {}; }\nfunction sonlar(s){ return (String(s || \"\").match(/\\d+(?:[.,]\\d+)*/g) || []).map(function(x){ return Number(/^\\d{1,3}(\\.\\d{3})+$/.test(x) ? x.split(\".\").join(\"\") : x.replace(\",\", \".\")); }); }\nfunction fmt(x){ x = Number(x); if (isNaN(x)) return \"\"; if (Math.round(x) !== x) return String(x).replace(\".\", \",\"); return String(x).replace(/\\B(?=(\\d{3})+(?!\\d))/g, \".\"); }\nfunction viz(s, toq){\n  var m = s.malumot || {}, ek = String(s.ekran_yozuvi || \"\"), ns = sonlar(ek), sub = toq ? \"rgba(247,245,240,0.7)\" : T.matn_ikkilamchi, fg = toq ? T.matn_toq_ustida : T.matn_och_ustida;\n  var semR = rang(m.rang || fakt(s.s_id).rang);\n  var p = Math.max(0, Math.min(100, Number(m.qiymat != null ? m.qiymat : (m.zarar_katak != null ? m.zarar_katak : (ns[0] != null ? ns[0] : 50)))));\n  var v = s.vizual, r, d = { sub: sub, fg: fg };\n  if (v === \"V_DONUT\") { r = statik(v); var C = 2 * Math.PI * 210; d.C = C.toFixed(2); d.dash = (C * p / 100).toFixed(2); d.raqam = \"%\" + fmt(p); }\n  else if (v === \"V_WAFFLE\") { r = statik(v); var pp = Math.round(p); d.katakchalar = []; for (var i = 0; i < 100; i++) d.katakchalar.push({ rang: i < pp ? T.zarar : T.ijobiy }); d.raqam = \"%\" + fmt(pp); }\n  else if (v === \"V_ORALIQ\") { r = statik(v); var a = Number(m.min != null ? m.min : ns[0]), b = Number(m.max != null ? m.max : (ns[1] != null ? ns[1] : a)); d.chap_px = (a * 8.8).toFixed(1); d.eni_px = Math.max(8, (b - a) * 8.8).toFixed(1); d.raqam = \"%\" + fmt(a) + \"–\" + fmt(b); }\n  else if (v === \"V_KATTA_RAQAM\") { r = statik(v); var q = m.qiymat != null ? Number(m.qiymat) : ns[0]; d.rang = semR; d.raqam = (ek.indexOf(\"%\") >= 0 ? \"%\" : \"\") + fmt(q); d.yorliq = ek.replace(/%?\\s*\\d+(?:[.,]\\d+)*/g, \"\").trim(); }\n  else if (v === \"V_USTUN\") { var U = (m.ustunlar || []).map(function(x){ return typeof x === \"object\" ? { q: Number(x.qiymat), y: x.yorliq } : { q: Number(x), y: \"\" }; }); if (!U.length) U = (m.degerler || m.qiymatlar || ns).map(function(x){ return { q: Number(x), y: \"\" }; });\n    if (U.length === 2) { r = statik(v, \"K_TAQQOS\"); var mx = Math.max(U[0].q, U[1].q) || 1; d.ustunlar = [{ h: Math.round(520 * U[0].q / mx), rang: T.quti_toq || T.fon_toq, yorliq: U[0].y }, { h: Math.round(520 * U[1].q / mx), rang: T.ijobiy, yorliq: U[1].y }]; }\n    else { r = statik(v, \"K_USTUN\"); var vals = U.length ? U.map(function(x){ return x.q; }) : [20, 35, 50, 68, 90], mx2 = Math.max.apply(null, vals) || 1; d.ustunlar = vals.map(function(x, i){ return { h: Math.round(560 * x / mx2), rang: i === vals.length - 1 ? T.urgu : T.ijobiy }; }); } }\n  else if (v === \"V_CHIZIQ\") { r = statik(v); }\n  else if (v === \"V_SXEMA\") { r = statik(v); var qs = (m.qadamlar || (m.tugunlar || m.bloklar || []).map(function(x){ return typeof x === \"object\" ? (x.matn || x.yorliq) : x; })).filter(Boolean).slice(0, 4); if (qs.length < 3) qs = ek.split(/[:→·]/).map(function(x){ return x.trim(); }).filter(Boolean).slice(0, 4); d.qadamlar = qs.map(function(t, i){ var ox = i === qs.length - 1; return { raqam: i + 1, matn: t, fon: ox ? T.fon_toq : \"#FFFFFF\", rang: ox ? T.matn_toq_ustida : T.matn_och_ustida, doira: ox ? T.urgu : T.fon_toq }; }); }\n  else if (v === \"V_KALIT_SOZ\") { if (m.yanlis || m.dogru) { r = statik(v); d.yanlis = m.yanlis || \"\"; d.dogru = m.dogru || \"\"; } else return '<div style=\"font:700 150px/1.02 Sora;text-transform:uppercase;letter-spacing:-.01em;color:' + T.urgu + ';max-width:880px\">' + e(m.soz || ek) + '</div>'; }\n  else if (v === \"V_MANBA_KARTA\" || (v === \"V_MANBA_SAHIFA\" && !rasm[s.s_id])) { var ka = M.kartalar[s.s_id]; return ka ? ka.html : '<div style=\"font:600 30px Inter;color:' + fg + '\">' + e(ek) + '</div>'; }\n  else if (v === \"V_MANBA_SAHIFA\") { var ra = rasm[s.s_id], ka2 = M.kartalar[s.s_id] || {}; return '<div style=\"width:880px\"><div style=\"font:600 20px Inter;letter-spacing:.18em;text-transform:uppercase;color:' + T.urgu + ';margin-bottom:18px\">Kaynak · ' + e([ka2.muallif, ka2.yil].filter(Boolean).join(\" · \")) + '</div><div style=\"width:880px;height:1000px;overflow:hidden;border-radius:14px;border:3px solid ' + T.urgu + '\"><img src=\"' + ra.src + '\" style=\"width:880px;display:block\"></div><div style=\"font:600 20px Inter;color:rgba(247,245,240,0.7);margin-top:16px;word-break:break-all\">' + e(ra.url) + '</div></div>'; }\n  else if (v === \"V_GIBRID\" || v === \"V_AVATAR_TOLIQ\") { var hq = harakatQator(v); if (hq) return shablon(hq.html_shablon, { fg: fg, sub: sub, yorliq: ek }); var R = v === \"V_AVATAR_TOLIQ\" ? 420 : 300; return '<div style=\"width:' + R + 'px;height:' + R + 'px;border-radius:50%;background:' + T.fon_toq + ';border:6px solid ' + T.urgu + ';display:flex;align-items:center;justify-content:center;font:700 ' + Math.round(R / 3) + 'px Sora;color:' + T.fon_och + '\">A1</div>'; }\n  if (!r) { var hq2 = harakatQator(v); if (hq2) return shablon(hq2.html_shablon, d); return '<div style=\"font:700 80px Sora;color:' + fg + '\">' + e(ek) + '</div>'; }\n  return shablon(r.html_shablon, d);\n}\nfunction sarlavha(s, col){ var h = e(s.ekran_yozuvi || \"\"); return h.replace(/%?\\d+(?:[.,]\\d+)*(?:\\s*[–-]\\s*%?\\d+(?:[.,]\\d+)*)?%?/g, function(x){ return '<span style=\"color:' + col + '\">' + x + '</span>'; }); }\nfunction f1(x){ return (Math.round(Number(x || 0) * 10) / 10).toFixed(1); }\nvar kadrlar = [];\nS.forEach(function(s, i){\n  var toq = [\"V_MANBA_KARTA\", \"V_MANBA_SAHIFA\", \"V_KALIT_SOZ\", \"V_AVATAR_TOLIQ\"].indexOf(s.vizual) >= 0;\n  var bg = toq ? T.fon_toq : T.fon_och, fg = toq ? T.matn_toq_ustida : T.matn_och_ustida, sub = toq ? \"rgba(247,245,240,0.7)\" : T.matn_ikkilamchi;\n  var semR = rang((s.malumot || {}).rang || fakt(s.s_id).rang);\n  var boshi = Number(s.boshlanish_s) || 0, oxiri = boshi + (Number(s.davomiylik_s) || 0);\n  var yorliq = \"Sahna \" + (s.n || i + 1) + \" · \" + f1(boshi) + \"–\" + f1(oxiri) + \" s · \" + (s.vizual || \"—\") + \" · \" + (s.harakat || \"—\");\n  var gibrid = (s.avatar === \"GIBRID_DOIRA\" && s.vizual !== \"V_GIBRID\" && s.vizual !== \"V_AVATAR_TOLIQ\") ? '<div style=\"flex:none;width:150px;height:150px;border-radius:50%;background:' + T.fon_toq + ';border:4px solid ' + T.urgu + ';display:flex;align-items:center;justify-content:center;font:700 48px Sora;color:' + T.fon_och + '\">A1</div>' : '';\n  var ka = M.kartalar[s.s_id];\n  var manbaQator = (s.manba_vizual && [\"V_MANBA_KARTA\", \"V_MANBA_SAHIFA\"].indexOf(s.vizual) < 0 && ka) ? '<div style=\"font:600 18px Inter;letter-spacing:.18em;text-transform:uppercase;color:' + sub + ';margin-top:14px\">Kaynak · ' + e([ka.muallif, ka.yil, ka.nashr].filter(Boolean).join(\" · \")) + '</div>' : '';\n  var x = (i % COLS) * FW, y = Math.floor(i / COLS) * FH;\n  var html = '<div class=\"k\" style=\"left:' + x + 'px;top:' + y + 'px;background:' + bg + '\"><div class=\"xz\" style=\"left:' + XZ.chap + 'px;top:' + XZ.tepa + 'px;right:' + XZ.ong + 'px;bottom:' + XZ.past + 'px\">' +\n    '<div style=\"display:flex;justify-content:space-between;align-items:center;font:600 20px Inter;letter-spacing:.18em;color:' + sub + '\"><span><span style=\"display:inline-block;width:14px;height:14px;background:' + T.urgu + ';margin-right:14px\"></span>' + e(belgi) + '</span><span>' + (i < 9 ? \"0\" : \"\") + (i + 1) + ' / ' + (N < 10 ? \"0\" : \"\") + N + '</span></div>' +\n    (([\"V_MANBA_KARTA\", \"V_MANBA_SAHIFA\"].indexOf(s.vizual) < 0 && s.ekran_yozuvi) ? '<div style=\"margin-top:36px;font:700 ' + (mk === \"yt_long\" ? 60 : 68) + 'px/1.08 Sora;text-transform:uppercase;letter-spacing:-.01em;color:' + fg + '\">' + sarlavha(s, semR) + '</div>' : '') +\n    '<div class=\"va\"><div class=\"vz\">' + viz(s, toq) + '</div></div>' + manbaQator +\n    '<div style=\"display:flex;align-items:flex-end;gap:24px;margin-top:18px\">' + gibrid + '<div style=\"font:600 18px Inter;letter-spacing:.18em;text-transform:uppercase;color:' + sub + '\">' + e(yorliq) + '</div></div>' +\n    '</div></div>';\n  kadrlar.push({ n: s.n || i + 1, x: x, y: y, html: html, vizual: s.vizual, vaqt: f1(boshi) + \"–\" + f1(oxiri), ekran: s.ekran_yozuvi || \"\" });\n});\nvar VW = FW * COLS, VH = FH * ROWS;\nvar sahifa = '<!doctype html><html><head><meta charset=\"utf-8\"><link rel=\"stylesheet\" href=\"' + V.shrift.google_fonts + '\"><style>html,body{margin:0;padding:0;background:#000;width:' + VW + 'px;height:' + VH + 'px;position:relative;overflow:hidden}.k{position:absolute;width:' + FW + 'px;height:' + FH + 'px;overflow:hidden;font-family:Inter,sans-serif}.xz{position:absolute;display:flex;flex-direction:column}.va{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.vz{transform-origin:center center}</style></head><body>' + kadrlar.map(function(k){ return k.html; }).join(\"\") +\n  '<script>function moslash(){document.querySelectorAll(\".va\").forEach(function(a){var z=a.firstChild;var s=Math.min(1,a.clientWidth/z.scrollWidth,a.clientHeight/z.scrollHeight);z.style.transform=\"scale(\"+s+\")\";});}document.fonts.ready.then(function(){moslash();document.body.classList.add(\"ready\")});setTimeout(function(){moslash();document.body.classList.add(\"ready\")},4000);<\\/script></body></html>';\n// Telegram caption (1-rasm): sahna | vaqt | vizual | ekran yozuvi — HTML, ≤1000 belgi\nvar sarl = \"<b>\" + e(j.mavzu_kod + \" · \" + mk + \" · storyboard\" + (j.test_rejim ? \" · test\" : \"\")) + \"</b>\\n\";\nvar jad = \"n | vaqt (s) | vizual | ekran yozuvi\\n\", qator;\nfor (var z = 0; z < kadrlar.length; z++) { qator = kadrlar[z].n + \" | \" + kadrlar[z].vaqt + \" | \" + kadrlar[z].vizual + \" | \" + kadrlar[z].ekran + \"\\n\"; if ((sarl + \"<pre>\" + e(jad + qator) + \"</pre>\").length > 1000) break; jad += qator; }\nvar caption = sarl + \"<pre>\" + e(jad.trim()) + \"</pre>\";\nvar TH = { yt_long: 3, yt_short: 5, tiktok: 7, reel: 9 };\nreturn [{ json: { html: sahifa, w: VW, h: VH, kadr_w: FW, kadr_h: FH, cols: COLS, jami: N, kadrlar: kadrlar.map(function(k){ return { n: k.n, x: k.x, y: k.y, vizual: k.vizual, vaqt: k.vaqt, ekran: k.ekran }; }), caption: caption, thread: (j.pasport && j.pasport.thread) || TH[mk], mahsulot_kod: mk, mavzu_kod: j.mavzu_kod, job_id: j.job_id, sahifa_rasm: Object.keys(rasm) } }];"
     },
-    "PR · Yetkazish (qurilsin)": {
-      "turi": "unknown"
+    "PR · Yetkazish": {
+      "turi": "telegram",
+      "text": "",
+      "chatId": "-1004462774154",
+      "thread": "={{ $json.thread }}",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     },
     "PR · Vaqt hisobi": {
       "turi": "code",
@@ -169,6 +177,24 @@
         ],
         "combinator": "and"
       }
+    },
+    "PR · Storyboard render": {
+      "turi": "http",
+      "method": "POST",
+      "url": "https://api.cloudflare.com/client/v4/accounts/e7d297b69ead02b6ab0a16480f08a42d/browser-rendering/screenshot",
+      "body": "={{ JSON.stringify({ html: $json.html, viewport: { width: $json.w, height: $json.h }, gotoOptions: { waitUntil: \"networkidle0\", timeout: 45000 }, waitForSelector: { selector: \"body.ready\", timeout: 20000 }, screenshotOptions: { type: \"png\", fullPage: true } }) }}",
+      "sendBody": true,
+      "creds": {
+        "cloudflareApi": "Cloudflare account"
+      }
+    },
+    "PR · Kesish tayyorlash": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "// PR · Kesish tayyorlash — bitta skrinshotni har kadr uchun item {x, y} + o'sha binary\nvar it = $input.first();\nvar m = $(\"PR · STORYBOARD\").first().json;\nreturn m.kadrlar.map(function(k, i){ return { json: { n: k.n, jami: m.jami, x: k.x, y: k.y, w: m.kadr_w, h: m.kadr_h, vizual: k.vizual, vaqt: k.vaqt, caption: i === 0 ? m.caption : \"\", thread: m.thread, mahsulot_kod: m.mahsulot_kod, mavzu_kod: m.mavzu_kod, job_id: m.job_id }, binary: { data: it.binary.data } }; });"
+    },
+    "PR · Kesish": {
+      "turi": "unknown"
     }
   },
   "connections": {
@@ -297,18 +323,7 @@
       "main": [
         [
           {
-            "node": "PR · STORYBOARD (qurilsin)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "PR · STORYBOARD (qurilsin)": {
-      "main": [
-        [
-          {
-            "node": "PR · Yetkazish (qurilsin)",
+            "node": "PR · STORYBOARD",
             "type": "main",
             "index": 0
           }
@@ -417,7 +432,51 @@
         ],
         [
           {
-            "node": "PR · STORYBOARD (qurilsin)",
+            "node": "PR · STORYBOARD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · STORYBOARD": {
+      "main": [
+        [
+          {
+            "node": "PR · Storyboard render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · Storyboard render": {
+      "main": [
+        [
+          {
+            "node": "PR · Kesish tayyorlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · Kesish tayyorlash": {
+      "main": [
+        [
+          {
+            "node": "PR · Kesish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · Kesish": {
+      "main": [
+        [
+          {
+            "node": "PR · Yetkazish",
             "type": "main",
             "index": 0
           }
@@ -425,5 +484,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-24T04:30:03.884Z"
+  "vaqt": "2026-09-24T04:38:43.544Z"
 }
