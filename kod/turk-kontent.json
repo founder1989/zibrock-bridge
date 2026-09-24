@@ -14414,6 +14414,11 @@
             "node": "KR · Telegram - Test Preview",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "KR · Render ma'lumotlarini tayyorlash",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -16212,7 +16217,7 @@
     "errorWorkflow": "5kLZUkHJZpPBsYI6",
     "saveExecutionProgress": false
   },
-  "versionId": "90559101-d57a-40cb-b102-1866e2d29675",
-  "updatedAt": "2026-09-24T15:58:42.642Z",
-  "vaqt": "2026-09-24T16:17:25.702Z"
+  "versionId": "ccab5120-fcb7-4c25-b425-d61f2269fcef",
+  "updatedAt": "2026-09-24T16:25:57.474Z",
+  "vaqt": "2026-09-24T16:26:03.331Z"
 }
