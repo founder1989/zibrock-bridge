@@ -5761,7 +5761,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "var inp=$(\"SH · Kirish tayyorlash\").first().json;var pas={};try{pas=$(\"SH · Pasport o'qish\").first().json||{};}catch(e){}var minS=parseFloat(pas.uzunlik_min_s||45);var maxS=parseFloat(pas.uzunlik_max_s||60);var minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);var ctaS=\"\";try{var ctaRS=$(\"CTA o'qish\").first().json||{};ctaS=ctaRS.matn||\"\";}catch(e){} if([\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0)ctaS=\"\"; return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:inp.faktlar||[],burchak:inp.burchak,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,ilgak_s:parseFloat(pas.ilgak_s||2.0),ctaMatn:ctaS}}];"
+        "jsCode": "var inp=$(\"SH · Kirish tayyorlash\").first().json;var pas={};try{pas=$(\"SH · Pasport o'qish\").first().json||{};}catch(e){}var minS=parseFloat(pas.uzunlik_min_s||45);var maxS=parseFloat(pas.uzunlik_max_s||60);var minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\n// Zarb bo'yicha so'z byudjeti (pasport minSoz/maxSoz dan)\nvar ZARB=[[\"HOOK\",0.08],[\"OG'RIQ\",0.17],[\"SABAB\",0.25],[\"ISBOT\",0.22],[\"YECHIM\",0.18],[\"XULOSA\",0.10]];var zarb_byudjet=ZARB.map(function(z){return z[0]+\" \"+Math.max(1,Math.round(minSoz*z[1]))+\"–\"+Math.max(1,Math.round(maxSoz*z[1]))+\" so'z\";}).join(\", \");\nvar ctaS=\"\";try{var ctaRS=$(\"CTA o'qish\").first().json||{};ctaS=ctaRS.matn||\"\";}catch(e){} if([\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0)ctaS=\"\"; return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:inp.faktlar||[],burchak:inp.burchak,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,zarb_byudjet:zarb_byudjet,ilgak_s:parseFloat(pas.ilgak_s||2.0),ctaMatn:ctaS}}];"
       },
       "creds": {}
     },
@@ -5788,8 +5788,8 @@
           ]
         },
         "options": {
-          "maxTokens": 2000,
-          "system": "=Turkce YouTube Shorts skripti yaz. Siz registri.\nSo'z soni pasportdan aniqlanadi — hozir \"{{ $json.minSoz }}–{{ $json.maxSoz }} so'z\" taxminan.\n- Ilgak 2s: raqam darhol ekranda. Uzun videodagi eng kuchli fikr\n- Qisman javob + oxirida: \"Tam analiz kanalda\"\n- Sarlavha ≤60 belgi, #shorts + 2 heshteg, tavsifda uzun videoga havola qo'sh\n- RAQAM IXTIRO QILINMAYDI. s_id ko'rsat\n- Heshteglar: #shorts #psikoloji #disiplin\nJSON: {\"hook\":\"...\",\"tts_matn\":\"...\",\"sceneBlocks\":[{\"matn\":\"...\",\"raqam\":\"...\",\"s_id\":\"N-01\"}],\"manba_toliq\":\"...\",\"sarlavha\":\"...\",\"tavsif\":\"...\",\"heshteglar\":[\"#shorts\",\"#psikoloji\",\"#disiplin\"]}\nFaqat JSON."
+          "maxTokens": 3000,
+          "system": "=Turkce YouTube Shorts skripti yaz. Siz registri.\nSo'z soni pasportdan aniqlanadi — hozir \"{{ $json.minSoz }}–{{ $json.maxSoz }} so'z\" taxminan.\nHar zarb uchun so'z byudjeti: {{ $json.zarb_byudjet }}. Har zarbni alohida yoz va byudjetga rioya qil.\n- Ilgak 2s: raqam darhol ekranda. Uzun videodagi eng kuchli fikr\n- Oxirida: \"Tam analiz kanalda\"\n- Sarlavha ≤60 belgi, #shorts + 2 heshteg, tavsifda uzun videoga havola qo'sh\n- RAQAM IXTIRO QILINMAYDI. s_id ko'rsat\n- Heshteglar: #shorts #psikoloji #disiplin\nJSON: {\"hook\":\"...\",\"tts_matn\":\"...\",\"sceneBlocks\":[{\"matn\":\"...\",\"raqam\":\"...\",\"s_id\":\"N-01\"}],\"manba_toliq\":\"...\",\"sarlavha\":\"...\",\"tavsif\":\"...\",\"heshteglar\":[\"#shorts\",\"#psikoloji\",\"#disiplin\"]}\nFaqat JSON."
         }
       },
       "creds": {
@@ -8016,7 +8016,7 @@
         },
         "options": {
           "maxTokens": 1000,
-          "system": "Raqam Kartasi post (Telegram kanal). Siz registri. JSON qaytargin:\n{\"raqam\":\"97%\",\"rang\":\"clay\",\"izoh\":\"qisqa izoh ≤50 belgi\",\"manba_qisqa\":\"ESMA 2018\",\"caption_html\":\"...\"}\nrang: clay=zarar/salbiy gold=neytral sage=ijobiy\ncaption_html QOIDALAR (≤900 belgi, HTML):\n- Birinchi qator: <b>ilgak ≤80 belgi</b>\n- <tg-spoiler>asosiy raqam</tg-spoiler> — spoiler bilan yopiq\n- 2-4 qator: kim, qachon, n, mamlakat\n- <blockquote>Kaynak: manba_toliq</blockquote>\n- Ohirida: Maqola havolasi uchun joy qoldiring (3-post keladi)\n- Ruxsat: b, i, u, s, a, blockquote, tg-spoiler. Emoji ≤2. Boshqa teg YOQ.\n- RAQAM IXTIRO QILINMAYDI. Faqat JSON."
+          "system": "Raqam Kartasi post (Telegram kanal). Siz registri. JSON qaytargin:\nKontent tili: FAQAT TURKCHA (caption_html va izoh turk tilida; o'zbekcha yozma).\n{\"raqam\":\"97%\",\"rang\":\"clay\",\"izoh\":\"qisqa izoh ≤50 belgi\",\"manba_qisqa\":\"ESMA 2018\",\"caption_html\":\"...\"}\nrang: clay=zarar/salbiy gold=neytral sage=ijobiy\ncaption_html QOIDALAR (≤900 belgi, HTML):\n- Birinchi qator: <b>ilgak ≤80 belgi</b>\n- <tg-spoiler>asosiy raqam</tg-spoiler> — spoiler bilan yopiq\n- 2-4 qator: kim, qachon, n, mamlakat\n- <blockquote>Kaynak: manba_toliq</blockquote>\n- Ohirida: Maqola havolasi uchun joy qoldiring (3-post keladi)\n- Ruxsat: b, i, u, s, a, blockquote, tg-spoiler. Emoji ≤2. Boshqa teg YOQ.\n- RAQAM IXTIRO QILINMAYDI. Faqat JSON."
         }
       },
       "creds": {
@@ -8911,7 +8911,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "var b = Object.assign({}, $(\"AN · Brif tekshiruvi\").item.json);\nvar bosh = function (v) { return v === undefined || v === null || v === \"\"; };\nb.faktlar = (b.faktlar || []).map(function (f) { var g = Object.assign({}, f); if (bosh(g.matn)) g.matn = g.matn_tr; if (bosh(g.qiymat)) g.qiymat = g.matn_tr; return g; });\nreturn { json: b };"
+        "jsCode": "var b = Object.assign({}, $(\"AN · Brif tekshiruvi\").item.json);\nvar bosh = function (v) { return v === undefined || v === null || v === \"\"; };\nb.faktlar = (b.faktlar || []).map(function (f) { var g = Object.assign({}, f); if (bosh(g.matn)) g.matn = g.matn_tr; if (bosh(g.qiymat)) g.qiymat = g.matn_tr; return g; });\n// burchaklar: bitta satr bo'lib kelganlarni massivga o'rash (liniyalar [0] ni oladi)\nif (b.burchaklar && typeof b.burchaklar === \"object\") { Object.keys(b.burchaklar).forEach(function (k) { if (typeof b.burchaklar[k] === \"string\") b.burchaklar[k] = [b.burchaklar[k]]; }); }\nreturn { json: b };"
       },
       "creds": {}
     },
@@ -9033,6 +9033,1389 @@
       "parameters": {
         "mode": "runOnceForAllItems",
         "jsCode": "// Test to'sig'idan o'tgan asl kirishni qaytaradi (jurnal qatori emas)\nreturn [{ json: $(\"OR · Bo'lim marshruti\").first().json }];"
+      },
+      "creds": {}
+    },
+    "TT · R3 til (tts+tavsif)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "d7effe05-4efc-4764-8e82-e1eee234c00d",
+      "position": [
+        -544,
+        684
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ ($json.tts_matn || \"\") + \"\\n\" + ($json.tavsif || \"\") }}",
+            "variant": "full",
+            "mahsulot_kod": "tiktok",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "TT · Til OK? (tts+tavsif)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "2afc18d7-7018-40e8-bbf3-1ca2b06e3dc4",
+      "position": [
+        -344,
+        684
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "818fd9d8-c2d9-49c3-846c-7802ca865feb",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "TT · Til keyin (tts+tavsif)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "11ed8839-bdfa-4f14-823d-f1dea79a6cb7",
+      "position": [
+        -144,
+        684
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"TT · Skript tekshiruvi\").last().json }];"
+      },
+      "creds": {}
+    },
+    "RL · R3 til (tts+caption)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "e908e852-9904-418c-9292-68ca6525e417",
+      "position": [
+        -544,
+        876
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ ($json.tts_matn || \"\") + \"\\n\" + ($json.caption || \"\") }}",
+            "variant": "full",
+            "mahsulot_kod": "reel",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "RL · Til OK? (tts+caption)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "2bc9db44-a181-4f02-95dc-b8a5c769d822",
+      "position": [
+        -344,
+        876
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c23dc5f3-34a0-43b3-8f30-03054b15e4f2",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "RL · Til keyin (tts+caption)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "91a983c5-c794-4c8b-bfbd-1523a0cb737e",
+      "position": [
+        -144,
+        876
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"RL · Skript tekshiruvi\").last().json }];"
+      },
+      "creds": {}
+    },
+    "SH · R3 til (tts+tavsif)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "5bd8a88f-56af-4b18-82a0-676968ea6995",
+      "position": [
+        -992,
+        1068
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ ($json.tts_matn || \"\") + \"\\n\" + ($json.sarlavha || \"\") + \"\\n\" + ($json.tavsif || \"\") }}",
+            "variant": "full",
+            "mahsulot_kod": "yt_short",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "SH · Til OK? (tts+tavsif)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "78179cd1-63da-47ab-8960-c40e8d709a40",
+      "position": [
+        -792,
+        1068
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7eb344a1-91ce-45b0-8449-2011731fc886",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "SH · Til keyin (tts+tavsif)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "75e466ae-e08e-4ec7-96c6-7b4cba97ca91",
+      "position": [
+        -592,
+        1068
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"SH · Skript tekshiruvi\").last().json }];"
+      },
+      "creds": {}
+    },
+    "YT · R3 til (matn)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "59f51abd-e224-4dda-835b-06cce94ed333",
+      "position": [
+        -96,
+        1644
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ ($json.tts_matn || \"\") + \"\\n\" + ($json.sarlavha || \"\") }}",
+            "variant": "full",
+            "mahsulot_kod": "yt_long",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "YT · Til OK? (matn)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "6bfaefa3-3ee6-4e60-84b0-46cc5ee2f731",
+      "position": [
+        104,
+        1644
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d4fe1f81-c156-4768-90d2-236f26577212",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "YT · Til keyin (matn)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "59e8c3ed-9cf7-415a-abc1-9f8c41c8dcd2",
+      "position": [
+        304,
+        1644
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"YT · Yakuniy matn\").last().json }];"
+      },
+      "creds": {}
+    },
+    "TG · R3 til (P1)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "053e78a9-bde4-43ff-84a5-fb0ef06347dd",
+      "position": [
+        -5488,
+        3936
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ [$json.question].concat(($json.options || []).map(String)).concat([$json.explanation]).filter(Boolean).join(\" \") }}",
+            "variant": "full",
+            "mahsulot_kod": "tg_paket",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "TG · Til OK? (P1)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "a92584d2-3a02-4a7c-bd49-cab4a026ab5d",
+      "position": [
+        -5288,
+        3936
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6142c1dc-51ea-405f-a6b6-0eb534d05f90",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "TG · Til keyin (P1)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "33d78878-af4a-4ae5-8cfb-ef111b503ea4",
+      "position": [
+        -5088,
+        3936
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"TG · Parse P1\").last().json }];"
+      },
+      "creds": {}
+    },
+    "TG · R3 til (P2)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "6f8d1408-a701-4249-8d46-f9dcbdc2f339",
+      "position": [
+        -3920,
+        3936
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ ($json.caption_html || \"\") + \" \" + ($json.izoh || \"\") }}",
+            "variant": "full",
+            "mahsulot_kod": "tg_paket",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "TG · Til OK? (P2)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "ed6337bf-f3a5-415c-a469-aa27b40e1916",
+      "position": [
+        -3720,
+        3936
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4b184dc9-c506-4fc2-a17b-fa4fbbece5e0",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "TG · Til keyin (P2)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "fc28dfbd-fdb7-4da5-915c-4b6903763b4f",
+      "position": [
+        -3520,
+        3936
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"TG · Parse P2\").last().json }];"
+      },
+      "creds": {}
+    },
+    "TG · R3 til (P3)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "d564d39c-6363-49c4-bb82-8c063a641694",
+      "position": [
+        -2128,
+        3936
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ ($json.telegraph_nodes || []).map(function (n) { return Array.isArray(n.children) ? n.children.join(\" \") : \"\"; }).join(\" \") }}",
+            "variant": "full",
+            "mahsulot_kod": "tg_paket",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "TG · Til OK? (P3)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "1e7f7e2d-f230-4c08-aa8e-a8b07214c35e",
+      "position": [
+        -1928,
+        3936
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a847c211-c2c4-4274-8098-855bccce8dc6",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "TG · Til keyin (P3)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "b83208a2-51a4-4dbc-be8e-70ca296d38a3",
+      "position": [
+        -1728,
+        3936
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"TG · Parse P3\").last().json }];"
+      },
+      "creds": {}
+    },
+    "TG · R3 til (P5)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "4406982d-193b-43ac-88a3-421633c5f844",
+      "position": [
+        336,
+        3744
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ (function (a) { return (a || []).map(function (s) { return [s.title, s.subtitle, s.body].filter(Boolean).join(\" \"); }).join(\" \"); })($json.carousel && $json.carousel.slides) }}",
+            "variant": "full",
+            "mahsulot_kod": "tg_paket",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "TG · Til OK? (P5)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "9c43c004-e41d-4b77-ba4b-627cd296966b",
+      "position": [
+        536,
+        3744
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ac4c281e-aaeb-4c35-b2e7-d25da7413b39",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "TG · Til keyin (P5)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "d4cfe9e4-ff9d-4e78-89e9-6a28e0e6b0ad",
+      "position": [
+        736,
+        3744
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"TG · Manbalar qurish\").last().json }];"
+      },
+      "creds": {}
+    },
+    "KR · R3 til (slaydlar)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "b6085140-efd5-4903-93d1-5a1a0343707a",
+      "position": [
+        -544,
+        1260
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ (function (a) { return (a || []).map(function (s) { return [s.title, s.subtitle, s.body].filter(Boolean).join(\" \"); }).join(\" \"); })($json.slaydlar) + \" \" + ($json.caption || \"\") }}",
+            "variant": "full",
+            "mahsulot_kod": "carousel",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "KR · Til OK? (slaydlar)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "26bc844c-db44-4c44-8944-9b6b4f9f71ed",
+      "position": [
+        -344,
+        1260
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "14a8d6d6-56ce-4d2a-a164-5a9bcd48f02a",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "KR · Til keyin (slaydlar)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "81ecac93-1669-49cc-a812-780bd1c8785d",
+      "position": [
+        -144,
+        1260
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"KR · Slaydlarni birlashtirish\").last().json }];"
+      },
+      "creds": {}
+    },
+    "TH · R3 til (sarlavha)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "id": "6ec3c7cf-00a9-4862-af7f-e2429ec11928",
+      "position": [
+        -1888,
+        1596
+      ],
+      "parameters": {
+        "mode": "once",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5kLZUkHJZpPBsYI6",
+          "cachedResultName": "turk kontent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rol": "korrektor",
+            "matn": "={{ ($json.yt_sarlavha || \"\") + \" \" + ($json.burchak || \"\") }}",
+            "variant": "full",
+            "mahsulot_kod": "thumbnail",
+            "pasport": "={{ {} }}"
+          },
+          "schema": [
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "matn",
+              "displayName": "matn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "displayName": "variant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mahsulot_kod",
+              "displayName": "mahsulot_kod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pasport",
+              "displayName": "pasport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "TH · Til OK? (sarlavha)": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "5d7c90c5-809a-431b-9826-fbc1f2e5cdf4",
+      "position": [
+        -1688,
+        1596
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f92b8c6c-4c4e-429e-89bf-5d28cc21361d",
+              "leftValue": "={{ String($json.holat || \"\") }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "TH · Til keyin (sarlavha)": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "0047d8f8-9209-4af1-8ebd-31c6db66ac80",
+      "position": [
+        -1488,
+        1596
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// R3 til darvozasidan o'tdi — asl ma'lumotni tiklaydi\nreturn [{ json: $(\"TH · Thumbnail HTML qurish\").last().json }];"
+      },
+      "creds": {}
+    },
+    "YT · Kengaytirish rejasi": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "e043a711-2798-48ab-a777-50e0b37d5139",
+      "position": [
+        -772,
+        1840
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// QULF bloklar so'zma-so'z qoladi; qolgan bloklar minSoz gacha kengaytiriladi (pasport o'zgarmaydi)\nvar ds = $(\"YT · Bloklarni yig'ish\").first().json;\nvar bl = (ds.bloklar || []).slice();\nvar wc = function (s) { return String(s || \"\").split(/\\s+/).filter(Boolean).length; };\nvar matnOf = function (b) { return b.matn || b.matn_tr || \"\"; };\nvar qulfSoz = 0, ochiq = [], kontekst = [];\nbl.forEach(function (b) { var w = wc(matnOf(b)); if (String(b.rejim || \"\").toUpperCase() === \"QULF\") { qulfSoz += w; kontekst.push(\"[\" + b.blok + \"] \" + matnOf(b)); } else { ochiq.push({ b: b, w: w }); } });\nvar minSoz = parseInt(ds.minSoz || 0, 10) || 0;\nvar jami = qulfSoz + ochiq.reduce(function (a, x) { return a + x.w; }, 0);\nvar byudjet = Math.max(0, minSoz - qulfSoz);\nvar maqsad = Math.round(byudjet * 1.1);\nvar sekJami = ochiq.reduce(function (a, x) { return a + (parseFloat(x.b.sek) || 1); }, 0) || 1;\nvar reja = ochiq.map(function (x) { var ul = (parseFloat(x.b.sek) || 1) / sekJami; var mn = Math.max(x.w, Math.round(maqsad * ul)); return { id: x.b.id, blok: x.b.blok, rejim: x.b.rejim, sek: x.b.sek, asl_matn: matnOf(x.b), asl_soz: x.w, min_soz: mn, max_soz: Math.round(mn * 1.3) }; });\nvar faktlar_qisqa = (ds.faktlar || []).map(function (f) { return { s_id: f.s_id, matn: f.matn || f.matn_tr, manba: f.manba }; });\nreturn [{ json: Object.assign({}, ds, { kengaytirish: ochiq.length > 0 && jami < minSoz, qulf_soz: qulfSoz, jami_soz: jami, byudjet: byudjet, reja: reja, faktlar_qisqa: faktlar_qisqa, qulf_kontekst: kontekst.join(\"\\n\") }) }];"
+      },
+      "creds": {}
+    },
+    "YT · Kengaytirish kerakmi?": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "03239216-152c-4625-99bd-58dcbec337ba",
+      "position": [
+        -552,
+        1840
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5e32119c-2494-4fd1-bb98-c7f19601585f",
+              "leftValue": "={{ $json.kengaytirish === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "YT · Claude - Kengaytirish": {
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "id": "d5bc55de-2f15-4fb7-af16-a39df0fcbb8b",
+      "position": [
+        -332,
+        1840
+      ],
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ \"Mavzu: \" + $json.mavzu_kod + \"\\nSarlavha: \" + ($json.sarlavha || \"\") + \"\\n\\nFAKTLAR:\\n\" + JSON.stringify($json.faktlar_qisqa, null, 2) + \"\\n\\nKENGAYTIRILADIGAN BLOKLAR:\\n\" + JSON.stringify($json.reja, null, 2) + \"\\n\\nKONTEKST (QULF bloklar):\\n\" + $json.qulf_kontekst }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 6000,
+          "system": "Sen YouTube uzun video skriptining muharririsan. Kontent tili: FAQAT TURKCHA. Siz registri.\nVAZIFA: berilgan QULF BO'LMAGAN bloklarni har biri uchun ko'rsatilgan min_soz–max_soz oralig'igacha KENGAYTIR.\nQOIDALAR:\n- Faqat berilgan FAKTLAR (s_id bilan) ishlatiladi. Yangi raqam, foiz, yil, manba IXTIRO QILINMAYDI. Har raqam faktlar ro'yxatida bo'lishi shart.\n- Blokning ma'nosi va skriptdagi o'rni o'zgarmaydi. Asl blokdagi barcha fikrlar saqlanadi; faqat izoh, faktlardan misol va o'tish jumlalari bilan chuqurlashtir.\n- QULF bloklar (kontekst) o'zgartirilmaydi va qaytarilmaydi.\n- METASAFE: daromad va'dasi, kafolat, investitsiya tavsiyasi YO'Q.\nJSON qaytar: {\"bloklar\":[{\"id\":<blok id>,\"matn\":\"...\"}]}\nFaqat JSON."
+        }
+      },
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
+    },
+    "YT · Kengaytirilgan matn": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "425b0e7c-5c41-471a-847f-d7842fc0c141",
+      "position": [
+        -112,
+        1840
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Kengaytirilgan bloklarni asl tartibda yig'adi; QULF bloklar so'zma-so'z\nvar rj = $(\"YT · Kengaytirish rejasi\").first().json;\nvar raw = ($json.content && $json.content[0] && $json.content[0].text) || \"\";\nvar map = {}; var parseXato = false;\ntry { var s = raw.indexOf(\"{\"), e = raw.lastIndexOf(\"}\"); var p = JSON.parse(raw.slice(s, e + 1)); (p.bloklar || []).forEach(function (b) { map[String(b.id)] = String(b.matn || \"\"); }); } catch (err) { parseXato = true; }\nvar wc = function (t) { return String(t || \"\").split(/\\s+/).filter(Boolean).length; };\nvar ishlatildi = 0;\nvar qism = (rj.bloklar || []).map(function (b) { var asl = b.matn || b.matn_tr || \"\"; if (String(b.rejim || \"\").toUpperCase() === \"QULF\") return asl; var k = map[String(b.id)]; if (k && wc(k) >= wc(asl)) { ishlatildi++; return k; } return asl; });\nvar tts = qism.filter(Boolean).join(\"\\n\\n\");\nreturn [{ json: Object.assign({}, rj, { tts_final: tts, rejim_info: \"KENGAYTIRILGAN (QULF so'zma-so'z, \" + ishlatildi + \"/\" + (rj.reja || []).length + \" blok kengaytirildi)\" + (parseXato ? \" PARSE_FAIL\" : \"\"), kengaytirilgan_soz: wc(tts) }) }];"
       },
       "creds": {}
     }
@@ -10965,7 +12348,7 @@
       "main": [
         [
           {
-            "node": "TT · K1 Compliance",
+            "node": "TT · R3 til (tts+tavsif)",
             "type": "main",
             "index": 0
           }
@@ -11213,7 +12596,7 @@
       "main": [
         [
           {
-            "node": "RL · K1 Compliance",
+            "node": "RL · R3 til (tts+caption)",
             "type": "main",
             "index": 0
           }
@@ -11450,7 +12833,7 @@
       "main": [
         [
           {
-            "node": "SH · K1 Compliance",
+            "node": "SH · R3 til (tts+tavsif)",
             "type": "main",
             "index": 0
           }
@@ -11677,7 +13060,7 @@
         ],
         [
           {
-            "node": "YT · QULF rejimi?",
+            "node": "YT · Kengaytirish rejasi",
             "type": "main",
             "index": 0
           }
@@ -12107,7 +13490,7 @@
       "main": [
         [
           {
-            "node": "TG · K1 P1",
+            "node": "TG · R3 til (P1)",
             "type": "main",
             "index": 0
           }
@@ -12184,7 +13567,7 @@
       "main": [
         [
           {
-            "node": "TG · K1 P2",
+            "node": "TG · R3 til (P2)",
             "type": "main",
             "index": 0
           }
@@ -12271,7 +13654,7 @@
       "main": [
         [
           {
-            "node": "TG · K1 P3",
+            "node": "TG · R3 til (P3)",
             "type": "main",
             "index": 0
           }
@@ -12426,7 +13809,7 @@
       "main": [
         [
           {
-            "node": "TG · Carousel - Manbalar",
+            "node": "TG · R3 til (P5)",
             "type": "main",
             "index": 0
           }
@@ -12491,7 +13874,7 @@
       "main": [
         [
           {
-            "node": "TH · Variantlarni ajratish",
+            "node": "TH · R3 til (sarlavha)",
             "type": "main",
             "index": 0
           }
@@ -12593,7 +13976,7 @@
       "main": [
         [
           {
-            "node": "YT · K1 Compliance",
+            "node": "YT · R3 til (matn)",
             "type": "main",
             "index": 0
           }
@@ -12604,7 +13987,7 @@
       "main": [
         [
           {
-            "node": "KR · PASS?",
+            "node": "KR · R3 til (slaydlar)",
             "type": "main",
             "index": 0
           }
@@ -12638,6 +14021,397 @@
         [
           {
             "node": "TG · Post5 mavzu?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT · R3 til (tts+tavsif)": {
+      "main": [
+        [
+          {
+            "node": "TT · Til OK? (tts+tavsif)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT · Til OK? (tts+tavsif)": {
+      "main": [
+        [
+          {
+            "node": "TT · Til keyin (tts+tavsif)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "TT · Til keyin (tts+tavsif)": {
+      "main": [
+        [
+          {
+            "node": "TT · K1 Compliance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RL · R3 til (tts+caption)": {
+      "main": [
+        [
+          {
+            "node": "RL · Til OK? (tts+caption)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RL · Til OK? (tts+caption)": {
+      "main": [
+        [
+          {
+            "node": "RL · Til keyin (tts+caption)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "RL · Til keyin (tts+caption)": {
+      "main": [
+        [
+          {
+            "node": "RL · K1 Compliance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SH · R3 til (tts+tavsif)": {
+      "main": [
+        [
+          {
+            "node": "SH · Til OK? (tts+tavsif)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SH · Til OK? (tts+tavsif)": {
+      "main": [
+        [
+          {
+            "node": "SH · Til keyin (tts+tavsif)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "SH · Til keyin (tts+tavsif)": {
+      "main": [
+        [
+          {
+            "node": "SH · K1 Compliance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · R3 til (matn)": {
+      "main": [
+        [
+          {
+            "node": "YT · Til OK? (matn)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · Til OK? (matn)": {
+      "main": [
+        [
+          {
+            "node": "YT · Til keyin (matn)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "YT · Til keyin (matn)": {
+      "main": [
+        [
+          {
+            "node": "YT · K1 Compliance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · R3 til (P1)": {
+      "main": [
+        [
+          {
+            "node": "TG · Til OK? (P1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · Til OK? (P1)": {
+      "main": [
+        [
+          {
+            "node": "TG · Til keyin (P1)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "TG · Til keyin (P1)": {
+      "main": [
+        [
+          {
+            "node": "TG · K1 P1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · R3 til (P2)": {
+      "main": [
+        [
+          {
+            "node": "TG · Til OK? (P2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · Til OK? (P2)": {
+      "main": [
+        [
+          {
+            "node": "TG · Til keyin (P2)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "TG · Til keyin (P2)": {
+      "main": [
+        [
+          {
+            "node": "TG · K1 P2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · R3 til (P3)": {
+      "main": [
+        [
+          {
+            "node": "TG · Til OK? (P3)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · Til OK? (P3)": {
+      "main": [
+        [
+          {
+            "node": "TG · Til keyin (P3)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "TG · Til keyin (P3)": {
+      "main": [
+        [
+          {
+            "node": "TG · K1 P3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · R3 til (P5)": {
+      "main": [
+        [
+          {
+            "node": "TG · Til OK? (P5)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · Til OK? (P5)": {
+      "main": [
+        [
+          {
+            "node": "TG · Til keyin (P5)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "TG · Til keyin (P5)": {
+      "main": [
+        [
+          {
+            "node": "TG · Carousel - Manbalar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KR · R3 til (slaydlar)": {
+      "main": [
+        [
+          {
+            "node": "KR · Til OK? (slaydlar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KR · Til OK? (slaydlar)": {
+      "main": [
+        [
+          {
+            "node": "KR · Til keyin (slaydlar)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "KR · Til keyin (slaydlar)": {
+      "main": [
+        [
+          {
+            "node": "KR · PASS?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TH · R3 til (sarlavha)": {
+      "main": [
+        [
+          {
+            "node": "TH · Til OK? (sarlavha)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TH · Til OK? (sarlavha)": {
+      "main": [
+        [
+          {
+            "node": "TH · Til keyin (sarlavha)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "TH · Til keyin (sarlavha)": {
+      "main": [
+        [
+          {
+            "node": "TH · Variantlarni ajratish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · Kengaytirish rejasi": {
+      "main": [
+        [
+          {
+            "node": "YT · Kengaytirish kerakmi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · Kengaytirish kerakmi?": {
+      "main": [
+        [
+          {
+            "node": "YT · Claude - Kengaytirish",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "YT · QULF rejimi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · Claude - Kengaytirish": {
+      "main": [
+        [
+          {
+            "node": "YT · Kengaytirilgan matn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · Kengaytirilgan matn": {
+      "main": [
+        [
+          {
+            "node": "YT · Yakuniy matn",
             "type": "main",
             "index": 0
           }
@@ -12724,7 +14498,10 @@
         "f320fd09-4810-4ddd-bce3-eaeddec04f50",
         "87bfa0b1-9fb7-4b65-9371-50db96baaba7",
         "01589cc0-6a29-4221-ac74-6164851679df",
-        "67bd1476-9ad8-47d5-959c-0e64c8295e9a"
+        "67bd1476-9ad8-47d5-959c-0e64c8295e9a",
+        "d7effe05-4efc-4764-8e82-e1eee234c00d",
+        "2afc18d7-7018-40e8-bbf3-1ca2b06e3dc4",
+        "11ed8839-bdfa-4f14-823d-f1dea79a6cb7"
       ],
       "description": "Brifdan TikTok content → R3 til tekshiruvi → K1 compliance → R2b tuzatish → R7 preview (thread 7)"
     },
@@ -12756,7 +14533,10 @@
         "510b528e-6ca3-4c0d-a851-c83f7ed78bef",
         "e87853ae-7644-4ea8-ad3d-71507e5fe58e",
         "2cb937db-1e39-4f40-8d7b-6d580fba41c7",
-        "26e888ce-99c0-4823-9294-8ec217938972"
+        "26e888ce-99c0-4823-9294-8ec217938972",
+        "e908e852-9904-418c-9292-68ca6525e417",
+        "2bc9db44-a181-4f02-95dc-b8a5c769d822",
+        "91a983c5-c794-4c8b-bfbd-1523a0cb737e"
       ],
       "description": "Brifdan Reels content → tekshiruv → R7 preview (thread 9)"
     },
@@ -12785,7 +14565,10 @@
         "740e1f30-ff25-405d-bf3e-764ce2cfa914",
         "5bef1c6e-d1d9-404d-8840-4f95c5053a90",
         "5586b091-25e1-408c-ba87-b241497195fa",
-        "a011a0d8-121a-4937-853c-862c6788c0d3"
+        "a011a0d8-121a-4937-853c-862c6788c0d3",
+        "5bd8a88f-56af-4b18-82a0-676968ea6995",
+        "78179cd1-63da-47ab-8960-c40e8d709a40",
+        "75e466ae-e08e-4ec7-96c6-7b4cba97ca91"
       ],
       "description": "Brifdan YT Shorts content → tekshiruv → R7 preview (thread 5)"
     },
@@ -12816,7 +14599,14 @@
         "7106fdb8-ce43-4dd0-abb8-62e1e8bad51c",
         "e8cde228-4a3c-472d-8b0f-0b81668c0037",
         "b408d360-cc4d-4ef0-be34-4b7ca30bb540",
-        "9818275f-0cad-40df-bf48-2205fa61322c"
+        "9818275f-0cad-40df-bf48-2205fa61322c",
+        "59f51abd-e224-4dda-835b-06cce94ed333",
+        "6bfaefa3-3ee6-4e60-84b0-46cc5ee2f731",
+        "59e8c3ed-9cf7-415a-abc1-9f8c41c8dcd2",
+        "e043a711-2798-48ab-a777-50e0b37d5139",
+        "03239216-152c-4625-99bd-58dcbec337ba",
+        "d5bc55de-2f15-4fb7-af16-a39df0fcbb8b",
+        "425b0e7c-5c41-471a-847f-d7842fc0c141"
       ],
       "description": "Epizod bloklaridan YT Long matn → K1 → R7 preview (thread 3)"
     },
@@ -12842,7 +14632,10 @@
         "12024cae-a434-4949-9968-7fd7047bf939",
         "c23b59a2-863b-442c-bf82-04a0df1c1d43",
         "20d1521f-a314-4835-9334-cd002f6db96e",
-        "e5973881-a32f-4c2a-8722-71f500dc82c0"
+        "e5973881-a32f-4c2a-8722-71f500dc82c0",
+        "b6085140-efd5-4903-93d1-5a1a0343707a",
+        "26bc844c-db44-4c44-8944-9b6b4f9f71ed",
+        "81ecac93-1669-49cc-a812-780bd1c8785d"
       ],
       "description": "Brifdan karusel slaydlar → tekshiruv → carousel-render → R7 preview (thread 9)"
     },
@@ -12892,7 +14685,19 @@
         "76e33e84-e342-41fd-80b4-bdfa433f302a",
         "5cd6504c-f3d2-4f63-bdff-0e6bc80ef72c",
         "6d5281d6-a4e3-4b0a-83af-e371b6c047f8",
-        "1d4bb186-9c56-4979-8cd7-0fe750867cea"
+        "1d4bb186-9c56-4979-8cd7-0fe750867cea",
+        "053e78a9-bde4-43ff-84a5-fb0ef06347dd",
+        "a92584d2-3a02-4a7c-bd49-cab4a026ab5d",
+        "33d78878-af4a-4ae5-8cfb-ef111b503ea4",
+        "6f8d1408-a701-4249-8d46-f9dcbdc2f339",
+        "ed6337bf-f3a5-415c-a469-aa27b40e1916",
+        "fc28dfbd-fdb7-4da5-915c-4b6903763b4f",
+        "d564d39c-6363-49c4-bb82-8c063a641694",
+        "1e7f7e2d-f230-4c08-aa8e-a8b07214c35e",
+        "b83208a2-51a4-4dbc-be8e-70ca296d38a3",
+        "4406982d-193b-43ac-88a3-421633c5f844",
+        "9c43c004-e41d-4b77-ba4b-627cd296966b",
+        "d4cfe9e4-ff9d-4e78-89e9-6a28e0e6b0ad"
       ],
       "description": "zb-p-tg-paket sub-workflow → 5 post thread 11 da"
     },
@@ -12905,7 +14710,10 @@
         "be8b85aa-d0f8-4299-baa7-4ed655ff340b",
         "1cada4a1-3596-4e26-825f-93b3f16d5a72",
         "49ea3a56-492b-4ff8-aaf1-c0375871d9c4",
-        "8a4c46cf-ce4b-4479-852d-08dfcfc4e217"
+        "8a4c46cf-ce4b-4479-852d-08dfcfc4e217",
+        "6ec3c7cf-00a9-4862-af7f-e2429ec11928",
+        "5d7c90c5-809a-431b-9826-fbc1f2e5cdf4",
+        "0047d8f8-9209-4af1-8ebd-31c6db66ac80"
       ],
       "description": "HeyGen avatar URL → 2 variant thumbnail HTML → thread 3"
     },
@@ -12982,7 +14790,7 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "versionId": "610d3b5e-722c-4b44-9642-9b03c59422d0",
-  "updatedAt": "2026-09-24T04:16:35.460Z",
-  "vaqt": "2026-09-24T04:17:06.147Z"
+  "versionId": "e76bbbd4-dffe-418d-b9bc-98a0f234fed1",
+  "updatedAt": "2026-09-24T04:29:28.182Z",
+  "vaqt": "2026-09-24T04:29:59.462Z"
 }
