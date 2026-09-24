@@ -1,0 +1,39 @@
+{
+  "vaqt": "2026-09-24T18:36:17.142Z",
+  "qaytish_nuqtasi": "turk kontent ccab5120",
+  "fayllar": [
+    {
+      "slug": "turk-kontent",
+      "id": "5kLZUkHJZpPBsYI6",
+      "name": "turk kontent",
+      "versionId": "ccab5120-fcb7-4c25-b425-d61f2269fcef",
+      "activeVersionId": "ccab5120-fcb7-4c25-b425-d61f2269fcef",
+      "active": true,
+      "nodes": 393,
+      "bytes": 1344244,
+      "path": "kod/zaxira/2026-09-24/turk-kontent_ccab5120.json"
+    },
+    {
+      "slug": "carousel-render",
+      "id": "M3tR7zNQP8ITFWrH",
+      "name": "carousel-render",
+      "versionId": "64f2202e-cc7a-496c-a016-4f944b407d5b",
+      "activeVersionId": "64f2202e-cc7a-496c-a016-4f944b407d5b",
+      "active": true,
+      "nodes": 5,
+      "bytes": 68735,
+      "path": "kod/zaxira/2026-09-24/carousel-render_64f2202e.json"
+    },
+    {
+      "slug": "kod-koprigi",
+      "id": "LQmqgGIRzpSCK79F",
+      "name": "ZIBROCK — Kod Ko'prigi",
+      "versionId": "bee4d662-91ea-4acc-b7ec-06beecaf0587",
+      "activeVersionId": "bee4d662-91ea-4acc-b7ec-06beecaf0587",
+      "active": true,
+      "nodes": 14,
+      "bytes": 38344,
+      "path": "kod/zaxira/2026-09-24/kod-koprigi_bee4d662.json"
+    }
+  ]
+}
