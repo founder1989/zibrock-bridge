@@ -1,0 +1,1024 @@
+{
+  "id": "LQmqgGIRzpSCK79F",
+  "name": "ZIBROCK — Kod Ko'prigi",
+  "description": null,
+  "active": true,
+  "activeVersionId": "bee4d662-91ea-4acc-b7ec-06beecaf0587",
+  "createdAt": "2026-09-22T21:52:32.142Z",
+  "updatedAt": "2026-09-24T00:23:37.649Z",
+  "isArchived": false,
+  "versionId": "bee4d662-91ea-4acc-b7ec-06beecaf0587",
+  "versionCounter": 11,
+  "sourceWorkflowId": null,
+  "triggerCount": 1,
+  "nodes": [
+    {
+      "id": "28db408d-81f3-4e14-9332-7b8a3064f927",
+      "name": "Schedule — 6 soat",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "8b4f2bce-38a9-4b63-bd3e-08364b73962a",
+      "name": "n8n — TK versionId ol",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        448,
+        96
+      ],
+      "parameters": {
+        "url": "https://zibrock.app.n8n.cloud/api/v1/workflows/5kLZUkHJZpPBsYI6",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpTemplatedCustomAuth",
+        "options": {}
+      },
+      "credentials": {
+        "httpTemplatedCustomAuth": {
+          "id": "ObtpzAlacPTSg4b9",
+          "name": "n8n API Key (Zibrock) (Boburbek K)"
+        }
+      },
+      "executeOnce": true
+    },
+    {
+      "id": "5afa3f23-124e-43f3-9f8f-8045a7cf8b8d",
+      "name": "Manual Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        224,
+        192
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "d4ceed3d-7f46-41af-aaae-d045b75a815a",
+      "name": "Event Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -176,
+        160
+      ],
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "sabab",
+              "type": "string"
+            },
+            {
+              "name": "workflowId",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "34480e60-f3a9-4d11-9a0e-06dcb10b2083",
+      "name": "O'zgarish tekshiruvi",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        384
+      ],
+      "parameters": {
+        "jsCode": "var apiData = $input.first().json;\nvar newVersionId = apiData.versionId || '';\nvar updatedAt = apiData.updatedAt || new Date().toISOString();\n\n// Oldingi versionId ni staticData dan ol\nvar globalData = $getWorkflowStaticData('global');\nvar savedVersionId = globalData.oxirgi_versionId || '';\n\n// Sabab: qaysi trigger ishlaganiga qarab aniqlash\nvar sabab = 'qolda'; // Manual Start uchun default\ntry {\n  var evtData = $('Event Trigger').first().json;\n  sabab = evtData.sabab || 'publish';\n} catch(e1) {\n  try {\n    $('Schedule — 6 soat').first();\n    sabab = 'zaxira';\n  } catch(e2) {}\n}\n\n// O'zgarish yo'q bo'lsa — to'xtat\nif (savedVersionId && savedVersionId === newVersionId) {\n  return [];\n}\n\n// O'zgarish bor — davom et\nreturn [{ json: { sabab: sabab, newVersionId: newVersionId, updatedAt: updatedAt } }];"
+      }
+    },
+    {
+      "id": "f5dd4463-23ec-4ef5-9dd3-c9ee262e9016",
+      "name": "n8n — Workflow listini ol",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        544,
+        288
+      ],
+      "parameters": {
+        "url": "https://zibrock.app.n8n.cloud/api/v1/workflows?limit=250",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpTemplatedCustomAuth",
+        "options": {}
+      },
+      "credentials": {
+        "httpTemplatedCustomAuth": {
+          "id": "ObtpzAlacPTSg4b9",
+          "name": "n8n API Key (Zibrock) (Boburbek K)"
+        }
+      },
+      "executeOnce": true
+    },
+    {
+      "id": "dd098aa4-ca36-417f-83bb-0dd7262a3eb2",
+      "name": "Workflow'larni filtrlash",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        96
+      ],
+      "parameters": {
+        "jsCode": "var list = $input.first().json.data || [];\nvar targets = [];\nfor (var i = 0; i < list.length; i++) {\n  var wf = list[i];\n  var nm = String(wf.name || '');\n  var id = String(wf.id || '');\n  if (id === '5kLZUkHJZpPBsYI6' || nm.indexOf('zb-') === 0) {\n    var slug = nm.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');\n    if (id === '5kLZUkHJZpPBsYI6') slug = 'turk-kontent';\n    targets.push({ json: { id: id, name: nm, slug: slug, path: 'kod/' + slug + '.json' } });\n  }\n}\nreturn targets.length > 0 ? targets : [{ json: { id: '5kLZUkHJZpPBsYI6', name: 'turk kontent', slug: 'turk-kontent', path: 'kod/turk-kontent.json' } }];"
+      }
+    },
+    {
+      "id": "e9454ab5-0f8a-4e83-8363-7d9ff5cb1c60",
+      "name": "n8n — Workflow olish",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        784,
+        32
+      ],
+      "parameters": {
+        "url": "={{ \"https://zibrock.app.n8n.cloud/api/v1/workflows/\" + $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpTemplatedCustomAuth",
+        "options": {}
+      },
+      "credentials": {
+        "httpTemplatedCustomAuth": {
+          "id": "ObtpzAlacPTSg4b9",
+          "name": "n8n API Key (Zibrock) (Boburbek K)"
+        }
+      }
+    },
+    {
+      "id": "fe699925-52f2-4b8b-b2fa-24aeb7261127",
+      "name": "Code va node extraction",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        32
+      ],
+      "parameters": {
+        "jsCode": "var wfData = $input.first().json;\nvar batchItem = $('Har bir workflow uchun').item.json;\nvar nodes = wfData.nodes || [];\nvar connections = wfData.connections || {};\nvar isTurkKontent = batchItem.id === '5kLZUkHJZpPBsYI6';\nvar snap, b64;\n\n// O'zgarish ma'lumotlari\nvar ozgarishData = {};\ntry { ozgarishData = $(\"O'zgarish tekshiruvi\").first().json; } catch(e) {}\n\nif (isTurkKontent) {\n  // F0: turk-kontent uchun TO'LIQ eksport — barcha parametrlar, connections, nodeGroups, cred nomlari\n  var fullNodes = {};\n  for (var ni = 0; ni < nodes.length; ni++) {\n    var nd = nodes[ni];\n    var nc = nd.credentials || {};\n    var credNames = {};\n    for (var ct in nc) {\n      if (nc[ct] && nc[ct].name) credNames[ct] = nc[ct].name;\n    }\n    fullNodes[nd.name] = {\n      type: nd.type,\n      typeVersion: nd.typeVersion,\n      id: nd.id,\n      position: nd.position,\n      parameters: nd.parameters || {},\n      onError: nd.onError || undefined,\n      executeOnce: nd.executeOnce || undefined,\n      alwaysOutputData: nd.alwaysOutputData || undefined,\n      webhookId: nd.webhookId || undefined,\n      creds: credNames\n    };\n  }\n  snap = JSON.stringify({\n    nodes: fullNodes,\n    connections: connections,\n    nodeGroups: wfData.groups || wfData.nodeGroups || [],\n    settings: wfData.settings || {},\n    versionId: wfData.versionId || ozgarishData.newVersionId || '',\n    updatedAt: wfData.updatedAt || ozgarishData.updatedAt || new Date().toISOString(),\n    vaqt: new Date().toISOString()\n  }, null, 2);\n} else {\n  // zb- fayllari uchun cheklangan eksport\n  var out = {};\n  for (var zi = 0; zi < nodes.length; zi++) {\n    var zn = nodes[zi];\n    var zp = zn.parameters || {};\n    var zt = String(zn.type || '');\n    var ze = { turi: 'unknown' };\n    var zc = zn.credentials || {};\n    var zcn = {};\n    for (var zct in zc) {\n      if (zc[zct] && zc[zct].name) zcn[zct] = zc[zct].name;\n    }\n    if (zt.indexOf('code') > -1 && zp.jsCode) {\n      ze = { turi: 'code', mode: zp.mode || 'runOnceForAllItems', kod: zp.jsCode };\n    } else if (zt.indexOf('httpRequest') > -1) {\n      ze = { turi: 'http', method: zp.method || 'GET', url: zp.url || '', body: zp.jsonBody || zp.body || '', sendBody: zp.sendBody || false };\n    } else if (zt.indexOf('anthropic') > -1 || zt.indexOf('langchain') > -1) {\n      var zo = zp.options || {};\n      ze = { turi: 'ai', model: (zp.modelId && zp.modelId.value) || zp.model || '', maxTokens: zo.maxTokensToSample || zo.maxTokens || null, system: zo.systemMessage || zp.systemMessage || '' };\n    } else if (zt.indexOf('telegram') > -1) {\n      ze = { turi: 'telegram', text: zp.text || '', chatId: zp.chatId || '', thread: (zp.additionalFields || {}).message_thread_id || null };\n    } else if (zt.indexOf('nodes-base.if') > -1) {\n      ze = { turi: 'if', conditions: zp.conditions || {} };\n    } else if (zt.indexOf('switch') > -1) {\n      ze = { turi: 'switch', rules: (zp.rules && zp.rules.values) || [] };\n    } else if (zt.indexOf('wait') > -1) {\n      ze = { turi: 'wait', amount: zp.amount || 0, unit: zp.unit || 'seconds' };\n    } else if (zt.indexOf('executeWorkflow') > -1) {\n      ze = { turi: 'executeWorkflow', workflowId: (zp.workflowId && zp.workflowId.value) || '', inputs: zp.workflowInputs || {} };\n    }\n    if (Object.keys(zcn).length > 0) ze.creds = zcn;\n    out[zn.name] = ze;\n  }\n  snap = JSON.stringify({ nodes: out, connections: connections, vaqt: new Date().toISOString() }, null, 2);\n}\n\nb64 = Buffer.from(snap, 'utf-8').toString('base64');\nreturn [{ json: { b64: b64, vaqt: new Date().toISOString(), slug: batchItem.slug, path: batchItem.path, name: batchItem.name, isTurkKontent: isTurkKontent } }];"
+      }
+    },
+    {
+      "id": "c84de8cd-af2d-45d1-b886-53a23ed0d8b9",
+      "name": "GitHub — SHA olish",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        896,
+        96
+      ],
+      "parameters": {
+        "url": "={{ \"https://api.github.com/repos/founder1989/zibrock-bridge/contents/\" + $json.path }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "githubApi": {
+          "id": "2kF2eR4xjPBHJ4FV",
+          "name": "ZIBROCK GitHub"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "5f39225f-1ce0-414c-b941-3b9fac54cae4",
+      "name": "GitHub Payload qurish",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        96
+      ],
+      "parameters": {
+        "jsCode": "var sha = $input.first().json.sha || '';\nvar ext = $('Code va node extraction').first().json;\n\n// Commit xabarini aniqlash\nvar commitMsg;\nif (ext.isTurkKontent) {\n  var ozData = {};\n  try { ozData = $(\"O'zgarish tekshiruvi\").first().json; } catch(e) {}\n  var sabab = ozData.sabab || 'qolda';\n  var versionId = ozData.newVersionId || '';\n  var shortVid = versionId ? versionId.replace(/-/g, '').slice(0, 8) : ext.vaqt.slice(0, 10);\n  commitMsg = 'turk-kontent ' + shortVid + ' · ' + sabab;\n} else {\n  commitMsg = 'kod snapshot ' + ext.slug + ' ' + ext.vaqt;\n}\n\nvar body = { message: commitMsg, content: ext.b64 };\nif (sha) body.sha = sha;\nreturn [{ json: { body: body, path: ext.path, vaqt: ext.vaqt } }];"
+      }
+    },
+    {
+      "id": "e1f87a8d-88ae-4da1-959c-c3fe69240cf3",
+      "name": "GitHub — Yozish",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1344,
+        96
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ \"https://api.github.com/repos/founder1989/zibrock-bridge/contents/\" + $json.path }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {}
+      },
+      "credentials": {
+        "githubApi": {
+          "id": "2kF2eR4xjPBHJ4FV",
+          "name": "ZIBROCK GitHub"
+        }
+      }
+    },
+    {
+      "id": "9edde2cd-fe12-4576-92ef-a133e569dae7",
+      "name": "StaticData yangilash",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        96
+      ],
+      "parameters": {
+        "jsCode": "// Faqat turk-kontent uchun staticData ni yangilaymiz\nvar ext = {};\ntry { ext = $('Code va node extraction').first().json; } catch(e) {}\nif (ext.isTurkKontent) {\n  var ozData = {};\n  try { ozData = $(\"O'zgarish tekshiruvi\").first().json; } catch(e) {}\n  var newVid = ozData.newVersionId || '';\n  if (newVid) {\n    var globalData = $getWorkflowStaticData('global');\n    globalData.oxirgi_versionId = newVid;\n  }\n}\nreturn $input.all();"
+      }
+    },
+    {
+      "id": "f3b6710a-b8bf-4ffd-bf8d-f10a5f88c821",
+      "name": "Har bir workflow uchun",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        560,
+        96
+      ],
+      "parameters": {
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Schedule — 6 soat": {
+      "main": [
+        [
+          {
+            "node": "n8n — TK versionId ol",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n — TK versionId ol": {
+      "main": [
+        [
+          {
+            "node": "O'zgarish tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Start": {
+      "main": [
+        [
+          {
+            "node": "n8n — TK versionId ol",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Event Trigger": {
+      "main": [
+        [
+          {
+            "node": "n8n — TK versionId ol",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "O'zgarish tekshiruvi": {
+      "main": [
+        [
+          {
+            "node": "n8n — Workflow listini ol",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n — Workflow listini ol": {
+      "main": [
+        [
+          {
+            "node": "Workflow'larni filtrlash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow'larni filtrlash": {
+      "main": [
+        [
+          {
+            "node": "Har bir workflow uchun",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n — Workflow olish": {
+      "main": [
+        [
+          {
+            "node": "Code va node extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code va node extraction": {
+      "main": [
+        [
+          {
+            "node": "GitHub — SHA olish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub — SHA olish": {
+      "main": [
+        [
+          {
+            "node": "GitHub Payload qurish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Payload qurish": {
+      "main": [
+        [
+          {
+            "node": "GitHub — Yozish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub — Yozish": {
+      "main": [
+        [
+          {
+            "node": "StaticData yangilash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "StaticData yangilash": {
+      "main": [
+        [
+          {
+            "node": "Har bir workflow uchun",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Har bir workflow uchun": {
+      "main": [
+        [],
+        [
+          {
+            "node": "n8n — Workflow olish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodeGroups": [
+    {
+      "id": "18159810-584a-4f54-846b-5aee792b0303",
+      "name": "Tekshiruv va filtrlash",
+      "nodeIds": [
+        "8b4f2bce-38a9-4b63-bd3e-08364b73962a",
+        "34480e60-f3a9-4d11-9a0e-06dcb10b2083",
+        "f5dd4463-23ec-4ef5-9dd3-c9ee262e9016",
+        "dd098aa4-ca36-417f-83bb-0dd7262a3eb2"
+      ],
+      "description": "turk-kontent versionId ni tekshiradi (o'zgarish yo'q bo'lsa to'xtatadi), so'ng export qilinadigan workflow'lar ro'yxatini tayyorlaydi"
+    },
+    {
+      "id": "ec631989-1a42-4909-9352-6794f103f289",
+      "name": "Har bir workflow eksporti",
+      "nodeIds": [
+        "f3b6710a-b8bf-4ffd-bf8d-f10a5f88c821",
+        "e9454ab5-0f8a-4e83-8363-7d9ff5cb1c60",
+        "fe699925-52f2-4b8b-b2fa-24aeb7261127",
+        "c84de8cd-af2d-45d1-b886-53a23ed0d8b9",
+        "5f39225f-1ce0-414c-b941-3b9fac54cae4",
+        "e1f87a8d-88ae-4da1-959c-c3fe69240cf3",
+        "9edde2cd-fe12-4576-92ef-a133e569dae7"
+      ],
+      "description": "Har bir workflow'ni alohida oladi, F0 formatida JSON eksport qiladi va GitHub'ga commit qo'shadi; turk-kontent uchun versionId ni staticData'ga s"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": {
+    "node:Schedule — 10 daqiqa": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    },
+    "node:Schedule — 6 soat": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        "hours:6"
+      ]
+    },
+    "global": {
+      "oxirgi_versionId": "ccab5120-fcb7-4c25-b425-d61f2269fcef"
+    }
+  },
+  "pinData": {},
+  "meta": null,
+  "tags": [],
+  "shared": [
+    {
+      "role": "workflow:owner",
+      "workflowId": "LQmqgGIRzpSCK79F",
+      "projectId": "ptwvC1fB9jlsqLjP",
+      "project": {
+        "id": "ptwvC1fB9jlsqLjP",
+        "name": "Boburbek Kambarov <admin@zibrock.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "13080b06-05ba-4ec0-a905-7e301a9c80a4",
+        "createdAt": "2026-08-18T14:04:26.696Z",
+        "updatedAt": "2026-08-18T14:04:39.380Z"
+      },
+      "createdAt": "2026-09-22T21:52:32.143Z",
+      "updatedAt": "2026-09-22T21:52:32.143Z"
+    }
+  ],
+  "activeVersion": {
+    "versionId": "bee4d662-91ea-4acc-b7ec-06beecaf0587",
+    "workflowId": "LQmqgGIRzpSCK79F",
+    "nodes": [
+      {
+        "id": "28db408d-81f3-4e14-9332-7b8a3064f927",
+        "name": "Schedule — 6 soat",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          224,
+          0
+        ],
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "hours",
+                "hoursInterval": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "8b4f2bce-38a9-4b63-bd3e-08364b73962a",
+        "name": "n8n — TK versionId ol",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.5,
+        "position": [
+          448,
+          96
+        ],
+        "parameters": {
+          "url": "https://zibrock.app.n8n.cloud/api/v1/workflows/5kLZUkHJZpPBsYI6",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpTemplatedCustomAuth",
+          "options": {}
+        },
+        "credentials": {
+          "httpTemplatedCustomAuth": {
+            "id": "ObtpzAlacPTSg4b9",
+            "name": "n8n API Key (Zibrock) (Boburbek K)"
+          }
+        },
+        "executeOnce": true
+      },
+      {
+        "id": "5afa3f23-124e-43f3-9f8f-8045a7cf8b8d",
+        "name": "Manual Start",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          224,
+          192
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "d4ceed3d-7f46-41af-aaae-d045b75a815a",
+        "name": "Event Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -176,
+          160
+        ],
+        "parameters": {
+          "inputSource": "workflowInputs",
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "sabab",
+                "type": "string"
+              },
+              {
+                "name": "workflowId",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "34480e60-f3a9-4d11-9a0e-06dcb10b2083",
+        "name": "O'zgarish tekshiruvi",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          320,
+          384
+        ],
+        "parameters": {
+          "jsCode": "var apiData = $input.first().json;\nvar newVersionId = apiData.versionId || '';\nvar updatedAt = apiData.updatedAt || new Date().toISOString();\n\n// Oldingi versionId ni staticData dan ol\nvar globalData = $getWorkflowStaticData('global');\nvar savedVersionId = globalData.oxirgi_versionId || '';\n\n// Sabab: qaysi trigger ishlaganiga qarab aniqlash\nvar sabab = 'qolda'; // Manual Start uchun default\ntry {\n  var evtData = $('Event Trigger').first().json;\n  sabab = evtData.sabab || 'publish';\n} catch(e1) {\n  try {\n    $('Schedule — 6 soat').first();\n    sabab = 'zaxira';\n  } catch(e2) {}\n}\n\n// O'zgarish yo'q bo'lsa — to'xtat\nif (savedVersionId && savedVersionId === newVersionId) {\n  return [];\n}\n\n// O'zgarish bor — davom et\nreturn [{ json: { sabab: sabab, newVersionId: newVersionId, updatedAt: updatedAt } }];"
+        }
+      },
+      {
+        "id": "f5dd4463-23ec-4ef5-9dd3-c9ee262e9016",
+        "name": "n8n — Workflow listini ol",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.5,
+        "position": [
+          544,
+          288
+        ],
+        "parameters": {
+          "url": "https://zibrock.app.n8n.cloud/api/v1/workflows?limit=250",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpTemplatedCustomAuth",
+          "options": {}
+        },
+        "credentials": {
+          "httpTemplatedCustomAuth": {
+            "id": "ObtpzAlacPTSg4b9",
+            "name": "n8n API Key (Zibrock) (Boburbek K)"
+          }
+        },
+        "executeOnce": true
+      },
+      {
+        "id": "dd098aa4-ca36-417f-83bb-0dd7262a3eb2",
+        "name": "Workflow'larni filtrlash",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          336,
+          96
+        ],
+        "parameters": {
+          "jsCode": "var list = $input.first().json.data || [];\nvar targets = [];\nfor (var i = 0; i < list.length; i++) {\n  var wf = list[i];\n  var nm = String(wf.name || '');\n  var id = String(wf.id || '');\n  if (id === '5kLZUkHJZpPBsYI6' || nm.indexOf('zb-') === 0) {\n    var slug = nm.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');\n    if (id === '5kLZUkHJZpPBsYI6') slug = 'turk-kontent';\n    targets.push({ json: { id: id, name: nm, slug: slug, path: 'kod/' + slug + '.json' } });\n  }\n}\nreturn targets.length > 0 ? targets : [{ json: { id: '5kLZUkHJZpPBsYI6', name: 'turk kontent', slug: 'turk-kontent', path: 'kod/turk-kontent.json' } }];"
+        }
+      },
+      {
+        "id": "e9454ab5-0f8a-4e83-8363-7d9ff5cb1c60",
+        "name": "n8n — Workflow olish",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.5,
+        "position": [
+          784,
+          32
+        ],
+        "parameters": {
+          "url": "={{ \"https://zibrock.app.n8n.cloud/api/v1/workflows/\" + $json.id }}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpTemplatedCustomAuth",
+          "options": {}
+        },
+        "credentials": {
+          "httpTemplatedCustomAuth": {
+            "id": "ObtpzAlacPTSg4b9",
+            "name": "n8n API Key (Zibrock) (Boburbek K)"
+          }
+        }
+      },
+      {
+        "id": "fe699925-52f2-4b8b-b2fa-24aeb7261127",
+        "name": "Code va node extraction",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1008,
+          32
+        ],
+        "parameters": {
+          "jsCode": "var wfData = $input.first().json;\nvar batchItem = $('Har bir workflow uchun').item.json;\nvar nodes = wfData.nodes || [];\nvar connections = wfData.connections || {};\nvar isTurkKontent = batchItem.id === '5kLZUkHJZpPBsYI6';\nvar snap, b64;\n\n// O'zgarish ma'lumotlari\nvar ozgarishData = {};\ntry { ozgarishData = $(\"O'zgarish tekshiruvi\").first().json; } catch(e) {}\n\nif (isTurkKontent) {\n  // F0: turk-kontent uchun TO'LIQ eksport — barcha parametrlar, connections, nodeGroups, cred nomlari\n  var fullNodes = {};\n  for (var ni = 0; ni < nodes.length; ni++) {\n    var nd = nodes[ni];\n    var nc = nd.credentials || {};\n    var credNames = {};\n    for (var ct in nc) {\n      if (nc[ct] && nc[ct].name) credNames[ct] = nc[ct].name;\n    }\n    fullNodes[nd.name] = {\n      type: nd.type,\n      typeVersion: nd.typeVersion,\n      id: nd.id,\n      position: nd.position,\n      parameters: nd.parameters || {},\n      onError: nd.onError || undefined,\n      executeOnce: nd.executeOnce || undefined,\n      alwaysOutputData: nd.alwaysOutputData || undefined,\n      webhookId: nd.webhookId || undefined,\n      creds: credNames\n    };\n  }\n  snap = JSON.stringify({\n    nodes: fullNodes,\n    connections: connections,\n    nodeGroups: wfData.groups || wfData.nodeGroups || [],\n    settings: wfData.settings || {},\n    versionId: wfData.versionId || ozgarishData.newVersionId || '',\n    updatedAt: wfData.updatedAt || ozgarishData.updatedAt || new Date().toISOString(),\n    vaqt: new Date().toISOString()\n  }, null, 2);\n} else {\n  // zb- fayllari uchun cheklangan eksport\n  var out = {};\n  for (var zi = 0; zi < nodes.length; zi++) {\n    var zn = nodes[zi];\n    var zp = zn.parameters || {};\n    var zt = String(zn.type || '');\n    var ze = { turi: 'unknown' };\n    var zc = zn.credentials || {};\n    var zcn = {};\n    for (var zct in zc) {\n      if (zc[zct] && zc[zct].name) zcn[zct] = zc[zct].name;\n    }\n    if (zt.indexOf('code') > -1 && zp.jsCode) {\n      ze = { turi: 'code', mode: zp.mode || 'runOnceForAllItems', kod: zp.jsCode };\n    } else if (zt.indexOf('httpRequest') > -1) {\n      ze = { turi: 'http', method: zp.method || 'GET', url: zp.url || '', body: zp.jsonBody || zp.body || '', sendBody: zp.sendBody || false };\n    } else if (zt.indexOf('anthropic') > -1 || zt.indexOf('langchain') > -1) {\n      var zo = zp.options || {};\n      ze = { turi: 'ai', model: (zp.modelId && zp.modelId.value) || zp.model || '', maxTokens: zo.maxTokensToSample || zo.maxTokens || null, system: zo.systemMessage || zp.systemMessage || '' };\n    } else if (zt.indexOf('telegram') > -1) {\n      ze = { turi: 'telegram', text: zp.text || '', chatId: zp.chatId || '', thread: (zp.additionalFields || {}).message_thread_id || null };\n    } else if (zt.indexOf('nodes-base.if') > -1) {\n      ze = { turi: 'if', conditions: zp.conditions || {} };\n    } else if (zt.indexOf('switch') > -1) {\n      ze = { turi: 'switch', rules: (zp.rules && zp.rules.values) || [] };\n    } else if (zt.indexOf('wait') > -1) {\n      ze = { turi: 'wait', amount: zp.amount || 0, unit: zp.unit || 'seconds' };\n    } else if (zt.indexOf('executeWorkflow') > -1) {\n      ze = { turi: 'executeWorkflow', workflowId: (zp.workflowId && zp.workflowId.value) || '', inputs: zp.workflowInputs || {} };\n    }\n    if (Object.keys(zcn).length > 0) ze.creds = zcn;\n    out[zn.name] = ze;\n  }\n  snap = JSON.stringify({ nodes: out, connections: connections, vaqt: new Date().toISOString() }, null, 2);\n}\n\nb64 = Buffer.from(snap, 'utf-8').toString('base64');\nreturn [{ json: { b64: b64, vaqt: new Date().toISOString(), slug: batchItem.slug, path: batchItem.path, name: batchItem.name, isTurkKontent: isTurkKontent } }];"
+        }
+      },
+      {
+        "id": "c84de8cd-af2d-45d1-b886-53a23ed0d8b9",
+        "name": "GitHub — SHA olish",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.5,
+        "position": [
+          896,
+          96
+        ],
+        "parameters": {
+          "url": "={{ \"https://api.github.com/repos/founder1989/zibrock-bridge/contents/\" + $json.path }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "githubApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.github+json"
+              },
+              {
+                "name": "X-GitHub-Api-Version",
+                "value": "2022-11-28"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "githubApi": {
+            "id": "2kF2eR4xjPBHJ4FV",
+            "name": "ZIBROCK GitHub"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "5f39225f-1ce0-414c-b941-3b9fac54cae4",
+        "name": "GitHub Payload qurish",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1120,
+          96
+        ],
+        "parameters": {
+          "jsCode": "var sha = $input.first().json.sha || '';\nvar ext = $('Code va node extraction').first().json;\n\n// Commit xabarini aniqlash\nvar commitMsg;\nif (ext.isTurkKontent) {\n  var ozData = {};\n  try { ozData = $(\"O'zgarish tekshiruvi\").first().json; } catch(e) {}\n  var sabab = ozData.sabab || 'qolda';\n  var versionId = ozData.newVersionId || '';\n  var shortVid = versionId ? versionId.replace(/-/g, '').slice(0, 8) : ext.vaqt.slice(0, 10);\n  commitMsg = 'turk-kontent ' + shortVid + ' · ' + sabab;\n} else {\n  commitMsg = 'kod snapshot ' + ext.slug + ' ' + ext.vaqt;\n}\n\nvar body = { message: commitMsg, content: ext.b64 };\nif (sha) body.sha = sha;\nreturn [{ json: { body: body, path: ext.path, vaqt: ext.vaqt } }];"
+        }
+      },
+      {
+        "id": "e1f87a8d-88ae-4da1-959c-c3fe69240cf3",
+        "name": "GitHub — Yozish",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.5,
+        "position": [
+          1344,
+          96
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "={{ \"https://api.github.com/repos/founder1989/zibrock-bridge/contents/\" + $json.path }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "githubApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.github+json"
+              },
+              {
+                "name": "X-GitHub-Api-Version",
+                "value": "2022-11-28"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify($json.body) }}",
+          "options": {}
+        },
+        "credentials": {
+          "githubApi": {
+            "id": "2kF2eR4xjPBHJ4FV",
+            "name": "ZIBROCK GitHub"
+          }
+        }
+      },
+      {
+        "id": "9edde2cd-fe12-4576-92ef-a133e569dae7",
+        "name": "StaticData yangilash",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1744,
+          96
+        ],
+        "parameters": {
+          "jsCode": "// Faqat turk-kontent uchun staticData ni yangilaymiz\nvar ext = {};\ntry { ext = $('Code va node extraction').first().json; } catch(e) {}\nif (ext.isTurkKontent) {\n  var ozData = {};\n  try { ozData = $(\"O'zgarish tekshiruvi\").first().json; } catch(e) {}\n  var newVid = ozData.newVersionId || '';\n  if (newVid) {\n    var globalData = $getWorkflowStaticData('global');\n    globalData.oxirgi_versionId = newVid;\n  }\n}\nreturn $input.all();"
+        }
+      },
+      {
+        "id": "f3b6710a-b8bf-4ffd-bf8d-f10a5f88c821",
+        "name": "Har bir workflow uchun",
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          560,
+          96
+        ],
+        "parameters": {
+          "options": {}
+        }
+      }
+    ],
+    "connections": {
+      "Schedule — 6 soat": {
+        "main": [
+          [
+            {
+              "node": "n8n — TK versionId ol",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "n8n — TK versionId ol": {
+        "main": [
+          [
+            {
+              "node": "O'zgarish tekshiruvi",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Manual Start": {
+        "main": [
+          [
+            {
+              "node": "n8n — TK versionId ol",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Event Trigger": {
+        "main": [
+          [
+            {
+              "node": "n8n — TK versionId ol",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "O'zgarish tekshiruvi": {
+        "main": [
+          [
+            {
+              "node": "n8n — Workflow listini ol",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "n8n — Workflow listini ol": {
+        "main": [
+          [
+            {
+              "node": "Workflow'larni filtrlash",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Workflow'larni filtrlash": {
+        "main": [
+          [
+            {
+              "node": "Har bir workflow uchun",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "n8n — Workflow olish": {
+        "main": [
+          [
+            {
+              "node": "Code va node extraction",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code va node extraction": {
+        "main": [
+          [
+            {
+              "node": "GitHub — SHA olish",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub — SHA olish": {
+        "main": [
+          [
+            {
+              "node": "GitHub Payload qurish",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub Payload qurish": {
+        "main": [
+          [
+            {
+              "node": "GitHub — Yozish",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub — Yozish": {
+        "main": [
+          [
+            {
+              "node": "StaticData yangilash",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "StaticData yangilash": {
+        "main": [
+          [
+            {
+              "node": "Har bir workflow uchun",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Har bir workflow uchun": {
+        "main": [
+          [],
+          [
+            {
+              "node": "n8n — Workflow olish",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [
+      {
+        "id": "18159810-584a-4f54-846b-5aee792b0303",
+        "name": "Tekshiruv va filtrlash",
+        "nodeIds": [
+          "8b4f2bce-38a9-4b63-bd3e-08364b73962a",
+          "34480e60-f3a9-4d11-9a0e-06dcb10b2083",
+          "f5dd4463-23ec-4ef5-9dd3-c9ee262e9016",
+          "dd098aa4-ca36-417f-83bb-0dd7262a3eb2"
+        ],
+        "description": "turk-kontent versionId ni tekshiradi (o'zgarish yo'q bo'lsa to'xtatadi), so'ng export qilinadigan workflow'lar ro'yxatini tayyorlaydi"
+      },
+      {
+        "id": "ec631989-1a42-4909-9352-6794f103f289",
+        "name": "Har bir workflow eksporti",
+        "nodeIds": [
+          "f3b6710a-b8bf-4ffd-bf8d-f10a5f88c821",
+          "e9454ab5-0f8a-4e83-8363-7d9ff5cb1c60",
+          "fe699925-52f2-4b8b-b2fa-24aeb7261127",
+          "c84de8cd-af2d-45d1-b886-53a23ed0d8b9",
+          "5f39225f-1ce0-414c-b941-3b9fac54cae4",
+          "e1f87a8d-88ae-4da1-959c-c3fe69240cf3",
+          "9edde2cd-fe12-4576-92ef-a133e569dae7"
+        ],
+        "description": "Har bir workflow'ni alohida oladi, F0 formatida JSON eksport qiladi va GitHub'ga commit qo'shadi; turk-kontent uchun versionId ni staticData'ga s"
+      }
+    ],
+    "authors": "Boburbek Kambarov",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "createdAt": "2026-09-24T00:23:37.651Z",
+    "updatedAt": "2026-09-24T00:23:37.651Z",
+    "workflowPublishHistory": [
+      {
+        "id": 941,
+        "workflowId": "LQmqgGIRzpSCK79F",
+        "versionId": "bee4d662-91ea-4acc-b7ec-06beecaf0587",
+        "event": "activated",
+        "userId": "13080b06-05ba-4ec0-a905-7e301a9c80a4",
+        "createdAt": "2026-09-24T00:29:13.129Z"
+      },
+      {
+        "id": 943,
+        "workflowId": "LQmqgGIRzpSCK79F",
+        "versionId": "bee4d662-91ea-4acc-b7ec-06beecaf0587",
+        "event": "activated",
+        "userId": "13080b06-05ba-4ec0-a905-7e301a9c80a4",
+        "createdAt": "2026-09-24T00:29:19.357Z"
+      },
+      {
+        "id": 942,
+        "workflowId": "LQmqgGIRzpSCK79F",
+        "versionId": "bee4d662-91ea-4acc-b7ec-06beecaf0587",
+        "event": "deactivated",
+        "userId": "13080b06-05ba-4ec0-a905-7e301a9c80a4",
+        "createdAt": "2026-09-24T00:29:19.357Z"
+      }
+    ]
+  }
+}
