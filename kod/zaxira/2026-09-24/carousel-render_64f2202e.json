@@ -1,0 +1,416 @@
+{
+  "id": "M3tR7zNQP8ITFWrH",
+  "name": "carousel-render",
+  "description": "Sub-workflow: renders a carousel (brand + carousel JSON + carouselId) into named JPG/PNG files via Cloudflare Browser Rendering. Called by carousel-render-test and, later, carousel-generator-main.",
+  "active": true,
+  "activeVersionId": "64f2202e-cc7a-496c-a016-4f944b407d5b",
+  "createdAt": "2026-09-16T09:54:40.149Z",
+  "updatedAt": "2026-09-24T09:28:39.027Z",
+  "isArchived": false,
+  "versionId": "64f2202e-cc7a-496c-a016-4f944b407d5b",
+  "versionCounter": 10,
+  "sourceWorkflowId": null,
+  "triggerCount": 0,
+  "nodes": [
+    {
+      "id": "f1768c1b-694c-4cdb-ad5d-c4fc92431608",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "brand",
+              "type": "object"
+            },
+            {
+              "name": "carousel",
+              "type": "object"
+            },
+            {
+              "name": "carouselId",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dc74710f-fdab-46f8-a4cb-77a511f531a0",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "parameters": {
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cloudflareAccountId",
+              "name": "cloudflareAccountId",
+              "value": "e7d297b69ead02b6ab0a16480f08a42d",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6d516e7c-48e6-4101-b84f-ef5e384f44a8",
+      "name": "Build Slides",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "/**\n * Carousel slide builder\n * ------------------------------------------------------------\n * Turns Claude's carousel JSON + a brand kit into one HTML page per slide\n * (1080×1350). Each page is sent to Cloudflare Browser Run /screenshot.\n *\n * n8n usage (Code node, \"Run Once for All Items\"):\n *   Paste this whole file. The node before it must output ONE item:\n *   { brand: {...brand kit row...}, carousel: {...Claude JSON...}, carouselId: \"crs-xxxx\" }\n *   Output: one item per slide → { carouselId, lang, n, total, layout, format, html }\n *\n * Browser Run request body (HTTP Request node, Response Format: File):\n *   { html: $json.html,\n *     viewport: { width: 1080, height: 1350 },\n *     gotoOptions: { waitUntil: 'networkidle0' },\n *     waitForSelector: { selector: 'body.ready', timeout: 15000 },\n *     screenshotOptions: $json.format === 'png' ? { type: 'png' } : { type: 'jpeg', quality: 92 } }\n *   body.ready is set after fonts load and long text is shrunk to fit.\n *\n * To swap in the real brand later, change the brand kit row only\n * (colors, fonts, font_css_url, logo_url, handle). No code changes needed.\n */\n\nconst DEFAULT_BRAND = {\n  brand_name: 'Lajvard',\n  handle: '@lajvard.studio',\n  logo_url: '', // empty → built-in ring-and-chevron mark\n  color_ground: '#1B2A78', // lapis — main dark background\n  color_ground_line: '#2A3C9E', // lattice lines + inactive progress on the dark background\n  color_tile: '#22A6B3', // turquoise tile\n  color_porcelain: '#F2F5FB', // light background / text on dark\n  color_gold: '#EBB64A', // single highlight (button, medallion core)\n  color_ink: '#101A4F', // text on light background\n  color_muted_dark: '#AEB9E6', // secondary text on lapis\n  color_muted_light: '#5B6592', // secondary text on porcelain\n  font_display: 'Inter',\n  font_body: 'Inter',\n  font_css_url:\n    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=block',\n  output_format: 'jpg',\n};\n\n// Small interface strings that are not part of Claude's content.\nconst UI_STRINGS = {\n  'uz-Latn': { swipe: 'Varaqlang' },\n  'uz-Cyrl': { swipe: 'Варақланг' },\n  ru: { swipe: 'Листайте' },\n  en: { swipe: 'Swipe' },\n  tr: { swipe: 'Kaydır' },\n};\n\nconst W = 1080;\nconst H = 1350;\n\n// ---------- helpers ----------\n\nfunction esc(value) {\n  return String(value ?? '').replace(/[&<>\"']/g, (c) => ({\n    '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;',\n  })[c]);\n}\n\n// Safety net for Uzbek Latin: fix oʻ/gʻ and tutuq belgisi typed with plain apostrophes.\nfunction normalizeText(text, lang) {\n  let t = String(text ?? '').trim();\n  if (lang === 'uz-Latn') {\n    t = t.replace(/([OoGg])['‘’`ʼ]/g, '$1ʻ');\n    t = t.replace(/([A-Za-z])['’`]/g, '$1ʼ');\n  }\n  return t;\n}\n\n// ---------- motifs ----------\n// A motif supplies exactly 4 decorative functions — medallion/backdrop/\n// progress/mark — selected per-carousel via brand.motif_key. It never\n// touches headline/body copy layout, and it never draws the brand lockup\n// or the site-corner website mark: those are called directly from the\n// slide-layout functions below, the same for every motif, so a new motif\n// can't accidentally drop the logo or the website by omission.\n\n// \"True Bearing\" motif — an instrument/calibration-dial visual language\n// (concentric rings, a partial tick bezel, a compact two-bar chevron) that\n// replaces the old octagram-star family with something built from trading\n// infrastructure's own vocabulary (precision, calibration) rather than\n// literal chart imagery — chosen over a literal price-chart motif because\n// it never visually implies \"returns going up\", which matters given this\n// brand's own compliance rule against implying guaranteed returns.\n\n// Badge: two concentric rings, a partial tick bezel (only at large size),\n// and a small solid chevron at the center. Same function at two scales —\n// the ~460px cover badge gets the full tick bezel; the ~240px CTA badge\n// drops the bezel and inner ring so it stays crisp instead of turning to\n// noise at small scale.\nfunction instrumentMedallion(b, size) {\n  const c = size / 2;\n  const outerR = size * 0.46;\n  const innerR = size * 0.34;\n  const full = size >= 400;\n  let svg = `<svg width=\"${size}\" height=\"${size}\" viewBox=\"0 0 ${size} ${size}\" aria-hidden=\"true\">`;\n  svg += `<circle cx=\"${c}\" cy=\"${c}\" r=\"${outerR.toFixed(1)}\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"1.5\"/>`;\n  if (full) {\n    svg += `<circle cx=\"${c}\" cy=\"${c}\" r=\"${innerR.toFixed(1)}\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"1\" opacity=\"0.5\"/>`;\n    // 7 tick bars over a 240° arc, leaving a deliberate 120° gap toward the\n    // lower-right — the asymmetry reads as a calibrated dial, not a sunburst.\n    const tickCount = 7;\n    const arcSpan = 240;\n    const gapCenter = 135;\n    const startAngle = gapCenter + (360 - arcSpan) / 2;\n    const step = arcSpan / (tickCount - 1);\n    for (let i = 0; i < tickCount; i++) {\n      const angleDeg = startAngle + i * step;\n      const a = ((angleDeg - 90) * Math.PI) / 180;\n      const tx = c + outerR * Math.cos(a);\n      const ty = c + outerR * Math.sin(a);\n      svg += `<rect x=\"${(tx - 1).toFixed(1)}\" y=\"${(ty - 7).toFixed(1)}\" width=\"2\" height=\"14\" rx=\"1\" fill=\"${b.color_gold}\" opacity=\"0.7\" transform=\"rotate(${angleDeg.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)})\"/>`;\n    }\n  }\n  const barLen = size * 0.048;\n  const barW = Math.max(2, size * 0.0065);\n  const bx = (c - barW / 2).toFixed(1);\n  const by = (c - barLen / 2).toFixed(1);\n  svg += `<rect x=\"${bx}\" y=\"${by}\" width=\"${barW.toFixed(1)}\" height=\"${barLen.toFixed(1)}\" rx=\"${(barW / 2).toFixed(1)}\" fill=\"${b.color_gold}\" transform=\"rotate(18 ${c} ${c})\"/>`;\n  svg += `<rect x=\"${bx}\" y=\"${by}\" width=\"${barW.toFixed(1)}\" height=\"${barLen.toFixed(1)}\" rx=\"${(barW / 2).toFixed(1)}\" fill=\"${b.color_gold}\" transform=\"rotate(-18 ${c} ${c})\"/>`;\n  svg += `</svg>`;\n  return svg;\n}\n\nfunction instrumentMark(b) {\n  if (b.logo_url) {\n    return `<img class=\"logo-img\" src=\"${esc(b.logo_url)}\" alt=\"\">`;\n  }\n  return `<svg class=\"mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\">\n    <circle cx=\"24\" cy=\"24\" r=\"21\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"2\"/>\n    <rect x=\"22.5\" y=\"13\" width=\"3\" height=\"14\" rx=\"1.5\" fill=\"${b.color_gold}\" transform=\"rotate(18 24 24)\"/>\n    <rect x=\"22.5\" y=\"13\" width=\"3\" height=\"14\" rx=\"1.5\" fill=\"${b.color_gold}\" transform=\"rotate(-18 24 24)\"/>\n  </svg>`;\n}\n\n// The brand lockup always uses the logo image when brand.logo_url is set\n// (true in production), regardless of motif — motif.mark only supplies the\n// no-logo fallback icon, so a new motif's \"mark\" is rarely even seen live.\nfunction lockup(b, motif) {\n  return `<div class=\"lockup\">${motif.mark(b)}<span>${esc(b.brand_name)}</span></div>`;\n}\n\n// Full-bleed background: a barely-visible dot lattice (ambient texture, not\n// a border), two vertical hairlines tucked safely inside the outer margin,\n// and small \"+\" registration ticks in the four corners. Everything uses\n// currentColor so one markup adapts to both dark and light slides — no\n// per-brand color wiring needed. The lines sit at x=60/x=1020, inside the\n// 88px slide padding, specifically so they never cross centered CTA text or\n// wrap under a headline the way a center line would.\nfunction instrumentBackdrop(b) {\n  const corners = [[60, 60], [W - 60, 60], [60, H - 60], [W - 60, H - 60]];\n  const ticks = corners\n    .map(\n      ([x, y]) => `<line x1=\"${x - 5}\" y1=\"${y}\" x2=\"${x + 5}\" y2=\"${y}\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\"0.1\"/>\n    <line x1=\"${x}\" y1=\"${y - 5}\" x2=\"${x}\" y2=\"${y + 5}\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\"0.1\"/>`\n    )\n    .join('\\n    ');\n  return `<svg class=\"pattern\" width=\"${W}\" height=\"${H}\" aria-hidden=\"true\">\n    <defs><pattern id=\"dots\" width=\"90\" height=\"156\" patternUnits=\"userSpaceOnUse\">\n      <circle cx=\"0\" cy=\"0\" r=\"1\" fill=\"currentColor\" opacity=\"0.05\"/>\n      <circle cx=\"90\" cy=\"0\" r=\"1\" fill=\"currentColor\" opacity=\"0.05\"/>\n      <circle cx=\"45\" cy=\"78\" r=\"1\" fill=\"currentColor\" opacity=\"0.05\"/>\n    </pattern></defs>\n    <rect width=\"${W}\" height=\"${H}\" fill=\"url(#dots)\"/>\n    <line x1=\"60\" y1=\"0\" x2=\"60\" y2=\"${H}\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\"0.08\"/>\n    <line x1=\"${W - 60}\" y1=\"0\" x2=\"${W - 60}\" y2=\"${H}\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\"0.08\"/>\n    ${ticks}\n  </svg>`;\n}\n\n// Progress dots reuse the medallion's own ring-vs-fill language: an inactive\n// slide is a hollow gold ring, the current slide is a solid gold dot with a\n// wider ring around it — a miniature echo of the badge, not a separate motif.\nfunction instrumentProgress(b, n, total) {\n  let out = '';\n  for (let i = 1; i <= total; i++) {\n    out +=\n      i === n\n        ? `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"${b.color_gold}\"/><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"1\"/></svg>`\n        : `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"1.5\" opacity=\"0.35\"/></svg>`;\n  }\n  return `<div class=\"progress\" aria-label=\"${n} / ${total}\">${out}</div>`;\n}\n\n// \"Double Tick\" motif — a line-art reinterpretation of chat bubbles and\n// read-receipt double-ticks for the Sarcastic/Memes template. The joke is a\n// design pun, not a punchline graphic: the medallion's focal icon is a\n// read-receipt mark (\"you already know this, right?\" = you've already\n// \"seen\" it), and progress dots quietly read as seen-vs-unread bubbles.\n// Deliberately built from zero chart/candlestick/growth shapes (that lesson\n// was already learned designing the Informative template's motif) and zero\n// checkmark/certification/notification-badge shapes — a design-workflow\n// judge panel flagged both as compliance-adjacent (implied verification,\n// implied urgency) and those exact devices were dropped before this shipped:\n// the medallion carries no notification dot, and the \"tick\" glyph is two\n// independent parallel dashes with no bend, so it can never read as a ✓.\nfunction mulberry32(seed) {\n  let a = seed >>> 0;\n  return function () {\n    a = (a + 0x6d2b79f5) | 0;\n    let t = Math.imul(a ^ (a >>> 15), 1 | a);\n    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;\n    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;\n  };\n}\n\n// Rounded square with a small triangular tail on one corner — an abstract\n// chat-bubble silhouette, never literally drawn as app UI.\nfunction bubbleGlyph(cx, cy, size, rotation, stroke, strokeWidth, opacity, filled) {\n  const r = size / 2;\n  const corner = size * 0.18;\n  const tail = size * 0.22;\n  const fillAttr = filled ? stroke : 'none';\n  return `<g transform=\"rotate(${rotation.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})\" opacity=\"${opacity}\">\n    <rect x=\"${(cx - r).toFixed(1)}\" y=\"${(cy - r).toFixed(1)}\" width=\"${size.toFixed(1)}\" height=\"${size.toFixed(1)}\" rx=\"${corner.toFixed(1)}\" fill=\"${fillAttr}\" stroke=\"${stroke}\" stroke-width=\"${strokeWidth.toFixed(2)}\"/>\n    <path d=\"M ${(cx + r - tail * 0.7).toFixed(1)} ${(cy + r).toFixed(1)} L ${(cx + r + tail * 0.5).toFixed(1)} ${(cy + r + tail * 0.6).toFixed(1)} L ${(cx + r).toFixed(1)} ${(cy + r - tail * 0.2).toFixed(1)}\" fill=\"${fillAttr}\" stroke=\"${stroke}\" stroke-width=\"${strokeWidth.toFixed(2)}\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>`;\n}\n\n// Two short parallel diagonal dashes, offset — a read-receipt \"tick\" mark\n// with no bend anywhere, so it never converges into a checkmark silhouette.\nfunction tickGlyph(cx, cy, size, rotation, stroke, strokeWidth, opacity) {\n  const dx = size * 0.22;\n  const dy = size * 0.3;\n  const gap = size * 0.3;\n  return `<g transform=\"rotate(${rotation.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})\" opacity=\"${opacity}\">\n    <line x1=\"${(cx - gap / 2 - dx / 2).toFixed(1)}\" y1=\"${(cy - dy / 2).toFixed(1)}\" x2=\"${(cx - gap / 2 + dx / 2).toFixed(1)}\" y2=\"${(cy + dy / 2).toFixed(1)}\" stroke=\"${stroke}\" stroke-width=\"${strokeWidth.toFixed(2)}\" stroke-linecap=\"round\"/>\n    <line x1=\"${(cx + gap / 2 - dx / 2).toFixed(1)}\" y1=\"${(cy - dy / 2).toFixed(1)}\" x2=\"${(cx + gap / 2 + dx / 2).toFixed(1)}\" y2=\"${(cy + dy / 2).toFixed(1)}\" stroke=\"${stroke}\" stroke-width=\"${strokeWidth.toFixed(2)}\" stroke-linecap=\"round\"/>\n  </g>`;\n}\n\nfunction dotsGlyph(cx, cy, size, stroke, opacity) {\n  const r = size * 0.09;\n  const gap = size * 0.32;\n  let out = '';\n  for (let i = -1; i <= 1; i++) {\n    out += `<circle cx=\"${(cx + i * gap).toFixed(1)}\" cy=\"${cy.toFixed(1)}\" r=\"${r.toFixed(1)}\" fill=\"${stroke}\" opacity=\"${opacity}\"/>`;\n  }\n  return out;\n}\n\n// Badge: two concentric notch-bubble squares (the inner one rotated ~9°, a\n// quiet \"stack of overlapping bubbles\" cue), with the tick glyph centered as\n// the bold focal icon — literally a read-receipt mark as the emblem. No\n// notification dot (dropped: an unread-count badge is an urgency device the\n// brand voice rules forbid, regardless of color).\nfunction memeMedallion(b, size) {\n  const c = size / 2;\n  const outerSize = size * 0.86;\n  const innerSize = outerSize * 0.78;\n  let svg = `<svg width=\"${size}\" height=\"${size}\" viewBox=\"0 0 ${size} ${size}\" aria-hidden=\"true\">`;\n  svg += bubbleGlyph(c, c, outerSize, 0, b.color_gold, size * 0.0065, 1, false);\n  svg += bubbleGlyph(c, c, innerSize, 9, b.color_gold, size * 0.0045, 0.6, false);\n  svg += tickGlyph(c, c, size * 0.42, 0, b.color_gold, size * 0.03, 1);\n  svg += `</svg>`;\n  return svg;\n}\n\nfunction memeMark(b) {\n  if (b.logo_url) {\n    return `<img class=\"logo-img\" src=\"${esc(b.logo_url)}\" alt=\"\">`;\n  }\n  return `<svg class=\"mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\">${bubbleGlyph(24, 24, 34, 0, b.color_gold, 2.4, 1, false)}${tickGlyph(24, 24, 16, 0, b.color_gold, 2.6, 1)}</svg>`;\n}\n\n// Full-bleed scatter of 3 glyphs from one shared shape family (bubbles,\n// ticks, a typing-dots triad) — deterministically seeded so every render is\n// identical, not visual noise. A central zone stays clear of glyphs, and\n// every instance sits at 6-8% opacity, so the pattern never competes with\n// headline/body text even where it does cross behind it.\nfunction memeBackdrop(b) {\n  const rand = mulberry32(20260917);\n  // Text can plausibly sit anywhere in this zone across all 3 slide types\n  // (cover's bottom-anchored title, content's/cta's centered blocks) — kept\n  // fully clear of bubble/tick glyphs, not just biased, after an earlier\n  // render showed a \"biased density\" approach still crowded real text.\n  const safe = { x0: 120, y0: 230, x1: 960, y1: 1150 };\n  const glyphs = [];\n  let guard = 0;\n  while (glyphs.length < 16 && guard++ < 500) {\n    const x = 40 + rand() * (W - 80);\n    const y = 40 + rand() * (H - 80);\n    if (x > safe.x0 && x < safe.x1 && y > safe.y0 && y < safe.y1) continue;\n    const size = 26 + rand() * 30;\n    const rotation = (rand() - 0.5) * 40;\n    const roll = rand();\n    const kind = roll < 0.5 ? 'bubble' : roll < 0.8 ? 'tick' : 'dots';\n    const isGold = rand() < 0.3;\n    const stroke = isGold ? b.color_gold : 'currentColor';\n    const opacity = isGold ? 0.05 : 0.06;\n    glyphs.push({ x, y, size, rotation, kind, stroke, opacity });\n  }\n  // The typing-dots triad is small enough (like True Bearing's dot lattice)\n  // to read as ambient texture rather than a shape, so it alone is allowed\n  // to scatter across the full canvas, still at very low opacity.\n  const dotCount = 10;\n  for (let i = 0; i < dotCount; i++) {\n    glyphs.push({\n      x: 40 + rand() * (W - 80),\n      y: 40 + rand() * (H - 80),\n      size: 14 + rand() * 10,\n      rotation: 0,\n      kind: 'dots',\n      stroke: 'currentColor',\n      opacity: 0.05,\n    });\n  }\n  const body = glyphs\n    .map((g) => {\n      const sw = Math.max(1, g.size * 0.05);\n      if (g.kind === 'bubble') return bubbleGlyph(g.x, g.y, g.size, g.rotation, g.stroke, sw, g.opacity, false);\n      if (g.kind === 'tick') return tickGlyph(g.x, g.y, g.size, g.rotation, g.stroke, sw, g.opacity);\n      return dotsGlyph(g.x, g.y, g.size * 0.6, g.stroke, g.opacity);\n    })\n    .join('');\n  return `<svg class=\"pattern\" width=\"${W}\" height=\"${H}\" aria-hidden=\"true\">${body}</svg>`;\n}\n\n// Progress dots stay on the same bubble shape as the rest of the system:\n// inactive is a hollow outline, passed is a dim filled bubble (\"delivered\n// but already scrolled past\"), active is a bold gold filled bubble.\nfunction memeProgress(b, n, total) {\n  let out = '';\n  for (let i = 1; i <= total; i++) {\n    if (i === n) {\n      out += `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">${bubbleGlyph(12, 12, 15, 0, b.color_gold, 1, 1, true)}</svg>`;\n    } else if (i < n) {\n      out += `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">${bubbleGlyph(12, 12, 11, 0, b.color_muted_light, 1, 0.55, true)}</svg>`;\n    } else {\n      out += `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">${bubbleGlyph(12, 12, 11, 0, b.color_muted_light, 1.3, 0.35, false)}</svg>`;\n    }\n  }\n  return `<div class=\"progress\" aria-label=\"${n} / ${total}\">${out}</div>`;\n}\n\n// ---------- motif registry ----------\n// Each pack supplies medallion/backdrop/progress/mark. cssVars lets a motif\n// nudge shared typographic feel (e.g. a bolder headline weight) without any\n// of the 3 slide-layout functions changing — empty by default.\nconst MOTIFS = {\n  instrument: {\n    medallion: instrumentMedallion,\n    backdrop: instrumentBackdrop,\n    progress: instrumentProgress,\n    mark: instrumentMark,\n    cssVars: {},\n  },\n  meme: {\n    medallion: memeMedallion,\n    backdrop: memeBackdrop,\n    progress: memeProgress,\n    mark: memeMark,\n    cssVars: {},\n  },\n};\n\nfunction resolveMotif(b) {\n  return MOTIFS[b.motif_key] || MOTIFS.instrument;\n}\n\n// Shrinks any [data-fit] element until its text fits its max-height.\n// Adds body.ready when done → can be used with Browser Run's waitForSelector.\nconst FIT_SCRIPT = `\n(function () {\n  var done = false;\n  function fit() {\n    if (done) return; done = true;\n    document.querySelectorAll('[data-fit]').forEach(function (el) {\n      var cs = getComputedStyle(el);\n      var min = parseFloat(el.dataset.min) || 28;\n      var maxH = parseFloat(cs.maxHeight);\n      var size = parseFloat(cs.fontSize);\n      var guard = 0;\n      el.style.maxHeight = 'none';\n      // offsetHeight = height of the line boxes (ignores glyph ink overflow)\n      while (el.offsetHeight > maxH + 1 && size > min && guard++ < 80) {\n        size -= 2;\n        el.style.fontSize = size + 'px';\n      }\n    });\n    document.body.classList.add('ready');\n  }\n  var b = document.body.dataset;\n  var sample = document.body.innerText;\n  if (document.fonts && document.fonts.load) {\n    Promise.all([\n      document.fonts.load('600 80px \"' + b.display + '\"', sample),\n      document.fonts.load('400 40px \"' + b.body + '\"', sample),\n      document.fonts.load('600 40px \"' + b.body + '\"', sample)\n    ]).then(function () { return document.fonts.ready; }).then(fit, fit);\n  }\n  setTimeout(fit, 5000);\n})();`;\n\nfunction css(b) {\n  return `\n:root {\n  --ground: ${b.color_ground}; --tile: ${b.color_tile}; --porcelain: ${b.color_porcelain};\n  --gold: ${b.color_gold}; --ink: ${b.color_ink};\n  --muted-dark: ${b.color_muted_dark}; --muted-light: ${b.color_muted_light};\n  --display: '${b.font_display}', 'Segoe UI', Arial, sans-serif;\n  --body: '${b.font_body}', 'Segoe UI', Arial, sans-serif;\n  --headline-weight: 600; --headline-tracking: -0.012em;\n}\n* { box-sizing: border-box; margin: 0; padding: 0; }\nhtml, body { width: ${W}px; height: ${H}px; overflow: hidden; }\nbody { font-family: var(--body); -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }\n.slide { position: relative; width: ${W}px; height: ${H}px; overflow: hidden;\n  padding: 88px; display: flex; flex-direction: column; }\n.dark { background: var(--ground); color: var(--porcelain); }\n.light { background: var(--porcelain); color: var(--ink); }\n.pattern { position: absolute; left: 0; top: 0; z-index: 0; }\n.layer { position: relative; z-index: 1; }\n\n.lockup { display: flex; align-items: center; gap: 16px;\n  font-family: var(--display); font-weight: 600; font-size: 38px; letter-spacing: 0.01em; }\n.mark, .logo-img { width: 48px; height: 48px; object-fit: contain; }\n\n.brand-top { display: flex; justify-content: center; }\n.site-corner { position: absolute; top: 88px; left: 88px; font-size: 26px; font-weight: 500;\n  opacity: 0.55; z-index: 1; }\n\n.headline { font-family: var(--display); font-weight: var(--headline-weight); line-height: 1.06;\n  letter-spacing: var(--headline-tracking); text-wrap: balance; }\n.lede { font-weight: 400; line-height: 1.32; text-wrap: pretty; }\n.copy { font-weight: 400; line-height: 1.42; text-wrap: pretty; }\n\n.progress { display: flex; gap: 10px; align-items: center; }\n.progress svg { width: 22px; height: 22px; }\n\n/* cover */\n.cover .medallion { position: absolute; right: -60px; top: 96px; z-index: 1; }\n.cover-text { margin-top: auto; }\n.cover-title { font-size: 96px; max-height: 420px; }\n.cover-sub { font-size: 36px; max-height: 108px; margin-top: 34px; color: var(--muted-dark); }\n.foot { display: flex; justify-content: space-between; align-items: center; margin-top: 64px; }\n.swipe { font-size: 30px; font-weight: 500; color: var(--muted-dark); }\n\n/* content */\n.content-main { flex: 1; display: flex; flex-direction: column; justify-content: center;\n  padding-bottom: 120px; }\n.content-title { font-size: 72px; max-height: 260px; }\n.content-rule { width: 96px; height: 6px; background: var(--tile); margin: 48px 0 40px; }\n.content-body { font-size: 36px; max-height: 460px; color: var(--muted-light); }\n\n/* cta */\n.cta-main { flex: 1; display: flex; flex-direction: column; align-items: center;\n  justify-content: center; text-align: center; }\n.cta-title { font-size: 72px; max-height: 280px; margin-top: 56px; }\n.cta-sub { font-size: 36px; max-height: 104px; margin-top: 28px; color: var(--muted-dark); max-width: 820px; }\n.button { margin-top: 56px; background: var(--gold); color: var(--ink); font-weight: 600;\n  font-size: 40px; line-height: 1; padding: 30px 56px; border-radius: 999px; max-width: 820px; }\n.handle { margin-top: 30px; font-size: 32px; font-weight: 500; color: var(--muted-dark); }\n.cta .foot { justify-content: center; }\n`;\n}\n\nfunction page(b, lang, bodyHtml, fontCss, motifCssVars) {\n  const fonts = fontCss\n    ? `<style>${fontCss}</style>`\n    : `<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link rel=\"stylesheet\" href=\"${esc(b.font_css_url)}\">`;\n  const overrideEntries = Object.entries(motifCssVars || {});\n  const motifOverride = overrideEntries.length\n    ? `<style>:root{${overrideEntries.map(([k, v]) => `${k}:${v};`).join('')}}</style>`\n    : '';\n  return `<!doctype html>\n<html lang=\"${esc(lang)}\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=${W}, height=${H}\">\n${fonts}\n<style>${css(b)}</style>\n${motifOverride}\n</head>\n<body data-display=\"${esc(b.font_display)}\" data-body=\"${esc(b.font_body)}\">\n${bodyHtml}\n<script>${FIT_SCRIPT}</script>\n</body>\n</html>`;\n}\n\n// ---------- layouts ----------\n\nfunction coverSlide(b, s, lang, total, motif) {\n  const ui = UI_STRINGS[lang] || UI_STRINGS.en;\n  return `<main class=\"slide dark cover\">\n  ${motif.backdrop(b)}\n  <div class=\"medallion\">${motif.medallion(b, 460)}</div>\n  <div class=\"layer brand-top\">${lockup(b, motif)}</div>\n  <p class=\"site-corner\">${esc(b.handle)}</p>\n  <div class=\"layer cover-text\">\n    <h1 class=\"headline cover-title\" data-fit data-min=\"56\">${esc(s.title)}</h1>\n    ${s.subtitle ? `<p class=\"lede cover-sub\" data-fit data-min=\"28\">${esc(s.subtitle)}</p>` : ''}\n  </div>\n  <div class=\"layer foot\">${motif.progress(b, s.n, total)}<span class=\"swipe\">${esc(ui.swipe)}</span></div>\n</main>`;\n}\n\nfunction contentSlide(b, s, lang, total, motif) {\n  return `<main class=\"slide light content\">\n  ${motif.backdrop(b)}\n  <div class=\"layer brand-top\">${lockup(b, motif)}</div>\n  <p class=\"site-corner\">${esc(b.handle)}</p>\n  <div class=\"layer content-main\">\n    <h2 class=\"headline content-title\" data-fit data-min=\"48\">${esc(s.title)}</h2>\n    <div class=\"content-rule\"></div>\n    ${s.body ? `<p class=\"copy content-body\" data-fit data-min=\"30\">${esc(s.body)}</p>` : ''}\n  </div>\n  <div class=\"layer foot\">${motif.progress(b, s.n, total)}</div>\n</main>`;\n}\n\nfunction ctaSlide(b, s, lang, total, motif) {\n  return `<main class=\"slide dark cta\">\n  ${motif.backdrop(b)}\n  <div class=\"layer brand-top\">${lockup(b, motif)}</div>\n  <p class=\"site-corner\">${esc(b.handle)}</p>\n  <div class=\"layer cta-main\">\n    ${motif.medallion(b, 240)}\n    <h2 class=\"headline cta-title\" data-fit data-min=\"52\">${esc(s.title)}</h2>\n    ${s.subtitle ? `<p class=\"lede cta-sub\" data-fit data-min=\"28\">${esc(s.subtitle)}</p>` : ''}\n    ${s.button ? `<div class=\"button\">${esc(s.button)}</div>` : ''}\n    <p class=\"handle\">${esc(b.handle)}</p>\n  </div>\n  <div class=\"layer foot\">${motif.progress(b, s.n, total)}</div>\n</main>`;\n}\n\nconst LAYOUTS = { cover: coverSlide, content: contentSlide, cta: ctaSlide };\n\n/**\n * Build HTML for every slide in a carousel.\n * @returns {Array<{n, total, layout, lang, html}>}\n */\nfunction buildCarousel(brandInput, carousel, opts = {}) {\n  const b = { ...DEFAULT_BRAND, ...(brandInput || {}) };\n  const motif = resolveMotif(b);\n  const lang = carousel.language || 'uz-Latn';\n  const slides = [...(carousel.slides || [])].sort((a, z) => a.n - z.n);\n  const total = slides.length;\n  return slides.map((raw, i) => {\n    const s = {\n      n: raw.n ?? i + 1,\n      layout: raw.layout,\n      title: normalizeText(raw.title, lang),\n      subtitle: normalizeText(raw.subtitle, lang),\n      body: normalizeText(raw.body, lang),\n      button: normalizeText(raw.button, lang),\n    };\n    const layout = LAYOUTS[s.layout] || (i === 0 ? coverSlide : i === total - 1 ? ctaSlide : contentSlide);\n    return {\n      n: s.n,\n      total,\n      layout: s.layout,\n      lang,\n      html: page(b, lang, layout(b, s, lang, total, motif), opts.fontCss, motif.cssVars),\n    };\n  });\n}\n\n// ---------- n8n entry ----------\nif (typeof $input !== 'undefined') {\n  const src = $input.first().json;\n  const brand = src.brand || {};\n  const carousel = src.carousel || src.output || src;\n  const carouselId = src.carouselId || `crs-${Date.now().toString(36)}`;\n  const format = (brand.output_format || carousel.output_format || 'jpg').toLowerCase() === 'png' ? 'png' : 'jpg';\n  return buildCarousel(brand, carousel).map((s) => ({\n    json: { carouselId, lang: s.lang, n: s.n, total: s.total, layout: s.layout, format, html: s.html },\n  }));\n}\n\n// ---------- local usage (Node) ----------\nif (typeof module !== 'undefined') {\n  module.exports = { buildCarousel, DEFAULT_BRAND, UI_STRINGS, MOTIFS };\n}\n"
+      }
+    },
+    {
+      "id": "f3634f8e-9627-4632-bd50-f92d50e18dca",
+      "name": "Render Slide",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        672,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.cloudflare.com/client/v4/accounts/{{ $('Config').item.json.cloudflareAccountId }}/browser-rendering/screenshot",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "cloudflareApi",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ html: $json.html, viewport: { width: 1080, height: 1350 }, gotoOptions: { waitUntil: \"networkidle0\" }, waitForSelector: { selector: \"body.ready\", timeout: 15000 }, screenshotOptions: $json.format === \"png\" ? { type: \"png\" } : { type: \"jpeg\", quality: 92 } }) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 30000
+            }
+          },
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 10000,
+      "credentials": {
+        "cloudflareApi": {
+          "id": "dBebkeXL5mZ19cKz",
+          "name": "Cloudflare account"
+        }
+      }
+    },
+    {
+      "id": "3c69b7c9-25e0-45ac-a3d0-7a9b7813f016",
+      "name": "Name Files",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "javaScript",
+        "jsCode": "/**\n * Name Files — n8n Code node (\"Run Once for Each Item\")\n * ------------------------------------------------------------\n * Place right after the \"Render Slide\" HTTP Request node (Response Format: File).\n * Browser Run returns the image without a filename; Telegram would show \"file\".\n * This gives each slide a sortable name and the right MIME type, and keeps the\n * slide metadata from the \"Build Slides\" node (without the large html string).\n *\n * Output: { json: { carouselId, lang, n, total, layout, format, fileName }, binary: { data } }\n */\n\nconst { html, ...meta } = $('Build Slides').item.json;\nconst ext = meta.format === 'png' ? 'png' : 'jpg';\nconst nn = String(meta.n).padStart(2, '0');\n\nconst bin = $input.item.binary && $input.item.binary.data;\nif (!bin) {\n  throw new Error(`Slide ${meta.n} (${meta.lang}): no image returned by Render Slide`);\n}\n\nbin.fileName = `${meta.carouselId}_${meta.lang}_${nn}.${ext}`;\nbin.mimeType = ext === 'png' ? 'image/png' : 'image/jpeg';\nbin.fileExtension = ext;\n\nreturn { json: { ...meta, fileName: bin.fileName }, binary: { data: bin } };\n"
+      }
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Build Slides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Slides": {
+      "main": [
+        [
+          {
+            "node": "Render Slide",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render Slide": {
+      "main": [
+        [
+          {
+            "node": "Name Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodeGroups": [],
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "errorWorkflow": "Sq5fwFJVgGMGiWYl"
+  },
+  "staticData": null,
+  "pinData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "tags": [],
+  "shared": [
+    {
+      "role": "workflow:owner",
+      "workflowId": "M3tR7zNQP8ITFWrH",
+      "projectId": "ptwvC1fB9jlsqLjP",
+      "project": {
+        "id": "ptwvC1fB9jlsqLjP",
+        "name": "Boburbek Kambarov <admin@zibrock.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "13080b06-05ba-4ec0-a905-7e301a9c80a4",
+        "createdAt": "2026-08-18T14:04:26.696Z",
+        "updatedAt": "2026-08-18T14:04:39.380Z"
+      },
+      "createdAt": "2026-09-16T09:54:40.152Z",
+      "updatedAt": "2026-09-16T09:54:40.152Z"
+    }
+  ],
+  "activeVersion": {
+    "versionId": "64f2202e-cc7a-496c-a016-4f944b407d5b",
+    "workflowId": "M3tR7zNQP8ITFWrH",
+    "nodes": [
+      {
+        "id": "f1768c1b-694c-4cdb-ad5d-c4fc92431608",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          0,
+          0
+        ],
+        "parameters": {
+          "inputSource": "workflowInputs",
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "brand",
+                "type": "object"
+              },
+              {
+                "name": "carousel",
+                "type": "object"
+              },
+              {
+                "name": "carouselId",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "dc74710f-fdab-46f8-a4cb-77a511f531a0",
+        "name": "Config",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.5,
+        "position": [
+          224,
+          0
+        ],
+        "parameters": {
+          "mode": "manual",
+          "includeOtherFields": true,
+          "assignments": {
+            "assignments": [
+              {
+                "id": "cloudflareAccountId",
+                "name": "cloudflareAccountId",
+                "value": "e7d297b69ead02b6ab0a16480f08a42d",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "6d516e7c-48e6-4101-b84f-ef5e384f44a8",
+        "name": "Build Slides",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          448,
+          0
+        ],
+        "parameters": {
+          "mode": "runOnceForAllItems",
+          "language": "javaScript",
+          "jsCode": "/**\n * Carousel slide builder\n * ------------------------------------------------------------\n * Turns Claude's carousel JSON + a brand kit into one HTML page per slide\n * (1080×1350). Each page is sent to Cloudflare Browser Run /screenshot.\n *\n * n8n usage (Code node, \"Run Once for All Items\"):\n *   Paste this whole file. The node before it must output ONE item:\n *   { brand: {...brand kit row...}, carousel: {...Claude JSON...}, carouselId: \"crs-xxxx\" }\n *   Output: one item per slide → { carouselId, lang, n, total, layout, format, html }\n *\n * Browser Run request body (HTTP Request node, Response Format: File):\n *   { html: $json.html,\n *     viewport: { width: 1080, height: 1350 },\n *     gotoOptions: { waitUntil: 'networkidle0' },\n *     waitForSelector: { selector: 'body.ready', timeout: 15000 },\n *     screenshotOptions: $json.format === 'png' ? { type: 'png' } : { type: 'jpeg', quality: 92 } }\n *   body.ready is set after fonts load and long text is shrunk to fit.\n *\n * To swap in the real brand later, change the brand kit row only\n * (colors, fonts, font_css_url, logo_url, handle). No code changes needed.\n */\n\nconst DEFAULT_BRAND = {\n  brand_name: 'Lajvard',\n  handle: '@lajvard.studio',\n  logo_url: '', // empty → built-in ring-and-chevron mark\n  color_ground: '#1B2A78', // lapis — main dark background\n  color_ground_line: '#2A3C9E', // lattice lines + inactive progress on the dark background\n  color_tile: '#22A6B3', // turquoise tile\n  color_porcelain: '#F2F5FB', // light background / text on dark\n  color_gold: '#EBB64A', // single highlight (button, medallion core)\n  color_ink: '#101A4F', // text on light background\n  color_muted_dark: '#AEB9E6', // secondary text on lapis\n  color_muted_light: '#5B6592', // secondary text on porcelain\n  font_display: 'Inter',\n  font_body: 'Inter',\n  font_css_url:\n    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=block',\n  output_format: 'jpg',\n};\n\n// Small interface strings that are not part of Claude's content.\nconst UI_STRINGS = {\n  'uz-Latn': { swipe: 'Varaqlang' },\n  'uz-Cyrl': { swipe: 'Варақланг' },\n  ru: { swipe: 'Листайте' },\n  en: { swipe: 'Swipe' },\n  tr: { swipe: 'Kaydır' },\n};\n\nconst W = 1080;\nconst H = 1350;\n\n// ---------- helpers ----------\n\nfunction esc(value) {\n  return String(value ?? '').replace(/[&<>\"']/g, (c) => ({\n    '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;',\n  })[c]);\n}\n\n// Safety net for Uzbek Latin: fix oʻ/gʻ and tutuq belgisi typed with plain apostrophes.\nfunction normalizeText(text, lang) {\n  let t = String(text ?? '').trim();\n  if (lang === 'uz-Latn') {\n    t = t.replace(/([OoGg])['‘’`ʼ]/g, '$1ʻ');\n    t = t.replace(/([A-Za-z])['’`]/g, '$1ʼ');\n  }\n  return t;\n}\n\n// ---------- motifs ----------\n// A motif supplies exactly 4 decorative functions — medallion/backdrop/\n// progress/mark — selected per-carousel via brand.motif_key. It never\n// touches headline/body copy layout, and it never draws the brand lockup\n// or the site-corner website mark: those are called directly from the\n// slide-layout functions below, the same for every motif, so a new motif\n// can't accidentally drop the logo or the website by omission.\n\n// \"True Bearing\" motif — an instrument/calibration-dial visual language\n// (concentric rings, a partial tick bezel, a compact two-bar chevron) that\n// replaces the old octagram-star family with something built from trading\n// infrastructure's own vocabulary (precision, calibration) rather than\n// literal chart imagery — chosen over a literal price-chart motif because\n// it never visually implies \"returns going up\", which matters given this\n// brand's own compliance rule against implying guaranteed returns.\n\n// Badge: two concentric rings, a partial tick bezel (only at large size),\n// and a small solid chevron at the center. Same function at two scales —\n// the ~460px cover badge gets the full tick bezel; the ~240px CTA badge\n// drops the bezel and inner ring so it stays crisp instead of turning to\n// noise at small scale.\nfunction instrumentMedallion(b, size) {\n  const c = size / 2;\n  const outerR = size * 0.46;\n  const innerR = size * 0.34;\n  const full = size >= 400;\n  let svg = `<svg width=\"${size}\" height=\"${size}\" viewBox=\"0 0 ${size} ${size}\" aria-hidden=\"true\">`;\n  svg += `<circle cx=\"${c}\" cy=\"${c}\" r=\"${outerR.toFixed(1)}\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"1.5\"/>`;\n  if (full) {\n    svg += `<circle cx=\"${c}\" cy=\"${c}\" r=\"${innerR.toFixed(1)}\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"1\" opacity=\"0.5\"/>`;\n    // 7 tick bars over a 240° arc, leaving a deliberate 120° gap toward the\n    // lower-right — the asymmetry reads as a calibrated dial, not a sunburst.\n    const tickCount = 7;\n    const arcSpan = 240;\n    const gapCenter = 135;\n    const startAngle = gapCenter + (360 - arcSpan) / 2;\n    const step = arcSpan / (tickCount - 1);\n    for (let i = 0; i < tickCount; i++) {\n      const angleDeg = startAngle + i * step;\n      const a = ((angleDeg - 90) * Math.PI) / 180;\n      const tx = c + outerR * Math.cos(a);\n      const ty = c + outerR * Math.sin(a);\n      svg += `<rect x=\"${(tx - 1).toFixed(1)}\" y=\"${(ty - 7).toFixed(1)}\" width=\"2\" height=\"14\" rx=\"1\" fill=\"${b.color_gold}\" opacity=\"0.7\" transform=\"rotate(${angleDeg.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)})\"/>`;\n    }\n  }\n  const barLen = size * 0.048;\n  const barW = Math.max(2, size * 0.0065);\n  const bx = (c - barW / 2).toFixed(1);\n  const by = (c - barLen / 2).toFixed(1);\n  svg += `<rect x=\"${bx}\" y=\"${by}\" width=\"${barW.toFixed(1)}\" height=\"${barLen.toFixed(1)}\" rx=\"${(barW / 2).toFixed(1)}\" fill=\"${b.color_gold}\" transform=\"rotate(18 ${c} ${c})\"/>`;\n  svg += `<rect x=\"${bx}\" y=\"${by}\" width=\"${barW.toFixed(1)}\" height=\"${barLen.toFixed(1)}\" rx=\"${(barW / 2).toFixed(1)}\" fill=\"${b.color_gold}\" transform=\"rotate(-18 ${c} ${c})\"/>`;\n  svg += `</svg>`;\n  return svg;\n}\n\nfunction instrumentMark(b) {\n  if (b.logo_url) {\n    return `<img class=\"logo-img\" src=\"${esc(b.logo_url)}\" alt=\"\">`;\n  }\n  return `<svg class=\"mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\">\n    <circle cx=\"24\" cy=\"24\" r=\"21\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"2\"/>\n    <rect x=\"22.5\" y=\"13\" width=\"3\" height=\"14\" rx=\"1.5\" fill=\"${b.color_gold}\" transform=\"rotate(18 24 24)\"/>\n    <rect x=\"22.5\" y=\"13\" width=\"3\" height=\"14\" rx=\"1.5\" fill=\"${b.color_gold}\" transform=\"rotate(-18 24 24)\"/>\n  </svg>`;\n}\n\n// The brand lockup always uses the logo image when brand.logo_url is set\n// (true in production), regardless of motif — motif.mark only supplies the\n// no-logo fallback icon, so a new motif's \"mark\" is rarely even seen live.\nfunction lockup(b, motif) {\n  return `<div class=\"lockup\">${motif.mark(b)}<span>${esc(b.brand_name)}</span></div>`;\n}\n\n// Full-bleed background: a barely-visible dot lattice (ambient texture, not\n// a border), two vertical hairlines tucked safely inside the outer margin,\n// and small \"+\" registration ticks in the four corners. Everything uses\n// currentColor so one markup adapts to both dark and light slides — no\n// per-brand color wiring needed. The lines sit at x=60/x=1020, inside the\n// 88px slide padding, specifically so they never cross centered CTA text or\n// wrap under a headline the way a center line would.\nfunction instrumentBackdrop(b) {\n  const corners = [[60, 60], [W - 60, 60], [60, H - 60], [W - 60, H - 60]];\n  const ticks = corners\n    .map(\n      ([x, y]) => `<line x1=\"${x - 5}\" y1=\"${y}\" x2=\"${x + 5}\" y2=\"${y}\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\"0.1\"/>\n    <line x1=\"${x}\" y1=\"${y - 5}\" x2=\"${x}\" y2=\"${y + 5}\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\"0.1\"/>`\n    )\n    .join('\\n    ');\n  return `<svg class=\"pattern\" width=\"${W}\" height=\"${H}\" aria-hidden=\"true\">\n    <defs><pattern id=\"dots\" width=\"90\" height=\"156\" patternUnits=\"userSpaceOnUse\">\n      <circle cx=\"0\" cy=\"0\" r=\"1\" fill=\"currentColor\" opacity=\"0.05\"/>\n      <circle cx=\"90\" cy=\"0\" r=\"1\" fill=\"currentColor\" opacity=\"0.05\"/>\n      <circle cx=\"45\" cy=\"78\" r=\"1\" fill=\"currentColor\" opacity=\"0.05\"/>\n    </pattern></defs>\n    <rect width=\"${W}\" height=\"${H}\" fill=\"url(#dots)\"/>\n    <line x1=\"60\" y1=\"0\" x2=\"60\" y2=\"${H}\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\"0.08\"/>\n    <line x1=\"${W - 60}\" y1=\"0\" x2=\"${W - 60}\" y2=\"${H}\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\"0.08\"/>\n    ${ticks}\n  </svg>`;\n}\n\n// Progress dots reuse the medallion's own ring-vs-fill language: an inactive\n// slide is a hollow gold ring, the current slide is a solid gold dot with a\n// wider ring around it — a miniature echo of the badge, not a separate motif.\nfunction instrumentProgress(b, n, total) {\n  let out = '';\n  for (let i = 1; i <= total; i++) {\n    out +=\n      i === n\n        ? `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"${b.color_gold}\"/><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"1\"/></svg>`\n        : `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"none\" stroke=\"${b.color_gold}\" stroke-width=\"1.5\" opacity=\"0.35\"/></svg>`;\n  }\n  return `<div class=\"progress\" aria-label=\"${n} / ${total}\">${out}</div>`;\n}\n\n// \"Double Tick\" motif — a line-art reinterpretation of chat bubbles and\n// read-receipt double-ticks for the Sarcastic/Memes template. The joke is a\n// design pun, not a punchline graphic: the medallion's focal icon is a\n// read-receipt mark (\"you already know this, right?\" = you've already\n// \"seen\" it), and progress dots quietly read as seen-vs-unread bubbles.\n// Deliberately built from zero chart/candlestick/growth shapes (that lesson\n// was already learned designing the Informative template's motif) and zero\n// checkmark/certification/notification-badge shapes — a design-workflow\n// judge panel flagged both as compliance-adjacent (implied verification,\n// implied urgency) and those exact devices were dropped before this shipped:\n// the medallion carries no notification dot, and the \"tick\" glyph is two\n// independent parallel dashes with no bend, so it can never read as a ✓.\nfunction mulberry32(seed) {\n  let a = seed >>> 0;\n  return function () {\n    a = (a + 0x6d2b79f5) | 0;\n    let t = Math.imul(a ^ (a >>> 15), 1 | a);\n    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;\n    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;\n  };\n}\n\n// Rounded square with a small triangular tail on one corner — an abstract\n// chat-bubble silhouette, never literally drawn as app UI.\nfunction bubbleGlyph(cx, cy, size, rotation, stroke, strokeWidth, opacity, filled) {\n  const r = size / 2;\n  const corner = size * 0.18;\n  const tail = size * 0.22;\n  const fillAttr = filled ? stroke : 'none';\n  return `<g transform=\"rotate(${rotation.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})\" opacity=\"${opacity}\">\n    <rect x=\"${(cx - r).toFixed(1)}\" y=\"${(cy - r).toFixed(1)}\" width=\"${size.toFixed(1)}\" height=\"${size.toFixed(1)}\" rx=\"${corner.toFixed(1)}\" fill=\"${fillAttr}\" stroke=\"${stroke}\" stroke-width=\"${strokeWidth.toFixed(2)}\"/>\n    <path d=\"M ${(cx + r - tail * 0.7).toFixed(1)} ${(cy + r).toFixed(1)} L ${(cx + r + tail * 0.5).toFixed(1)} ${(cy + r + tail * 0.6).toFixed(1)} L ${(cx + r).toFixed(1)} ${(cy + r - tail * 0.2).toFixed(1)}\" fill=\"${fillAttr}\" stroke=\"${stroke}\" stroke-width=\"${strokeWidth.toFixed(2)}\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>`;\n}\n\n// Two short parallel diagonal dashes, offset — a read-receipt \"tick\" mark\n// with no bend anywhere, so it never converges into a checkmark silhouette.\nfunction tickGlyph(cx, cy, size, rotation, stroke, strokeWidth, opacity) {\n  const dx = size * 0.22;\n  const dy = size * 0.3;\n  const gap = size * 0.3;\n  return `<g transform=\"rotate(${rotation.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})\" opacity=\"${opacity}\">\n    <line x1=\"${(cx - gap / 2 - dx / 2).toFixed(1)}\" y1=\"${(cy - dy / 2).toFixed(1)}\" x2=\"${(cx - gap / 2 + dx / 2).toFixed(1)}\" y2=\"${(cy + dy / 2).toFixed(1)}\" stroke=\"${stroke}\" stroke-width=\"${strokeWidth.toFixed(2)}\" stroke-linecap=\"round\"/>\n    <line x1=\"${(cx + gap / 2 - dx / 2).toFixed(1)}\" y1=\"${(cy - dy / 2).toFixed(1)}\" x2=\"${(cx + gap / 2 + dx / 2).toFixed(1)}\" y2=\"${(cy + dy / 2).toFixed(1)}\" stroke=\"${stroke}\" stroke-width=\"${strokeWidth.toFixed(2)}\" stroke-linecap=\"round\"/>\n  </g>`;\n}\n\nfunction dotsGlyph(cx, cy, size, stroke, opacity) {\n  const r = size * 0.09;\n  const gap = size * 0.32;\n  let out = '';\n  for (let i = -1; i <= 1; i++) {\n    out += `<circle cx=\"${(cx + i * gap).toFixed(1)}\" cy=\"${cy.toFixed(1)}\" r=\"${r.toFixed(1)}\" fill=\"${stroke}\" opacity=\"${opacity}\"/>`;\n  }\n  return out;\n}\n\n// Badge: two concentric notch-bubble squares (the inner one rotated ~9°, a\n// quiet \"stack of overlapping bubbles\" cue), with the tick glyph centered as\n// the bold focal icon — literally a read-receipt mark as the emblem. No\n// notification dot (dropped: an unread-count badge is an urgency device the\n// brand voice rules forbid, regardless of color).\nfunction memeMedallion(b, size) {\n  const c = size / 2;\n  const outerSize = size * 0.86;\n  const innerSize = outerSize * 0.78;\n  let svg = `<svg width=\"${size}\" height=\"${size}\" viewBox=\"0 0 ${size} ${size}\" aria-hidden=\"true\">`;\n  svg += bubbleGlyph(c, c, outerSize, 0, b.color_gold, size * 0.0065, 1, false);\n  svg += bubbleGlyph(c, c, innerSize, 9, b.color_gold, size * 0.0045, 0.6, false);\n  svg += tickGlyph(c, c, size * 0.42, 0, b.color_gold, size * 0.03, 1);\n  svg += `</svg>`;\n  return svg;\n}\n\nfunction memeMark(b) {\n  if (b.logo_url) {\n    return `<img class=\"logo-img\" src=\"${esc(b.logo_url)}\" alt=\"\">`;\n  }\n  return `<svg class=\"mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\">${bubbleGlyph(24, 24, 34, 0, b.color_gold, 2.4, 1, false)}${tickGlyph(24, 24, 16, 0, b.color_gold, 2.6, 1)}</svg>`;\n}\n\n// Full-bleed scatter of 3 glyphs from one shared shape family (bubbles,\n// ticks, a typing-dots triad) — deterministically seeded so every render is\n// identical, not visual noise. A central zone stays clear of glyphs, and\n// every instance sits at 6-8% opacity, so the pattern never competes with\n// headline/body text even where it does cross behind it.\nfunction memeBackdrop(b) {\n  const rand = mulberry32(20260917);\n  // Text can plausibly sit anywhere in this zone across all 3 slide types\n  // (cover's bottom-anchored title, content's/cta's centered blocks) — kept\n  // fully clear of bubble/tick glyphs, not just biased, after an earlier\n  // render showed a \"biased density\" approach still crowded real text.\n  const safe = { x0: 120, y0: 230, x1: 960, y1: 1150 };\n  const glyphs = [];\n  let guard = 0;\n  while (glyphs.length < 16 && guard++ < 500) {\n    const x = 40 + rand() * (W - 80);\n    const y = 40 + rand() * (H - 80);\n    if (x > safe.x0 && x < safe.x1 && y > safe.y0 && y < safe.y1) continue;\n    const size = 26 + rand() * 30;\n    const rotation = (rand() - 0.5) * 40;\n    const roll = rand();\n    const kind = roll < 0.5 ? 'bubble' : roll < 0.8 ? 'tick' : 'dots';\n    const isGold = rand() < 0.3;\n    const stroke = isGold ? b.color_gold : 'currentColor';\n    const opacity = isGold ? 0.05 : 0.06;\n    glyphs.push({ x, y, size, rotation, kind, stroke, opacity });\n  }\n  // The typing-dots triad is small enough (like True Bearing's dot lattice)\n  // to read as ambient texture rather than a shape, so it alone is allowed\n  // to scatter across the full canvas, still at very low opacity.\n  const dotCount = 10;\n  for (let i = 0; i < dotCount; i++) {\n    glyphs.push({\n      x: 40 + rand() * (W - 80),\n      y: 40 + rand() * (H - 80),\n      size: 14 + rand() * 10,\n      rotation: 0,\n      kind: 'dots',\n      stroke: 'currentColor',\n      opacity: 0.05,\n    });\n  }\n  const body = glyphs\n    .map((g) => {\n      const sw = Math.max(1, g.size * 0.05);\n      if (g.kind === 'bubble') return bubbleGlyph(g.x, g.y, g.size, g.rotation, g.stroke, sw, g.opacity, false);\n      if (g.kind === 'tick') return tickGlyph(g.x, g.y, g.size, g.rotation, g.stroke, sw, g.opacity);\n      return dotsGlyph(g.x, g.y, g.size * 0.6, g.stroke, g.opacity);\n    })\n    .join('');\n  return `<svg class=\"pattern\" width=\"${W}\" height=\"${H}\" aria-hidden=\"true\">${body}</svg>`;\n}\n\n// Progress dots stay on the same bubble shape as the rest of the system:\n// inactive is a hollow outline, passed is a dim filled bubble (\"delivered\n// but already scrolled past\"), active is a bold gold filled bubble.\nfunction memeProgress(b, n, total) {\n  let out = '';\n  for (let i = 1; i <= total; i++) {\n    if (i === n) {\n      out += `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">${bubbleGlyph(12, 12, 15, 0, b.color_gold, 1, 1, true)}</svg>`;\n    } else if (i < n) {\n      out += `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">${bubbleGlyph(12, 12, 11, 0, b.color_muted_light, 1, 0.55, true)}</svg>`;\n    } else {\n      out += `<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">${bubbleGlyph(12, 12, 11, 0, b.color_muted_light, 1.3, 0.35, false)}</svg>`;\n    }\n  }\n  return `<div class=\"progress\" aria-label=\"${n} / ${total}\">${out}</div>`;\n}\n\n// ---------- motif registry ----------\n// Each pack supplies medallion/backdrop/progress/mark. cssVars lets a motif\n// nudge shared typographic feel (e.g. a bolder headline weight) without any\n// of the 3 slide-layout functions changing — empty by default.\nconst MOTIFS = {\n  instrument: {\n    medallion: instrumentMedallion,\n    backdrop: instrumentBackdrop,\n    progress: instrumentProgress,\n    mark: instrumentMark,\n    cssVars: {},\n  },\n  meme: {\n    medallion: memeMedallion,\n    backdrop: memeBackdrop,\n    progress: memeProgress,\n    mark: memeMark,\n    cssVars: {},\n  },\n};\n\nfunction resolveMotif(b) {\n  return MOTIFS[b.motif_key] || MOTIFS.instrument;\n}\n\n// Shrinks any [data-fit] element until its text fits its max-height.\n// Adds body.ready when done → can be used with Browser Run's waitForSelector.\nconst FIT_SCRIPT = `\n(function () {\n  var done = false;\n  function fit() {\n    if (done) return; done = true;\n    document.querySelectorAll('[data-fit]').forEach(function (el) {\n      var cs = getComputedStyle(el);\n      var min = parseFloat(el.dataset.min) || 28;\n      var maxH = parseFloat(cs.maxHeight);\n      var size = parseFloat(cs.fontSize);\n      var guard = 0;\n      el.style.maxHeight = 'none';\n      // offsetHeight = height of the line boxes (ignores glyph ink overflow)\n      while (el.offsetHeight > maxH + 1 && size > min && guard++ < 80) {\n        size -= 2;\n        el.style.fontSize = size + 'px';\n      }\n    });\n    document.body.classList.add('ready');\n  }\n  var b = document.body.dataset;\n  var sample = document.body.innerText;\n  if (document.fonts && document.fonts.load) {\n    Promise.all([\n      document.fonts.load('600 80px \"' + b.display + '\"', sample),\n      document.fonts.load('400 40px \"' + b.body + '\"', sample),\n      document.fonts.load('600 40px \"' + b.body + '\"', sample)\n    ]).then(function () { return document.fonts.ready; }).then(fit, fit);\n  }\n  setTimeout(fit, 5000);\n})();`;\n\nfunction css(b) {\n  return `\n:root {\n  --ground: ${b.color_ground}; --tile: ${b.color_tile}; --porcelain: ${b.color_porcelain};\n  --gold: ${b.color_gold}; --ink: ${b.color_ink};\n  --muted-dark: ${b.color_muted_dark}; --muted-light: ${b.color_muted_light};\n  --display: '${b.font_display}', 'Segoe UI', Arial, sans-serif;\n  --body: '${b.font_body}', 'Segoe UI', Arial, sans-serif;\n  --headline-weight: 600; --headline-tracking: -0.012em;\n}\n* { box-sizing: border-box; margin: 0; padding: 0; }\nhtml, body { width: ${W}px; height: ${H}px; overflow: hidden; }\nbody { font-family: var(--body); -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }\n.slide { position: relative; width: ${W}px; height: ${H}px; overflow: hidden;\n  padding: 88px; display: flex; flex-direction: column; }\n.dark { background: var(--ground); color: var(--porcelain); }\n.light { background: var(--porcelain); color: var(--ink); }\n.pattern { position: absolute; left: 0; top: 0; z-index: 0; }\n.layer { position: relative; z-index: 1; }\n\n.lockup { display: flex; align-items: center; gap: 16px;\n  font-family: var(--display); font-weight: 600; font-size: 38px; letter-spacing: 0.01em; }\n.mark, .logo-img { width: 48px; height: 48px; object-fit: contain; }\n\n.brand-top { display: flex; justify-content: center; }\n.site-corner { position: absolute; top: 88px; left: 88px; font-size: 26px; font-weight: 500;\n  opacity: 0.55; z-index: 1; }\n\n.headline { font-family: var(--display); font-weight: var(--headline-weight); line-height: 1.06;\n  letter-spacing: var(--headline-tracking); text-wrap: balance; }\n.lede { font-weight: 400; line-height: 1.32; text-wrap: pretty; }\n.copy { font-weight: 400; line-height: 1.42; text-wrap: pretty; }\n\n.progress { display: flex; gap: 10px; align-items: center; }\n.progress svg { width: 22px; height: 22px; }\n\n/* cover */\n.cover .medallion { position: absolute; right: -60px; top: 96px; z-index: 1; }\n.cover-text { margin-top: auto; }\n.cover-title { font-size: 96px; max-height: 420px; }\n.cover-sub { font-size: 36px; max-height: 108px; margin-top: 34px; color: var(--muted-dark); }\n.foot { display: flex; justify-content: space-between; align-items: center; margin-top: 64px; }\n.swipe { font-size: 30px; font-weight: 500; color: var(--muted-dark); }\n\n/* content */\n.content-main { flex: 1; display: flex; flex-direction: column; justify-content: center;\n  padding-bottom: 120px; }\n.content-title { font-size: 72px; max-height: 260px; }\n.content-rule { width: 96px; height: 6px; background: var(--tile); margin: 48px 0 40px; }\n.content-body { font-size: 36px; max-height: 460px; color: var(--muted-light); }\n\n/* cta */\n.cta-main { flex: 1; display: flex; flex-direction: column; align-items: center;\n  justify-content: center; text-align: center; }\n.cta-title { font-size: 72px; max-height: 280px; margin-top: 56px; }\n.cta-sub { font-size: 36px; max-height: 104px; margin-top: 28px; color: var(--muted-dark); max-width: 820px; }\n.button { margin-top: 56px; background: var(--gold); color: var(--ink); font-weight: 600;\n  font-size: 40px; line-height: 1; padding: 30px 56px; border-radius: 999px; max-width: 820px; }\n.handle { margin-top: 30px; font-size: 32px; font-weight: 500; color: var(--muted-dark); }\n.cta .foot { justify-content: center; }\n`;\n}\n\nfunction page(b, lang, bodyHtml, fontCss, motifCssVars) {\n  const fonts = fontCss\n    ? `<style>${fontCss}</style>`\n    : `<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link rel=\"stylesheet\" href=\"${esc(b.font_css_url)}\">`;\n  const overrideEntries = Object.entries(motifCssVars || {});\n  const motifOverride = overrideEntries.length\n    ? `<style>:root{${overrideEntries.map(([k, v]) => `${k}:${v};`).join('')}}</style>`\n    : '';\n  return `<!doctype html>\n<html lang=\"${esc(lang)}\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=${W}, height=${H}\">\n${fonts}\n<style>${css(b)}</style>\n${motifOverride}\n</head>\n<body data-display=\"${esc(b.font_display)}\" data-body=\"${esc(b.font_body)}\">\n${bodyHtml}\n<script>${FIT_SCRIPT}</script>\n</body>\n</html>`;\n}\n\n// ---------- layouts ----------\n\nfunction coverSlide(b, s, lang, total, motif) {\n  const ui = UI_STRINGS[lang] || UI_STRINGS.en;\n  return `<main class=\"slide dark cover\">\n  ${motif.backdrop(b)}\n  <div class=\"medallion\">${motif.medallion(b, 460)}</div>\n  <div class=\"layer brand-top\">${lockup(b, motif)}</div>\n  <p class=\"site-corner\">${esc(b.handle)}</p>\n  <div class=\"layer cover-text\">\n    <h1 class=\"headline cover-title\" data-fit data-min=\"56\">${esc(s.title)}</h1>\n    ${s.subtitle ? `<p class=\"lede cover-sub\" data-fit data-min=\"28\">${esc(s.subtitle)}</p>` : ''}\n  </div>\n  <div class=\"layer foot\">${motif.progress(b, s.n, total)}<span class=\"swipe\">${esc(ui.swipe)}</span></div>\n</main>`;\n}\n\nfunction contentSlide(b, s, lang, total, motif) {\n  return `<main class=\"slide light content\">\n  ${motif.backdrop(b)}\n  <div class=\"layer brand-top\">${lockup(b, motif)}</div>\n  <p class=\"site-corner\">${esc(b.handle)}</p>\n  <div class=\"layer content-main\">\n    <h2 class=\"headline content-title\" data-fit data-min=\"48\">${esc(s.title)}</h2>\n    <div class=\"content-rule\"></div>\n    ${s.body ? `<p class=\"copy content-body\" data-fit data-min=\"30\">${esc(s.body)}</p>` : ''}\n  </div>\n  <div class=\"layer foot\">${motif.progress(b, s.n, total)}</div>\n</main>`;\n}\n\nfunction ctaSlide(b, s, lang, total, motif) {\n  return `<main class=\"slide dark cta\">\n  ${motif.backdrop(b)}\n  <div class=\"layer brand-top\">${lockup(b, motif)}</div>\n  <p class=\"site-corner\">${esc(b.handle)}</p>\n  <div class=\"layer cta-main\">\n    ${motif.medallion(b, 240)}\n    <h2 class=\"headline cta-title\" data-fit data-min=\"52\">${esc(s.title)}</h2>\n    ${s.subtitle ? `<p class=\"lede cta-sub\" data-fit data-min=\"28\">${esc(s.subtitle)}</p>` : ''}\n    ${s.button ? `<div class=\"button\">${esc(s.button)}</div>` : ''}\n    <p class=\"handle\">${esc(b.handle)}</p>\n  </div>\n  <div class=\"layer foot\">${motif.progress(b, s.n, total)}</div>\n</main>`;\n}\n\nconst LAYOUTS = { cover: coverSlide, content: contentSlide, cta: ctaSlide };\n\n/**\n * Build HTML for every slide in a carousel.\n * @returns {Array<{n, total, layout, lang, html}>}\n */\nfunction buildCarousel(brandInput, carousel, opts = {}) {\n  const b = { ...DEFAULT_BRAND, ...(brandInput || {}) };\n  const motif = resolveMotif(b);\n  const lang = carousel.language || 'uz-Latn';\n  const slides = [...(carousel.slides || [])].sort((a, z) => a.n - z.n);\n  const total = slides.length;\n  return slides.map((raw, i) => {\n    const s = {\n      n: raw.n ?? i + 1,\n      layout: raw.layout,\n      title: normalizeText(raw.title, lang),\n      subtitle: normalizeText(raw.subtitle, lang),\n      body: normalizeText(raw.body, lang),\n      button: normalizeText(raw.button, lang),\n    };\n    const layout = LAYOUTS[s.layout] || (i === 0 ? coverSlide : i === total - 1 ? ctaSlide : contentSlide);\n    return {\n      n: s.n,\n      total,\n      layout: s.layout,\n      lang,\n      html: page(b, lang, layout(b, s, lang, total, motif), opts.fontCss, motif.cssVars),\n    };\n  });\n}\n\n// ---------- n8n entry ----------\nif (typeof $input !== 'undefined') {\n  const src = $input.first().json;\n  const brand = src.brand || {};\n  const carousel = src.carousel || src.output || src;\n  const carouselId = src.carouselId || `crs-${Date.now().toString(36)}`;\n  const format = (brand.output_format || carousel.output_format || 'jpg').toLowerCase() === 'png' ? 'png' : 'jpg';\n  return buildCarousel(brand, carousel).map((s) => ({\n    json: { carouselId, lang: s.lang, n: s.n, total: s.total, layout: s.layout, format, html: s.html },\n  }));\n}\n\n// ---------- local usage (Node) ----------\nif (typeof module !== 'undefined') {\n  module.exports = { buildCarousel, DEFAULT_BRAND, UI_STRINGS, MOTIFS };\n}\n"
+        }
+      },
+      {
+        "id": "f3634f8e-9627-4632-bd50-f92d50e18dca",
+        "name": "Render Slide",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.5,
+        "position": [
+          672,
+          0
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "=https://api.cloudflare.com/client/v4/accounts/{{ $('Config').item.json.cloudflareAccountId }}/browser-rendering/screenshot",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "cloudflareApi",
+          "sendBody": true,
+          "contentType": "json",
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ html: $json.html, viewport: { width: 1080, height: 1350 }, gotoOptions: { waitUntil: \"networkidle0\" }, waitForSelector: { selector: \"body.ready\", timeout: 15000 }, screenshotOptions: $json.format === \"png\" ? { type: \"png\" } : { type: \"jpeg\", quality: 92 } }) }}",
+          "options": {
+            "batching": {
+              "batch": {
+                "batchSize": 1,
+                "batchInterval": 30000
+              }
+            },
+            "response": {
+              "response": {
+                "responseFormat": "file",
+                "outputPropertyName": "data"
+              }
+            }
+          }
+        },
+        "retryOnFail": true,
+        "maxTries": 3,
+        "waitBetweenTries": 10000,
+        "credentials": {
+          "cloudflareApi": {
+            "id": "dBebkeXL5mZ19cKz",
+            "name": "Cloudflare account"
+          }
+        }
+      },
+      {
+        "id": "3c69b7c9-25e0-45ac-a3d0-7a9b7813f016",
+        "name": "Name Files",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          896,
+          0
+        ],
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "language": "javaScript",
+          "jsCode": "/**\n * Name Files — n8n Code node (\"Run Once for Each Item\")\n * ------------------------------------------------------------\n * Place right after the \"Render Slide\" HTTP Request node (Response Format: File).\n * Browser Run returns the image without a filename; Telegram would show \"file\".\n * This gives each slide a sortable name and the right MIME type, and keeps the\n * slide metadata from the \"Build Slides\" node (without the large html string).\n *\n * Output: { json: { carouselId, lang, n, total, layout, format, fileName }, binary: { data } }\n */\n\nconst { html, ...meta } = $('Build Slides').item.json;\nconst ext = meta.format === 'png' ? 'png' : 'jpg';\nconst nn = String(meta.n).padStart(2, '0');\n\nconst bin = $input.item.binary && $input.item.binary.data;\nif (!bin) {\n  throw new Error(`Slide ${meta.n} (${meta.lang}): no image returned by Render Slide`);\n}\n\nbin.fileName = `${meta.carouselId}_${meta.lang}_${nn}.${ext}`;\nbin.mimeType = ext === 'png' ? 'image/png' : 'image/jpeg';\nbin.fileExtension = ext;\n\nreturn { json: { ...meta, fileName: bin.fileName }, binary: { data: bin } };\n"
+        }
+      }
+    ],
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [
+          [
+            {
+              "node": "Config",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Config": {
+        "main": [
+          [
+            {
+              "node": "Build Slides",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Build Slides": {
+        "main": [
+          [
+            {
+              "node": "Render Slide",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Render Slide": {
+        "main": [
+          [
+            {
+              "node": "Name Files",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Boburbek Kambarov",
+    "name": "carousel-render",
+    "description": null,
+    "autosaved": false,
+    "createdAt": "2026-09-24T09:28:39.028Z",
+    "updatedAt": "2026-09-24T13:43:51.000Z",
+    "workflowPublishHistory": [
+      {
+        "id": 993,
+        "workflowId": "M3tR7zNQP8ITFWrH",
+        "versionId": "64f2202e-cc7a-496c-a016-4f944b407d5b",
+        "event": "activated",
+        "userId": "13080b06-05ba-4ec0-a905-7e301a9c80a4",
+        "createdAt": "2026-09-24T13:43:51.096Z"
+      }
+    ]
+  }
+}
