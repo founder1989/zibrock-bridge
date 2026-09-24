@@ -1,0 +1,245 @@
+{
+  "nodes": {
+    "Manual Trigger": {
+      "turi": "unknown"
+    },
+    "PR · Test kirish": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "return [{ json: { job_id:\"PR-TEST-001\", mavzu_kod:\"T1\", mahsulot_kod:\"yt_short\", variant_idx:0, akkaunt:\"ig_yuzde97\", test_rejim:true,\n  tts_matn:\"Yüz yatırımcıdan doksan yedisi para kaybetti. Bu bir tahmin değil. Brezilya'da on dokuz bin altı yüz kırk altı günlük trader izlendi. Sonuç: yüzde doksan yedisi zararda. Avrupa'da da tablo benzer: yüzde yetmiş dört ile seksen dokuz arası. Sorun bilgi eksikliği değil. Sorun biyoloji.\" } }];"
+    },
+    "Execute Workflow Trigger": {
+      "turi": "executeWorkflow",
+      "workflowId": "",
+      "inputs": {}
+    },
+    "PR · VIZUAL_TIZIM": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "// PR · VIZUAL_TIZIM (DZ bilan bir xil tokenlar) — yagona manba. KONSTANTALAR emas. Tokenlarni faqat inson o'zgartiradi.\nvar V = {\n  versiya: \"tr-1.0\",\n  tokenlar: {\n    fon_toq:\"#0A1727\", fon_och:\"#F7F5F0\", urgu:\"#D6AD62\", ijobiy:\"#82BD8F\", zarar:\"#E0584A\",\n    zarar_fon:\"rgba(224,88,74,0.15)\", matn_toq_ustida:\"#F7F5F0\", matn_och_ustida:\"#0A1727\",\n    matn_ikkilamchi:\"rgba(10,23,39,0.70)\", matn_xira:\"rgba(10,23,39,0.50)\", quti_toq:\"#0A1727\", chiziq:\"rgba(10,23,39,0.12)\"\n  },\n  shrift: {\n    sarlavha:{oila:\"Sora\", vazn:700, katta_harf:true, harf_orasi:\"-0.01em\"},\n    raqam:{oila:\"Sora\", vazn:700}, matn:{oila:\"Inter\", vazn:600}, yorliq:{oila:\"Inter\", vazn:600, katta_harf:true, harf_orasi:\"0.18em\"},\n    google_fonts:\"https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@600;800&display=swap\"\n  },\n  grid: { w:1080, h:1350, chegara:88, sarlavha_qatori_y:104, sarlavha_qatori_h:22, matn_zonasi_y:1150, matn_zonasi_y2:1260, past:96, xavfsiz_kvadrat:{x:0,y:135,w:1080,h:1080} },\n  olchamlar: { muqova_sarlavha:[92,104], muqova_qator_max_belgi:14, muqova_qator_max:3, ichki_sarlavha:[60,68], matn:30, qator_orasi:1.4, yorliq:16, katta_raqam:[150,200] },\n  akkaunt: {\n    ig_yuzde97:{ belgi:\"YÜZDE 97\", logo:false, taqiq_sozlar:[\"ZIBROCK\",\"challenge\",\"prop\",\"funded\",\"fiyat\",\"hesap aç\",\"instant pro\",\"prime\"] },\n    tg_zibrock:{ belgi:\"ZIBROCK\", logo:true, taqiq_sozlar:[\"challenge\",\"fiyat\",\"hesap aç\"] }\n  },\n  formatlar: { karusel:[1080,1350], poster:[1080,1350], cover:[1080,1920], thumbnail:[1280,720], tg_karta:[1080,1350] },\n  arxetiplar: [\"A1_MUQOVA\",\"A2_DALIL\",\"A3_TEZIS\",\"A4_YAKUN\",\"P1_POSTER\"],\n  komponentlar: [\"K_RAQAM\",\"K_TAQQOS\",\"K_KARTA\",\"K_QADAM\",\"K_USTUN\",\"K_KESISH\",\"K_KVADRAT\",\"K_IQTIBOS\"],\n  bosqich: \"ISITISH\"  // mahsulot, narx, sayt, challenge YO'Q\n};\nreturn $input.all().map(function(i){ return { json: Object.assign({}, i.json, { vizual_tizim: V }) }; });"
+    },
+    "PR · QOIDALAR": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "// PR · QOIDALAR — prodyuserning yagona qoidalar kitobi. Raqamlarni faqat inson o'zgartiradi. Nazoratchi shu yerdan tekshiradi.\nvar Q = {\n  versiya: \"pr-1.0\",\n  // ── KOGNITIV YUKLAMA (Mayer multimedia printsiplari, Sweller) ──\n  kognitiv: {\n    sahnada_bitta_goya: true,\n    ekrandagi_element_max: 3,            // bir kadrda ko'pi bilan 3 ta mazmunli element\n    bir_vaqtda_harakat_max: 1,           // bir paytda faqat bitta element harakatlanadi (signal printsipi)\n    ekran_matni_soz_max: 7,              // bitta ekran yozuvi ≤7 so'z; ovozni so'zma-so'z takrorlamaydi (redundancy)\n    oqish_tezligi_soz_s: 3,              // ekrandagi yozuv uchun ≥ so'z/3 soniya ko'rinish\n    raqam_ovoz_sinxron_ms: 300,          // raqam aytilgan paytdan ±300 ms ichida paydo bo'ladi (temporal contiguity)\n    animatsiya_kirish_ms: [300,600],     // kirish ease-out 300–600 ms\n    animatsiyadan_keyin_ushlab_turish_s: 1.5,\n    chunk_max: 4                         // bitta sahnada ko'pi bilan 4 bo'lak axborot\n  },\n  // ── MA'LUMOTLAR VIZUALIZATSIYASI (tanlov qoidasi) ──\n  vizualizatsiya: {\n    qism_butun_2_segment: [\"V_DONUT\",\"V_WAFFLE\"],   // %97 → donut (97 clay / 3 sage) yoki 10×10 waffle\n    taqqoslash: [\"V_USTUN\"],\n    vaqt_boyicha: [\"V_CHIZIQ\"],\n    oraliq: [\"V_ORALIQ\"],                           // %74–89 → oraliq chizig'i\n    bitta_zarba_raqam: [\"V_KATTA_RAQAM\"],           // faqat donut/waffle bilan juftlikda\n    mexanizm: [\"V_SXEMA\"],\n    taqiq: [\"3D\",\"pie_3_segmentdan_kop\",\"ikki_oqli_grafik\",\"bezak_ikonkalari\"],\n    rang_semantika: { zarar:\"zarar\", ijobiy:\"ijobiy\", neytral:\"urgu\" }\n  },\n  // ── NEYROMARKETING ──\n  neyro: {\n    yoqotish_ramkasi: true,              // \"100 dan 97 tasi yo'qotdi\" > \"3% yutdi\" (Kahneman–Tversky)\n    yuz_nigoh_grafikka: true,            // avatar grafik tomonga qaraydi / grafik avatar nigohi yo'nalishida\n    ochiq_halqa_tiktok_reels: true,      // Zeigarnik: javob keyingi videoda / YouTube'da\n    cho_qqi_oxir: true,                  // eng kuchli vizual — oxirgi 20% da (peak–end)\n    patern_uzish_s: { tiktok:2.5, reel:3, yt_short:3, yt_long:25 },\n    qayta_ilgak_s: { yt_long:75 }\n  },\n  // ── PLATFORMA PASPORTLARI (mahsulot_pasport jadvali bilan birga ishlaydi) ──\n  platforma: {\n    tiktok:  { ilgak_s:1.5, kadr_almashish_s:[1.5,3], avatar_yolg_iz_max_s:4,  xavfsiz_zona:{tepa:150,past:420,ong:140,chap:60}, loop:true,  auditoriya:\"tez, hissiy, sen registri, sayoz lekin qiziq\" },\n    reel:    { ilgak_s:1.7, kadr_almashish_s:[2,3.5], avatar_yolg_iz_max_s:5,  xavfsiz_zona:{tepa:220,past:380,ong:140,chap:60}, loop:true,  cover_markaziy_1x1:true, signal:\"yuborish (sends per reach)\" },\n    yt_short:{ ilgak_s:2,   kadr_almashish_s:[2,4],   avatar_yolg_iz_max_s:6,  xavfsiz_zona:{tepa:150,past:360,ong:140,chap:60}, loop:false, signal:\"tugatish\" },\n    yt_long: { ilgak_s:3,   kadr_almashish_s:[6,25],  avatar_yolg_iz_max_s:12, xavfsiz_zona:{tepa:60,past:120,ong:60,chap:60},   vada_s:15, bolim_max_s:150, end_screen_s:[5,20], signal:\"ushlab turish\" }\n  },\n  // ── AVATAR TABIIYLIGI (AI kontent qabul qilinishi uchun) ──\n  avatar: {\n    uzluksiz_kadr_max_s: { tiktok:4, reel:5, yt_short:6, yt_long:12 },   // undan uzoq bo'lsa — grafikka o'tish (uncanny oldini olish)\n    joylashuv: [\"TOLIQ\",\"GIBRID_DOIRA\",\"AVATARSIZ\"],\n    grafik_paytida: \"GIBRID_DOIRA\",\n    statik_kadrda_mikroharakat: \"ken_burns 3–5% masshtab\"\n  },\n  // ── MANBA VIZUALLARI ──\n  manba: {\n    da_vo_manba_kechikish_s: 1,          // da'vo aytilgach ≤1 s ichida manba kartasi yoki yorlig'i\n    manba_karta: [\"muallif\",\"yil\",\"nashr\",\"n\",\"DOI_yoki_URL\"],\n    skrinshot_ruxsat: [\"rasmiy regulyator va davlat sahifalari (ESMA, AMF, SPK)\",\"ochiq kirish maqolaning sarlavha qismi\"],\n    skrinshot_qoida: \"faqat kerakli qator kesiladi va belgilanadi, URL ko'rinadi\"\n  },\n  // ── HUQUQ ──\n  huquq: {\n    taqiq: [\"kino/serial kadrlari\",\"media logotiplari\",\"kitob muqovasining to'liq tasviri\",\"taniqli shaxs surati\",\"litsenziyasiz musiqa\",\"trend audio\",\"real shaxs ovozi/yuzi taqlidi\"],\n    iqtibos: \"FSEK 35-modda (iktibas): qisqa, manbali, maqsadga mutanosib\",\n    ai_oshkoralik: { tiktok:\"AI-generated content yorlig'i YOQILADI\", instagram:\"AI info yorlig'i\", youtube:\"altered or synthetic content = Ha\" },\n    moliya: \"tavsiya, va'da, daromad kafolati yo'q; isitish bosqichi — mahsulot yo'q\"\n  },\n  // ── ORGANIK O'SISH ──\n  organik: {\n    ulashish_trigger: [\"tan olish ('bu men')\",\"hayrat raqami\",\"foydali xulosa\"],\n    saqlash_kadri: \"har Shorts/Reels'da ≥1 ta 'saqlashga arziydigan' xulosa kadri\",\n    subtitr_har_doim: true\n  }\n};\nreturn $input.all().map(function(i){ return { json: Object.assign({}, i.json, { qoidalar: Q }) }; });"
+    },
+    "PR · s_jadval": {
+      "turi": "unknown"
+    },
+    "PR · pasport": {
+      "turi": "unknown"
+    },
+    "PR · manba_havolalari": {
+      "turi": "unknown"
+    },
+    "PR · Kirish tayyor": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var inp = $(\"PR · QOIDALAR\").first().json;\nvar sj = $(\"PR · s_jadval\").all().map(function(i){return i.json;});\nvar ps = $(\"PR · pasport\").all().map(function(i){return i.json;});\nvar mh = $(\"PR · manba_havolalari\").all().map(function(i){return i.json;});\nvar mavzu = String(inp.mavzu_kod||\"\");\nvar faktlar = sj.filter(function(r){ return String(r.mavzu_kodlar||\"\").split(\",\").map(function(s){return s.trim();}).indexOf(mavzu)>=0; })\n  .map(function(r){ var h = mh.filter(function(x){return x.s_id===r.s_id;})[0]||{}; return { s_id:r.s_id, ekran:r.matn_tr, manba:r.manba, manba_toliq:r.manba_toliq, rang:r.rang, meta_tiktok:r.meta_tiktok, daraja:r.daraja, havola:h.havola||\"\", skrinshot_ruxsat:h.skrinshot_ruxsat||\"\" }; });\nvar pas = ps.filter(function(r){return r.mahsulot_kod===inp.mahsulot_kod;})[0]||{};\nvar xato=[]; if(!faktlar.length) xato.push(\"fakt yoq\"); if(!pas.mahsulot_kod) xato.push(\"pasport yoq\"); if(!inp.tts_matn) xato.push(\"tts_matn yoq\");\nreturn [{ json: Object.assign({}, inp, { faktlar:faktlar, pasport:pas, platforma_qoida:(inp.qoidalar.platforma||{})[inp.mahsulot_kod]||{}, kirish_xato:xato }) }];"
+    },
+    "PR · Prodyuser": {
+      "turi": "ai",
+      "model": "claude-sonnet-4-6",
+      "maxTokens": 6000,
+      "system": "",
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
+    },
+    "PR · Reja parse": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var raw = String($json.merged_response || (Array.isArray($json.content) && $json.content[0] && $json.content[0].text) || $json.text || \"\");\nvar s = raw.indexOf(\"{\"), e = raw.lastIndexOf(\"}\");\ntry { var reja = JSON.parse(raw.slice(s, e+1)); return { json: Object.assign({}, $(\"PR · Kirish tayyor\").first().json, { reja: reja }) }; }\ncatch(err){ return { json: { xato:true, tur:\"PARSE_FAIL\", xabar:String(err).slice(0,200), raw: raw.slice(0,500) } }; }"
+    },
+    "PR · NAZORATCHI (qurilsin)": {
+      "turi": "unknown"
+    },
+    "PR · MANBA VIZUALLARI (qurilsin)": {
+      "turi": "unknown"
+    },
+    "PR · Cloudflare skrinshot": {
+      "turi": "http",
+      "method": "POST",
+      "url": "https://api.cloudflare.com/client/v4/accounts/e7d297b69ead02b6ab0a16480f08a42d/browser-rendering/screenshot",
+      "body": "={{ JSON.stringify($json.url ? { url: $json.url, viewport:{width:1080,height:1350}, gotoOptions:{waitUntil:\"networkidle2\"}, screenshotOptions:{type:\"png\"} } : { html: $json.html, viewport:{ width: $json.w||1080, height: $json.h||1920 }, gotoOptions:{waitUntil:\"networkidle0\"}, waitForSelector:{selector:\"body.ready\",timeout:15000}, screenshotOptions:{type:\"png\"} }) }}",
+      "sendBody": true,
+      "creds": {
+        "cloudflareApi": "Cloudflare account"
+      }
+    },
+    "PR · STORYBOARD (qurilsin)": {
+      "turi": "unknown"
+    },
+    "PR · Yetkazish (qurilsin)": {
+      "turi": "unknown"
+    }
+  },
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "PR · Test kirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · Test kirish": {
+      "main": [
+        [
+          {
+            "node": "PR · VIZUAL_TIZIM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "PR · VIZUAL_TIZIM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · VIZUAL_TIZIM": {
+      "main": [
+        [
+          {
+            "node": "PR · QOIDALAR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · QOIDALAR": {
+      "main": [
+        [
+          {
+            "node": "PR · s_jadval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · s_jadval": {
+      "main": [
+        [
+          {
+            "node": "PR · pasport",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · pasport": {
+      "main": [
+        [
+          {
+            "node": "PR · manba_havolalari",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · manba_havolalari": {
+      "main": [
+        [
+          {
+            "node": "PR · Kirish tayyor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · Kirish tayyor": {
+      "main": [
+        [
+          {
+            "node": "PR · Prodyuser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · Prodyuser": {
+      "main": [
+        [
+          {
+            "node": "PR · Reja parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · Reja parse": {
+      "main": [
+        [
+          {
+            "node": "PR · NAZORATCHI (qurilsin)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · NAZORATCHI (qurilsin)": {
+      "main": [
+        [
+          {
+            "node": "PR · MANBA VIZUALLARI (qurilsin)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · MANBA VIZUALLARI (qurilsin)": {
+      "main": [
+        [
+          {
+            "node": "PR · Cloudflare skrinshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · Cloudflare skrinshot": {
+      "main": [
+        [
+          {
+            "node": "PR · STORYBOARD (qurilsin)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR · STORYBOARD (qurilsin)": {
+      "main": [
+        [
+          {
+            "node": "PR · Yetkazish (qurilsin)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "vaqt": "2026-09-24T03:19:31.142Z"
+}
