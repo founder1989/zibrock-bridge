@@ -1986,7 +1986,7 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ String(\"TIL_XATO: \" + ($json.mahsulot_kod||\"?\") + \" uz:\" + ($json.uzbek_count||0) + \" ap:\" + ($json.apostrophe_count||0) + \" tr:\" + (($json.turkish_ratio||0)*100).toFixed(1) + \"%\").split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
+        "text": "={{ String(($json.tur || \"TIL_XATO\") + \": \" + ($json.mahsulot_kod || \"?\") + ($json.sabab ? \" — \" + $json.sabab : \" uz:\" + ($json.uzbek_count||0) + \" ap:\" + ($json.apostrophe_count||0) + \" tr:\" + (($json.turkish_ratio||0)*100).toFixed(1) + \"%\")).split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
         "additionalFields": {
           "appendAttribution": false,
           "message_thread_id": "={{ (function () { try { return $(\"OR · Bo'lim marshruti\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
@@ -4199,7 +4199,7 @@
         "text": "={{ \"⚠️ \" + $json.mavzu_kod + \": \" + $json.__mesaj }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "5d950a12-88de-4c93-b534-bb6949b22e1b",
@@ -4536,7 +4536,7 @@
         "text": "={{ \"🧪 TikTok test | \" + $json.mavzu_kod + \" v\" + $json.variant_idx + \"\\n\\nHook: \" + $json.hook + \"\\n\\nTana: \" + $json.tts_matn.slice(0,200) + \"\\n\\n\" + $json.heshteglar.join(\" \") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 7 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 7 }}"
         }
       },
       "webhookId": "ae9cd0c7-8d76-4bc0-b5aa-9decd4708a27",
@@ -4723,7 +4723,7 @@
         "text": "={{ \"✅ TikTok v\" + $json.variant_idx + \" | \" + $json.mavzu_kod + \"\\n\" + ($json.ogohlantirish?\"⚠️ \"+$json.ogohlantirish+\"\\n\":\"\") + \"\\n🎬 \" + $json.video_url + \"\\n\\n\" + ($json.hook_ok?\"\":\"⚠️ Hook \" + $json.hook_tugash_s + \"s > ilgak\\n\") + $json.tavsif + \"\\n\\n\" + $json.heshteglar.join(\" \") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 7 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 7 }}"
         }
       },
       "webhookId": "542a8d61-5ca4-4c9f-8d9a-6b4c490036e5",
@@ -4790,7 +4790,7 @@
         "text": "={{ \"❌ zb-p-tiktok: 3 urinishdan keyin FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) + ($json.ogohlantirish?\"\\n\"+$json.ogohlantirish:\"\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "99374cbc-3c3b-4237-8907-645bb3203709",
@@ -4957,7 +4957,7 @@
         "text": "={{ \"⚠️ \" + $json.mavzu_kod + \": \" + $json.__mesaj }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "3fc4630f-2987-4af1-9782-4b5297ab0d9b",
@@ -5294,7 +5294,7 @@
         "text": "={{ \"🧪 Reels test | \" + $json.mavzu_kod + \" v\" + $json.variant_idx + \"\\n\\n\" + $json.tts_matn.slice(0,200) + \"\\n\\n\" + ($json.ulashish_cta?\"CTA: \"+$json.ulashish_cta:\"CTA: yo'q (TR-C-0)\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 9 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 9 }}"
         }
       },
       "webhookId": "9d2ed4e4-1e2b-477d-bcc3-6935ae289631",
@@ -5481,7 +5481,7 @@
         "text": "={{ \"✅ Reels v\" + $json.variant_idx + \" | \" + $json.mavzu_kod + \"\\n\" + ($json.ogohlantirish?\"⚠️ \"+$json.ogohlantirish+\"\\n\":\"\") + \"\\n🎬 \" + $json.video_url + \"\\n\\n\" + ($json.hook_ok?\"\":\"⚠️ Hook \"+$json.hook_tugash_s+\"s > ilgak\\n\") + $json.caption + \"\\n\" + $json.heshteglar.join(\" \") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 9 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 9 }}"
         }
       },
       "webhookId": "d948a001-12d5-40d8-84db-11fffc2f31fe",
@@ -5548,7 +5548,7 @@
         "text": "={{ \"❌ zb-p-reels: FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "3f9edbc7-daeb-4512-9554-b3cdb4fc0c73",
@@ -5715,7 +5715,7 @@
         "text": "={{ \"⚠️ \" + $json.mavzu_kod + \": \" + $json.__mesaj }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "8613db0d-52d1-4e1b-864b-5a68aefb5481",
@@ -5988,7 +5988,7 @@
         "text": "={{ \"🧪 YT Shorts test | \" + $json.burchak + \"\\n\\n\" + $json.tts_matn.slice(0,250) + \"\\n\\n\" + $json.sarlavha }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 5 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 5 }}"
         }
       },
       "webhookId": "fb704089-e35c-43e9-b020-4b5667f1a465",
@@ -6175,7 +6175,7 @@
         "text": "={{ \"✅ YT Shorts v\" + $json.variant_idx + \" | \" + $json.burchak + \"\\n\" + ($json.hook_ok?\"\":\"⚠️ Hook \"+$json.hook_tugash_s+\"s\\n\") + \"\\n🎬 \" + $json.video_url + \"\\n\\n\" + $json.sarlavha + \"\\n\" + $json.heshteglar.join(\" \") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 5 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 5 }}"
         }
       },
       "webhookId": "0ad32ee0-6ddb-4d5c-b562-5e3353acb4ff",
@@ -6242,7 +6242,7 @@
         "text": "={{ \"❌ zb-p-shorts: FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "850c8e6f-00f9-4193-b94d-4378093219bf",
@@ -6401,7 +6401,7 @@
         "text": "={{ \"⚠️ \" + $json.mavzu_kod + \": \" + $json.__mesaj }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "2877fff4-da62-4619-8031-9d2f3332d586",
@@ -6560,7 +6560,7 @@
         "text": "={{ \"⚠️ zb-p-yt-long: \" + $json.xabar }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "77221198-8960-4de0-88f2-edac8ba96a26",
@@ -6731,7 +6731,7 @@
         "text": "={{ \"🧪 YT Long test | \" + $json.mavzu_kod + \" | \" + $json.rejim_info + \"\\n\\nSarlavha: \" + $json.sarlavha + \"\\n\\nSkript (boshi):\\n\" + $json.tts_matn.slice(0,300) }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 3 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 3 }}"
         }
       },
       "webhookId": "f9323672-d1c2-4393-8d1b-9854d29ebb48",
@@ -6946,7 +6946,7 @@
         "text": "={{ \"✅ YT Long | \" + $json.mavzu_kod + \" | \" + $json.rejim_info + \"\\n\\nSarlavha: \" + $($(\"YT · K1 natijasini birlashtirish\").item.json.sarlavha||\"\") + \"\\n\\n🎬 \" + $json.video_url }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 3 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 3 }}"
         }
       },
       "webhookId": "42150f28-7ae1-487c-9869-78b056ab21f4",
@@ -6967,7 +6967,7 @@
         "text": "={{ \"❌ zb-p-yt-long: FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "4d6f88e4-1c72-4d60-bd49-423718101c10",
@@ -7393,7 +7393,7 @@
         "text": "={{ \"🧪 Karusel test | \" + $json.mavzu_kod + \"\\n\\n\" + $json.slaydlar.length + \" slayd (baza: \" + ($json.bazaBor?\"ha\":\"yoq\") + \")\\n\" + $json.caption + \"\\n\" + $json.heshteglar.join(\" \") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"KR · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 9 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"KR · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 9 }}"
         }
       },
       "webhookId": "2aac7a70-6087-4d5d-a28b-6359026ce553",
@@ -7492,7 +7492,7 @@
         "additionalFields": {
           "appendAttribution": false,
           "caption": "={{ $(\"KR · Render ma'lumotlarini tayyorlash\").item.json.caption + \"\\n\\n\" + $(\"KR · Render ma'lumotlarini tayyorlash\").item.json.heshteglar.join(\" \") }}",
-          "message_thread_id": "={{ (function () { try { return $(\"KR · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 9 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"KR · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 9 }}"
         }
       },
       "webhookId": "33d63ef3-4317-40ff-8b54-b3e0df7de099",
@@ -7559,7 +7559,7 @@
         "text": "={{ \"❌ zb-p-karusel: FAIL\\n\" + $json.job_id + \"\\n\" + JSON.stringify($json.xatolar) }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"KR · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"KR · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "5913e548-2e57-4dd4-a61f-2daffe2cd866",
@@ -7698,7 +7698,7 @@
         "text": "={{ \"⚠️ T8 — AI avatar taqiq, real odam kerak. Job: \" + $json.job_id }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}"
         }
       },
       "webhookId": "92acf183-bdef-40d9-ba1b-7689e8b25355",
@@ -7949,7 +7949,7 @@
         "text": "={{ \"— TG paket [\" + $json.mavzu_kod + \"] 1/5 · So'rovnoma —\" }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "70df4795-6e6d-45a4-99d4-9d28c81dbc42",
@@ -7971,7 +7971,7 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML",
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "fb32dbea-db7d-4d6c-833a-954617aa98a2",
@@ -8199,7 +8199,7 @@
         "text": "={{ \"— TG paket [\" + $(\"TG · after P2\").item.json.mavzu_kod + \"] 2/5 · Raqam Kartasi —\" }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "43388ed6-2b0d-47bf-b474-e4e89131d637",
@@ -8224,7 +8224,7 @@
           "appendAttribution": false,
           "caption": "={{ $(\"TG · after P2\").item.json.caption_html }}",
           "parse_mode": "HTML",
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "4ebef951-02be-4604-b767-09531c1a228a",
@@ -8408,7 +8408,7 @@
         "text": "={{ \"— TG paket [\" + $json.mavzu_kod + \"] 3/5 · Chuqur Maqola —\" }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "d8740046-08cc-4fe1-b5b2-b107d7c33c6d",
@@ -8430,7 +8430,7 @@
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML",
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "74ae8d2d-b466-4025-a9ff-332acaa117d8",
@@ -8496,7 +8496,7 @@
         "text": "={{ \"— TG paket [\" + $json.mavzu_kod + \"] 4/5 · Video —\" }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "dcb30688-49f0-4595-9167-3ff0a538878b",
@@ -8519,7 +8519,7 @@
         "video": "={{ $json.video_url }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "0c0c8ca5-db79-431c-a8a4-e6b0b9ca88f1",
@@ -8644,8 +8644,8 @@
       "typeVersion": 1.3,
       "id": "76e33e84-e342-41fd-80b4-bdfa433f302a",
       "position": [
-        560,
-        4004
+        1336,
+        3920
       ],
       "parameters": {
         "mode": "once",
@@ -8706,15 +8706,15 @@
       "typeVersion": 1.2,
       "id": "5cd6504c-f3d2-4f63-bdff-0e6bc80ef72c",
       "position": [
-        784,
-        4196
+        1360,
+        3660
       ],
       "parameters": {
         "chatId": "-1004462774154",
         "text": "={{ \"— TG paket [\" + $(\"TG · Manbalar qurish\").item.json.mavzu_kod + \"] 5/5 · Manbalar Albomi —\" }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "executeOnce": true,
@@ -8728,8 +8728,8 @@
       "typeVersion": 1.2,
       "id": "6d5281d6-a4e3-4b0a-83af-e371b6c047f8",
       "position": [
-        1008,
-        4196
+        1560,
+        3660
       ],
       "parameters": {
         "resource": "message",
@@ -8738,9 +8738,9 @@
         "binaryData": true,
         "additionalFields": {
           "appendAttribution": false,
-          "caption": "={{ $itemIndex === 0 ? $(\"TG · Manbalar qurish\").item.json.caption_html : \"\" }}",
+          "caption": "={{ $itemIndex === 0 ? $(\"TG · Manbalar qurish\").first().json.caption_html : \"\" }}",
           "parse_mode": "HTML",
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 11 }}"
         }
       },
       "webhookId": "e2922602-57d1-4f3b-b146-304f4bc2f195",
@@ -8862,7 +8862,7 @@
         "text": "={{ \"🖼 Thumbnail | \" + $(\"TH · Thumbnail HTML qurish\").item.json.burchak + \" | \" + $json.variant + \"\\n\\nHTML tayyor\" }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 3 }}"
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 3 }}"
         }
       },
       "webhookId": "57e85fd3-3111-42cb-b8b9-999655a2714f",
@@ -9063,7 +9063,7 @@
             "variant": "full",
             "mahsulot_kod": "tiktok",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -9202,7 +9202,7 @@
             "variant": "full",
             "mahsulot_kod": "reel",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"RL · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -9341,7 +9341,7 @@
             "variant": "full",
             "mahsulot_kod": "yt_short",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"SH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -9480,7 +9480,7 @@
             "variant": "full",
             "mahsulot_kod": "yt_long",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"YT · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -9619,7 +9619,7 @@
             "variant": "full",
             "mahsulot_kod": "tg_paket",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -9758,7 +9758,7 @@
             "variant": "full",
             "mahsulot_kod": "tg_paket",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -9897,7 +9897,7 @@
             "variant": "full",
             "mahsulot_kod": "tg_paket",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -10036,7 +10036,7 @@
             "variant": "full",
             "mahsulot_kod": "tg_paket",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -10175,7 +10175,7 @@
             "variant": "full",
             "mahsulot_kod": "carousel",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"KR · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"KR · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -10314,7 +10314,7 @@
             "variant": "full",
             "mahsulot_kod": "thumbnail",
             "pasport": "={{ {} }}",
-            "test_rejim": "={{ (function () { try { return $(\"TH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
+            "test_rejim": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TH · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() }}"
           },
           "schema": [
             {
@@ -10647,7 +10647,7 @@
         "text": "={{ String(\"❌ TG P1 — \" + $json.xabar + \"\\njob: \" + ($json.job_id || \"~\") + \"\\nJavob uzunligi: \" + $json.raw_uzunlik + \" belgi. Post yuborilmadi.\").split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
           "parse_mode": "HTML"
         }
       },
@@ -10703,7 +10703,7 @@
         "text": "={{ String(\"❌ TG P2 — \" + $json.xabar + \"\\njob: \" + ($json.job_id || \"~\") + \"\\nJavob uzunligi: \" + $json.raw_uzunlik + \" belgi. Post yuborilmadi.\").split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
           "parse_mode": "HTML"
         }
       },
@@ -10759,7 +10759,7 @@
         "text": "={{ String(\"❌ TG P3 — \" + $json.xabar + \"\\njob: \" + ($json.job_id || \"~\") + \"\\nJavob uzunligi: \" + $json.raw_uzunlik + \" belgi. Post yuborilmadi.\").split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ (function () { try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
+          "message_thread_id": "={{ (function () { try { if ($(\"OR · Bo'lim marshruti\").first().json.test_rejim === true) return true; } catch (e) {} try { return $(\"TG · Kirish tayyorlash\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
           "parse_mode": "HTML"
         }
       },
@@ -10789,6 +10789,62 @@
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
+    },
+    "TG · P5 slayd bo'lish": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "0242d08b-3673-416a-b5c9-bf7e4b4cb8f5",
+      "position": [
+        936,
+        3744
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// P5: karuselni slaydlarga bo'ladi — har slayd alohida render chaqirig'i (Cloudflare 429 himoyasi)\nvar src = $input.first().json;\nvar car = src.carousel || {};\nvar slides = car.slides || [];\nvar out = [];\nfor (var i = 0; i < slides.length; i++) {\n  out.push({ json: {\n    brand: src.brand,\n    carousel: { language: car.language, slides: [slides[i]], caption: car.caption, hashtags: car.hashtags || [] },\n    carouselId: String(src.carouselId || \"manbalar\") + \"-s\" + (i + 1),\n    slayd_n: i + 1,\n    jami_slayd: slides.length,\n    caption_html: src.caption_html,\n    mavzu_kod: src.mavzu_kod\n  }});\n}\nif (out.length === 0) out = [{ json: src }];\nreturn out;"
+      },
+      "creds": {}
+    },
+    "TG · P5 halqa": {
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "id": "52020ca0-a9c4-4ed9-874b-a8428b3bcd97",
+      "position": [
+        1136,
+        3744
+      ],
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "creds": {}
+    },
+    "TG · P5 kechikish": {
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "id": "51898d1e-e145-40ce-beae-ce000bd0914a",
+      "position": [
+        1136,
+        3920
+      ],
+      "parameters": {
+        "amount": 12
+      },
+      "webhookId": "fa191622-e20c-4224-a3f5-6642e645c842",
+      "creds": {}
+    },
+    "R3 · Taqiqlangan faktlar": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "83701882-06ec-4264-bde1-28e455380cd3",
+      "position": [
+        -2400,
+        2352
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Taqiqlangan faktlar darvozasi — N-12, s_jadval faol=false (manbasi aniqlanmagan).\n// Ro’yxatni faqat shu yerda tahrirla.\nvar TAQIQ = [\n  \"295 milyon\",\n  \"iki yüz doksan beş milyon\",\n  \"8 milyon trader\",\n  \"sekiz milyon trader\",\n  \"27 yıl\",\n  \"27 yılda\",\n  \"yirmi yedi yıl\",\n  \"uzun dönem analizi\"\n];\n\nvar j = $json;\n// R3 allaqachon FAIL bergan bo’lsa — asl sababni saqlaymiz\nif (String(j.holat || \"\") !== \"PASS\") return { json: j };\n\nvar matn = String(j.matn_korr || j.matn || \"\");\nvar past = matn.toLocaleLowerCase(\"tr\");\nvar topildi = [];\nfor (var i = 0; i < TAQIQ.length; i++) {\n  if (past.indexOf(TAQIQ[i].toLocaleLowerCase(\"tr\")) >= 0) topildi.push(TAQIQ[i]);\n}\nif (topildi.length === 0) return { json: j };\n\nvar sabab = \"N-12 (s_jadval faol=false): \" + topildi.join(\", \");\nreturn { json: Object.assign({}, j, {\n  holat: \"FAIL\",\n  tur: \"TAQIQLANGAN_FAKT\",\n  sabab: sabab,\n  xabar: sabab,\n  taqiq_topildi: topildi\n}) };"
+      },
+      "creds": {}
     }
   },
   "connections": {
@@ -11568,7 +11624,7 @@
       "main": [
         [
           {
-            "node": "R3 · Natija: PASS?",
+            "node": "R3 · Taqiqlangan faktlar",
             "type": "main",
             "index": 0
           }
@@ -14201,12 +14257,7 @@
       "main": [
         [
           {
-            "node": "TG · Label 5",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "TG · Manbalar yuborish",
+            "node": "TG · P5 halqa",
             "type": "main",
             "index": 0
           }
@@ -14673,7 +14724,7 @@
       "main": [
         [
           {
-            "node": "TG · Carousel - Manbalar",
+            "node": "TG · P5 slayd bo'lish",
             "type": "main",
             "index": 0
           }
@@ -14906,6 +14957,62 @@
     "TG · PARSE_FAIL → thread 13 (P3)": {
       "main": [
         []
+      ]
+    },
+    "TG · P5 slayd bo'lish": {
+      "main": [
+        [
+          {
+            "node": "TG · P5 halqa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · P5 halqa": {
+      "main": [
+        [
+          {
+            "node": "TG · Label 5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TG · Manbalar yuborish",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "TG · P5 kechikish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TG · P5 kechikish": {
+      "main": [
+        [
+          {
+            "node": "TG · Carousel - Manbalar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "R3 · Taqiqlangan faktlar": {
+      "main": [
+        [
+          {
+            "node": "R3 · Natija: PASS?",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -15196,7 +15303,10 @@
         "804352b2-408f-4de0-9c3a-6bc0e819958f",
         "ea63b720-73df-4574-bafe-1fcc054dc817",
         "61d2139d-d379-47e3-9e2e-ca5236d9eab6",
-        "fc85e25d-2dc1-4aee-a150-800be89ecaab"
+        "fc85e25d-2dc1-4aee-a150-800be89ecaab",
+        "0242d08b-3673-416a-b5c9-bf7e4b4cb8f5",
+        "52020ca0-a9c4-4ed9-874b-a8428b3bcd97",
+        "51898d1e-e145-40ce-beae-ce000bd0914a"
       ],
       "description": "zb-p-tg-paket sub-workflow → 5 post thread 11 da"
     },
@@ -15289,7 +15399,7 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "versionId": "6ab6244b-7c38-4b01-b805-12cb5f6f93d2",
-  "updatedAt": "2026-09-24T05:17:07.889Z",
-  "vaqt": "2026-09-24T05:17:12.291Z"
+  "versionId": "90eaea72-8ea3-4ce4-8123-5f08468c90b3",
+  "updatedAt": "2026-09-24T06:58:49.695Z",
+  "vaqt": "2026-09-24T07:00:56.719Z"
 }
