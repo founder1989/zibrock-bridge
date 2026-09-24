@@ -2246,7 +2246,7 @@
       ],
       "parameters": {
         "chatId": "={{ $(\"Faqat skript matnini ajratish\").item.json.chatId }}",
-        "text": "⏳ *Video tayyorlanmoqda...*\n\nHeyGen video yaratmoqda. Taxminan 2-3 daqiqa kuting.",
+        "text": "⏳ *Skript tayyorlanmoqda va tekshirilmoqda…*",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "Markdown",
@@ -5761,7 +5761,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "var inp=$(\"SH · Kirish tayyorlash\").first().json;var pas={};try{pas=$(\"SH · Pasport o'qish\").first().json||{};}catch(e){}var minS=parseFloat(pas.uzunlik_min_s||45);var maxS=parseFloat(pas.uzunlik_max_s||60);var minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\n// Zarb bo'yicha so'z byudjeti (pasport minSoz/maxSoz dan)\nvar ZARB=[[\"HOOK\",0.08],[\"OG'RIQ\",0.17],[\"SABAB\",0.25],[\"ISBOT\",0.22],[\"YECHIM\",0.18],[\"XULOSA\",0.10]];var maqsad=Math.round((minSoz+maxSoz)/2);var zarb_byudjet=ZARB.map(function(z){return z[0]+\" ~\"+Math.max(1,Math.round(maqsad*z[1]))+\" so'z\";}).join(\", \")+\" (jami ~\"+maqsad+\")\";\nvar ctaS=\"\";try{var ctaRS=$(\"CTA o'qish\").first().json||{};ctaS=ctaRS.matn||\"\";}catch(e){} if([\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0)ctaS=\"\"; return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:inp.faktlar||[],burchak:inp.burchak,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,zarb_byudjet:zarb_byudjet,maqsad:maqsad,ilgak_s:parseFloat(pas.ilgak_s||2.0),ctaMatn:ctaS}}];"
+        "jsCode": "var inp=$(\"SH · Kirish tayyorlash\").first().json;var pas={};try{pas=$(\"SH · Pasport o'qish\").first().json||{};}catch(e){}var minS=parseFloat(pas.uzunlik_min_s||45);var maxS=parseFloat(pas.uzunlik_max_s||60);var minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\n// Zarb bo'yicha so'z byudjeti (pasport minSoz/maxSoz dan)\nvar ZARB=[[\"HOOK\",0.08],[\"OG'RIQ\",0.17],[\"SABAB\",0.25],[\"ISBOT\",0.22],[\"YECHIM\",0.18],[\"XULOSA\",0.10]];var maqsad=Math.round((minSoz+maxSoz)/2);var oldingi_xato=\"\";try{var _st=$(\"SH · Skript tekshiruvi\").last().json;oldingi_xato=(_st.xatolar||[]).join(\"; \");}catch(e){}var zarb_byudjet=ZARB.map(function(z){return z[0]+\" ~\"+Math.max(1,Math.round(maqsad*z[1]))+\" so'z\";}).join(\", \")+\" (jami ~\"+maqsad+\")\";\nvar ctaS=\"\";try{var ctaRS=$(\"CTA o'qish\").first().json||{};ctaS=ctaRS.matn||\"\";}catch(e){} if([\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0)ctaS=\"\"; return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:inp.faktlar||[],burchak:inp.burchak,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,zarb_byudjet:zarb_byudjet,maqsad:maqsad,oldingi_xato:oldingi_xato,ilgak_s:parseFloat(pas.ilgak_s||2.0),ctaMatn:ctaS}}];"
       },
       "creds": {}
     },
@@ -5783,7 +5783,7 @@
         "messages": {
           "values": [
             {
-              "content": "={{ \"Burchak: \" + $json.burchak + \"\\nFAKTLAR:\\n\" + JSON.stringify($json.faktlar, null, 2) }}"
+              "content": "={{ \"Burchak: \" + $json.burchak + \"\\nFAKTLAR:\\n\" + JSON.stringify($json.faktlar, null, 2) + \"\\n\\nSO'Z MAQSADI: tts_matn (hook bilan birga) jami taxminan \" + $json.maqsad + \" so'z; ruxsat \" + $json.minSoz + \"–\" + $json.maxSoz + \". Zarblar: \" + $json.zarb_byudjet + ($json.oldingi_xato ? \"\\nOLDINGI URINISH XATOSI: \" + $json.oldingi_xato + \" — shuni tuzat.\" : \"\") }}"
             }
           ]
         },
@@ -7828,7 +7828,7 @@
         },
         "options": {
           "maxTokens": 500,
-          "system": "Telegram quiz so'rovnomasi yarat. JSON qaytargin:\n{\"question\":\"...\",\"options\":[\"A\",\"B\",\"C\",\"D\"],\"correct_option_id\":2,\"explanation\":\"...\"}\n- Savol: asosiy raqam haqida, javobni ochiq aytmasdan\n- 4 variant: 1 ta to'g'ri (faktlardagi raqam), 3 ta yolg'on (da'vo emas, \"30%\",\"50%\",\"60%\" kabi)\n- correct_option_id: to'g'ri javob indeksi 0-3, tasodifiy o'rinda\n- explanation ≤200 belgi: to'g'ri javob + manba\n- Turkcha. RAQAM IXTIRO QILINMAYDI. Faqat JSON."
+          "system": "Telegram quiz so'rovnomasi yarat. JSON qaytargin:\n{\"question\":\"...\",\"options\":[\"A\",\"B\",\"C\",\"D\"],\"correct_option_id\":2,\"explanation\":\"...\"}\n- Savol: asosiy raqam haqida, javobni ochiq aytmasdan\n- 4 variant: 1 ta to'g'ri (faktlardagi raqam), 3 ta yolg'on (da'vo emas, \"%30\",\"%50\",\"%60\" kabi; foiz belgisi turkcha — raqamdan OLDIN, bitta)\n- correct_option_id: to'g'ri javob indeksi 0-3, tasodifiy o'rinda\n- explanation ≤200 belgi: to'g'ri javob + manba\n- Turkcha. RAQAM IXTIRO QILINMAYDI. Faqat JSON."
         }
       },
       "creds": {
@@ -7845,7 +7845,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);var p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));}catch(err){var _job=\"\";try{_job=$(\"TG · Kirish tayyorlash\").first().json.job_id||\"\";}catch(e2){}return{json:{xato:true,holat:\"FAIL\",tur:\"PARSE_FAIL\",xabar:\"PARSE_FAIL (javob kesilgan?)\",post:\"P1\",job_id:_job,raw_uzunlik:(typeof raw!==\"undefined\"?String(raw||\"\"):\"\").length}};}var ds=$(\"TG · Ma'lumotlar to'plami\").first().json;return{json:{question:p.question||\"\",options:p.options||[\"A\",\"B\",\"C\",\"D\"],correct_option_id:p.correct_option_id||0,explanation:p.explanation||\"\",faktlar:ds.faktlar,mavzu_kod:ds.mavzu_kod,test_rejim:ds.test_rejim,telegraph_token:ds.telegraph_token,video_url:ds.video_url,yt_url:ds.yt_url,epizodlar:ds.epizodlar,ctaMatn:ds.ctaMatn,ctaKod:ds.ctaKod,job_id:ds.job_id,p1_holat:\"PASS\"}};"
+        "jsCode": "var raw=$json.content&&$json.content[0]&&$json.content[0].text||JSON.stringify($json);var p;try{var s=raw.indexOf(\"{\");var e=raw.lastIndexOf(\"}\");p=JSON.parse(raw.slice(s,e+1));if(Array.isArray(p.options)){p.options=p.options.map(function(x){var t=String(x).trim().replace(/%{2,}/g,\"%\");var m=t.match(/^([0-9][0-9.,\\u2013-]*)\\s*%$/);if(m)t=\"%\"+m[1];return t;});}}catch(err){var _job=\"\";try{_job=$(\"TG · Kirish tayyorlash\").first().json.job_id||\"\";}catch(e2){}return{json:{xato:true,holat:\"FAIL\",tur:\"PARSE_FAIL\",xabar:\"PARSE_FAIL (javob kesilgan?)\",post:\"P1\",job_id:_job,raw_uzunlik:(typeof raw!==\"undefined\"?String(raw||\"\"):\"\").length}};}var ds=$(\"TG · Ma'lumotlar to'plami\").first().json;return{json:{question:p.question||\"\",options:p.options||[\"A\",\"B\",\"C\",\"D\"],correct_option_id:p.correct_option_id||0,explanation:p.explanation||\"\",faktlar:ds.faktlar,mavzu_kod:ds.mavzu_kod,test_rejim:ds.test_rejim,telegraph_token:ds.telegraph_token,video_url:ds.video_url,yt_url:ds.yt_url,epizodlar:ds.epizodlar,ctaMatn:ds.ctaMatn,ctaKod:ds.ctaKod,job_id:ds.job_id,p1_holat:\"PASS\"}};"
       },
       "creds": {}
     },
@@ -8016,7 +8016,7 @@
         },
         "options": {
           "maxTokens": 1000,
-          "system": "Raqam Kartasi post (Telegram kanal). Siz registri. JSON qaytargin:\nKontent tili: FAQAT TURKCHA (caption_html va izoh turk tilida; o'zbekcha yozma).\n{\"raqam\":\"97%\",\"rang\":\"clay\",\"izoh\":\"qisqa izoh ≤50 belgi\",\"manba_qisqa\":\"ESMA 2018\",\"caption_html\":\"...\"}\nrang: clay=zarar/salbiy gold=neytral sage=ijobiy\ncaption_html QOIDALAR (≤900 belgi, HTML):\n- Birinchi qator: <b>ilgak ≤80 belgi</b>\n- <tg-spoiler>asosiy raqam</tg-spoiler> — spoiler bilan yopiq\n- 2-4 qator: kim, qachon, n, mamlakat\n- <blockquote>Kaynak: manba_toliq</blockquote>\n- Ohirida: Maqola havolasi uchun joy qoldiring (3-post keladi)\n- Ruxsat: b, i, u, s, a, blockquote, tg-spoiler. Emoji ≤2. Boshqa teg YOQ.\n- RAQAM IXTIRO QILINMAYDI. Faqat JSON."
+          "system": "Raqam Kartasi post (Telegram kanal). Siz registri. JSON qaytargin:\nKontent tili: FAQAT TURKCHA (caption_html va izoh turk tilida; o'zbekcha yozma).\n{\"raqam\":\"97%\",\"rang\":\"clay\",\"izoh\":\"qisqa izoh ≤50 belgi\",\"manba_qisqa\":\"ESMA 2018\",\"caption_html\":\"...\"}\nrang: clay=zarar/salbiy gold=neytral sage=ijobiy\ncaption_html QOIDALAR (≤900 belgi, HTML):\n- Birinchi qator: <b>ilgak ≤80 belgi</b>\n- <tg-spoiler>asosiy raqam</tg-spoiler> — spoiler bilan yopiq\n- 2-4 qator: kim, qachon, n, mamlakat\n- <blockquote>Kaynak: manba_tr</blockquote>\n- Ohirida: Maqola havolasi uchun joy qoldiring (3-post keladi)\n- Ruxsat: b, i, u, s, a, blockquote, tg-spoiler. Emoji ≤2. Boshqa teg YOQ.\n- RAQAM IXTIRO QILINMAYDI. Faqat JSON."
         }
       },
       "creds": {
@@ -8269,7 +8269,7 @@
         },
         "options": {
           "maxTokens": 6000,
-          "system": "Telegraph uchun chuqur maqola yaratgin. Siz registri. JSON qaytargin:\nKontent tili: FAQAT TURKCHA (caption_html va izoh turk tilida; o'zbekcha yozma).\n{\"title\":\"≤60 belgi\",\"telegraph_nodes\":[...],\"announcement_html\":\"≤400 belgi HTML\"}\ntelegraph_nodes: [{tag:\"h3\",children:[\"...\"]},{tag:\"p\",children:[\"...\"]},{tag:\"blockquote\",children:[\"...\"]},{tag:\"ul\",children:[{tag:\"li\",children:[\"...\"]}]}]\nMAJBURIY BO'LIMLAR (900-1800 so'z):\n- Kirish paragraf (ilgak)\n- h3 \"Ne ölçüldü\" (fakt+manba+n+yil)\n- h3 \"Mekanizma\"\n- h3 \"Bu veri neyi söylemiyor\" (MAJBURIY, noaniqlik)\n- h3 \"Kaynaklar\" (raqamlangan ro'yxat, manba_toliq)\nannouncement_html: <b>sarlavha</b> + 2 qator + \"Detaylı analiz: {link}\"\nEpizod bloklaridan matn oling, yangi raqam QOSHMA. Faqat JSON."
+          "system": "Telegraph uchun chuqur maqola yaratgin. Siz registri. JSON qaytargin:\nKontent tili: FAQAT TURKCHA (caption_html va izoh turk tilida; o'zbekcha yozma).\n{\"title\":\"≤60 belgi\",\"telegraph_nodes\":[...],\"announcement_html\":\"≤400 belgi HTML\"}\ntelegraph_nodes: [{tag:\"h3\",children:[\"...\"]},{tag:\"p\",children:[\"...\"]},{tag:\"blockquote\",children:[\"...\"]},{tag:\"ul\",children:[{tag:\"li\",children:[\"...\"]}]}]\nMAJBURIY BO'LIMLAR (900-1800 so'z):\n- Kirish paragraf (ilgak)\n- h3 \"Ne ölçüldü\" (fakt+manba+n+yil)\n- h3 \"Mekanizma\"\n- h3 \"Bu veri neyi söylemiyor\" (MAJBURIY, noaniqlik)\n- h3 \"Kaynaklar\" (raqamlangan ro'yxat, manba_tr)\nannouncement_html: <b>sarlavha</b> + 2 qator + \"Detaylı analiz: {link}\"\nEpizod bloklaridan matn oling, yangi raqam QOSHMA. Faqat JSON."
         }
       },
       "creds": {
@@ -8634,7 +8634,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "var faktlar=$json.faktlar||[];var slaydlar=[];var batchSize=3;for(var i=0;i<faktlar.length&&slaydlar.length<4;i+=batchSize){var batch=faktlar.slice(i,i+batchSize);var bodyText=batch.map(function(f,j){return(i+j+1)+\". \"+(f.manba_toliq||f.manba||\"?\")+\" — \"+(f.matn||\"\").slice(0,80);}).join(\" | \");slaydlar.push({n:slaydlar.length+1,layout:slaydlar.length===0?\"cover\":\"content\",title:slaydlar.length===0?\"Bu analizin kaynakları\":\"Kaynaklar \"+(i/batchSize+1),body:bodyText});}if(slaydlar.length===0)slaydlar=[{n:1,layout:\"cover\",title:\"Kaynaklar\",subtitle:\"Tüm kaynaklar\"}];var brand={brand_name:\"ZIBROCK\",handle:\"@zibrock_turkiye\",logo_url:\"\",color_ground:\"#0A1727\",color_tile:\"#D6AD62\",color_porcelain:\"#F7F5F0\",color_gold:\"#D6AD62\",color_ink:\"#0A1727\",color_muted_dark:\"#9CA3AF\",color_muted_light:\"#6B7280\",font_display:\"Sora\",font_body:\"Inter\",font_css_url:\"https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Inter:wght@600&display=block\",output_format:\"png\",motif_key:\"instrument\"};var carousel={language:\"tr\",slides:slaydlar,caption:\"<b>Bu analizin kaynakları</b>\",hashtags:[]};return{json:{brand:brand,carousel:carousel,carouselId:\"manbalar-\"+($json.job_id||\"t1\"),caption_html:carousel.caption,mavzu_kod:$json.mavzu_kod}};"
+        "jsCode": "var faktlar=$json.faktlar||[];var slaydlar=[];var batchSize=3;for(var i=0;i<faktlar.length&&slaydlar.length<4;i+=batchSize){var batch=faktlar.slice(i,i+batchSize);var bodyText=batch.map(function(f,j){return(i+j+1)+\". \"+(f.manba||\"—\")+\" — \"+(f.manba_tr||\"\");}).join(\" | \");slaydlar.push({n:slaydlar.length+1,layout:slaydlar.length===0?\"cover\":\"content\",title:slaydlar.length===0?\"Bu analizin kaynakları\":\"Kaynaklar \"+(i/batchSize+1),body:bodyText});}if(slaydlar.length===0)slaydlar=[{n:1,layout:\"cover\",title:\"Kaynaklar\",subtitle:\"Tüm kaynaklar\"}];var brand={brand_name:\"ZIBROCK\",handle:\"@zibrock_turkiye\",logo_url:\"\",color_ground:\"#0A1727\",color_tile:\"#D6AD62\",color_porcelain:\"#F7F5F0\",color_gold:\"#D6AD62\",color_ink:\"#0A1727\",color_muted_dark:\"#9CA3AF\",color_muted_light:\"#6B7280\",font_display:\"Sora\",font_body:\"Inter\",font_css_url:\"https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Inter:wght@600&display=block\",output_format:\"png\",motif_key:\"instrument\"};var carousel={language:\"tr\",slides:slaydlar,caption:\"<b>Bu analizin kaynakları</b>\",hashtags:[]};return{json:{brand:brand,carousel:carousel,carouselId:\"manbalar-\"+($json.job_id||\"t1\"),caption_html:carousel.caption,mavzu_kod:$json.mavzu_kod}};"
       },
       "creds": {}
     },
@@ -8716,6 +8716,7 @@
           "message_thread_id": 11
         }
       },
+      "executeOnce": true,
       "webhookId": "433dc347-c0c6-40ab-a82c-6987837f9561",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -8911,7 +8912,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "var b = Object.assign({}, $(\"AN · Brif tekshiruvi\").item.json);\nvar bosh = function (v) { return v === undefined || v === null || v === \"\"; };\nb.faktlar = (b.faktlar || []).map(function (f) { var g = Object.assign({}, f); if (bosh(g.matn)) g.matn = g.matn_tr; if (bosh(g.qiymat)) g.qiymat = g.matn_tr; return g; });\n// burchaklar: bitta satr bo'lib kelganlarni massivga o'rash (liniyalar [0] ni oladi)\nif (b.burchaklar && typeof b.burchaklar === \"object\") { Object.keys(b.burchaklar).forEach(function (k) { if (typeof b.burchaklar[k] === \"string\") b.burchaklar[k] = [b.burchaklar[k]]; }); }\nreturn { json: b };"
+        "jsCode": "var b = Object.assign({}, $(\"AN · Brif tekshiruvi\").item.json);\nvar bosh = function (v) { return v === undefined || v === null || v === \"\"; };\nb.faktlar = (b.faktlar || []).map(function (f) { var g = Object.assign({}, f); if (bosh(g.matn)) g.matn = g.matn_tr; if (bosh(g.qiymat)) g.qiymat = g.matn_tr; if (bosh(g.manba_tr)) g.manba_tr = g.manba || \"\"; delete g.manba_toliq; /* manba_toliq o'zbekcha — faqat ichki (s_jadval), ommaviy matnga chiqmaydi */ return g; });\n// burchaklar: bitta satr bo'lib kelganlarni massivga o'rash (liniyalar [0] ni oladi)\nif (b.burchaklar && typeof b.burchaklar === \"object\") { Object.keys(b.burchaklar).forEach(function (k) { if (typeof b.burchaklar[k] === \"string\") b.burchaklar[k] = [b.burchaklar[k]]; }); }\nreturn { json: b };"
       },
       "creds": {}
     },
@@ -10665,6 +10666,28 @@
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
+    },
+    "Telegram - HeyGen boshlandi": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "id": "8804335f-2de7-46ef-b427-0e8f664d17dd",
+      "position": [
+        1172,
+        232
+      ],
+      "parameters": {
+        "chatId": "={{ $(\"Faqat skript matnini ajratish\").item.json.chatId }}",
+        "text": "🎬 *Skript K1 tekshiruvidan o'tdi.*\n\nHeyGen video yaratmoqda. Taxminan 2-3 daqiqa kuting.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown",
+          "message_thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
+        }
+      },
+      "webhookId": "58e348a9-82ee-4dca-85e1-0190b70453a8",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     }
   },
   "connections": {
@@ -11627,6 +11650,11 @@
             "node": "K2 Zichlik (Bev)",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Telegram - HeyGen boshlandi",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -11932,6 +11960,11 @@
         [
           {
             "node": "K2 Zichlik (AI)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram - HeyGen boshlandi",
             "type": "main",
             "index": 0
           }
@@ -15155,7 +15188,7 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "versionId": "3302d655-e9f4-4961-955a-9a1bfb3dd34a",
-  "updatedAt": "2026-09-24T04:47:55.938Z",
-  "vaqt": "2026-09-24T04:48:00.607Z"
+  "versionId": "8f7283d2-fc5f-495d-b422-ba8ffaa478b4",
+  "updatedAt": "2026-09-24T05:01:10.207Z",
+  "vaqt": "2026-09-24T05:01:15.717Z"
 }
