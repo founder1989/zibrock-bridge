@@ -5776,7 +5776,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "var inp=$(\"SH · Kirish tayyorlash\").first().json;var pas={};try{pas=$(\"SH · Pasport o'qish\").first().json||{};}catch(e){}var minS=parseFloat(pas.uzunlik_min_s||45);var maxS=parseFloat(pas.uzunlik_max_s||60);var minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\n// Zarb bo'yicha so'z byudjeti (pasport minSoz/maxSoz dan)\nvar ZARB=[[\"HOOK\",0.08],[\"OG'RIQ\",0.17],[\"SABAB\",0.25],[\"ISBOT\",0.22],[\"YECHIM\",0.18],[\"XULOSA\",0.10]];var __kf=1;try{__kf=(($(\"SH · Kirish tayyorlash\").first().json.soz_kalibr)||{}).yt_short||1;}catch(e){}\nvar maqsad=Math.min(maxSoz,Math.max(minSoz,Math.round(Math.round((minSoz+maxSoz)/2)*__kf))); // 26.1 kalibrvar oldingi_xato=\"\";try{var _st=$(\"SH · Skript tekshiruvi\").last().json;oldingi_xato=(_st.xatolar||[]).join(\"; \");}catch(e){}var zarb_byudjet=ZARB.map(function(z){return z[0]+\" ~\"+Math.max(1,Math.round(maqsad*z[1]))+\" so'z\";}).join(\", \")+\" (jami ~\"+maqsad+\")\";\nvar ctaS=\"\";try{var ctaRS=$(\"CTA o'qish\").first().json||{};ctaS=ctaRS.matn||\"\";}catch(e){} if([\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0)ctaS=\"\"; return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:inp.faktlar||[],burchak:inp.burchak,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,zarb_byudjet:zarb_byudjet,maqsad:maqsad,oldingi_xato:oldingi_xato,ilgak_s:parseFloat(pas.ilgak_s||2.0),ctaMatn:ctaS}}];"
+        "jsCode": "var inp=$(\"SH · Kirish tayyorlash\").first().json;var pas={};try{pas=$(\"SH · Pasport o'qish\").first().json||{};}catch(e){}var minS=parseFloat(pas.uzunlik_min_s||45);var maxS=parseFloat(pas.uzunlik_max_s||60);var minSoz=Math.round(minS*2.2);var maxSoz=Math.round(maxS*2.6);\n// Zarb bo'yicha so'z byudjeti (pasport minSoz/maxSoz dan)\nvar ZARB=[[\"HOOK\",0.08],[\"OG'RIQ\",0.17],[\"SABAB\",0.25],[\"ISBOT\",0.22],[\"YECHIM\",0.18],[\"XULOSA\",0.10]];var __kf=1;try{__kf=(($(\"SH · Kirish tayyorlash\").first().json.soz_kalibr)||{}).yt_short||1;}catch(e){}\nvar maqsad=Math.min(maxSoz,Math.max(minSoz,Math.round(Math.round((minSoz+maxSoz)/2)*__kf))); /* 26.1 kalibr */var oldingi_xato=\"\";try{var _st=$(\"SH · Skript tekshiruvi\").last().json;oldingi_xato=(_st.xatolar||[]).join(\"; \");}catch(e){}var zarb_byudjet=ZARB.map(function(z){return z[0]+\" ~\"+Math.max(1,Math.round(maqsad*z[1]))+\" so'z\";}).join(\", \")+\" (jami ~\"+maqsad+\")\";\nvar ctaS=\"\";try{var ctaRS=$(\"CTA o'qish\").first().json||{};ctaS=ctaRS.matn||\"\";}catch(e){} if([\"T1\",\"T2\",\"T3\"].indexOf(inp.mavzu_kod)>=0)ctaS=\"\"; return[{json:{job_id:inp.job_id,mavzu_kod:inp.mavzu_kod,avatar_kod:inp.avatar_kod,test_rejim:inp.test_rejim,faktlar:inp.faktlar||[],burchak:inp.burchak,variant_idx:inp.variant_idx,urinish:inp.urinish||1,voice_id:inp.voice_id,talking_photo_id:inp.talking_photo_id,minSoz:minSoz,maxSoz:maxSoz,zarb_byudjet:zarb_byudjet,maqsad:maqsad,oldingi_xato:oldingi_xato,ilgak_s:parseFloat(pas.ilgak_s||2.0),ctaMatn:ctaS}}];"
       },
       "creds": {}
     },
@@ -16217,7 +16217,7 @@
     "errorWorkflow": "5kLZUkHJZpPBsYI6",
     "saveExecutionProgress": false
   },
-  "versionId": "ccab5120-fcb7-4c25-b425-d61f2269fcef",
-  "updatedAt": "2026-09-24T16:25:57.474Z",
-  "vaqt": "2026-09-24T16:26:03.331Z"
+  "versionId": "caae6942-e3f3-48c3-92fa-0575a5a44adf",
+  "updatedAt": "2026-09-24T19:02:25.133Z",
+  "vaqt": "2026-09-24T19:02:53.058Z"
 }
