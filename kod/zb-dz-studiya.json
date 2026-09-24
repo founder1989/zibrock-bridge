@@ -1,0 +1,201 @@
+{
+  "nodes": {
+    "Manual Trigger": {
+      "turi": "unknown"
+    },
+    "DZ · Test kirish": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "return [{ json: { job_id:\"DZ-TEST-001\", mahsulot_kod:\"carousel\", mavzu_kod:\"T1\", akkaunt:\"ig_yuzde97\", format:\"karusel\", karusel_kod:\"K1\", test_rejim:true } }];"
+    },
+    "Execute Workflow Trigger": {
+      "turi": "executeWorkflow",
+      "workflowId": "",
+      "inputs": {}
+    },
+    "DZ · VIZUAL_TIZIM": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "// DZ · VIZUAL_TIZIM — yagona manba. KONSTANTALAR emas. Tokenlarni faqat inson o'zgartiradi.\nvar V = {\n  versiya: \"tr-1.0\",\n  tokenlar: {\n    fon_toq:\"#0A1727\", fon_och:\"#F7F5F0\", urgu:\"#D6AD62\", ijobiy:\"#82BD8F\", zarar:\"#E0584A\",\n    zarar_fon:\"rgba(224,88,74,0.15)\", matn_toq_ustida:\"#F7F5F0\", matn_och_ustida:\"#0A1727\",\n    matn_ikkilamchi:\"rgba(10,23,39,0.70)\", matn_xira:\"rgba(10,23,39,0.50)\", quti_toq:\"#0A1727\", chiziq:\"rgba(10,23,39,0.12)\"\n  },\n  shrift: {\n    sarlavha:{oila:\"Sora\", vazn:700, katta_harf:true, harf_orasi:\"-0.01em\"},\n    raqam:{oila:\"Sora\", vazn:700}, matn:{oila:\"Inter\", vazn:600}, yorliq:{oila:\"Inter\", vazn:600, katta_harf:true, harf_orasi:\"0.18em\"},\n    google_fonts:\"https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@600;800&display=swap\"\n  },\n  grid: { w:1080, h:1350, chegara:88, sarlavha_qatori_y:104, sarlavha_qatori_h:22, matn_zonasi_y:1150, matn_zonasi_y2:1260, past:96, xavfsiz_kvadrat:{x:0,y:135,w:1080,h:1080} },\n  olchamlar: { muqova_sarlavha:[92,104], muqova_qator_max_belgi:14, muqova_qator_max:3, ichki_sarlavha:[60,68], matn:30, qator_orasi:1.4, yorliq:16, katta_raqam:[150,200] },\n  akkaunt: {\n    ig_yuzde97:{ belgi:\"YÜZDE 97\", logo:false, taqiq_sozlar:[\"ZIBROCK\",\"challenge\",\"prop\",\"funded\",\"fiyat\",\"hesap aç\",\"instant pro\",\"prime\"] },\n    tg_zibrock:{ belgi:\"ZIBROCK\", logo:true, taqiq_sozlar:[\"challenge\",\"fiyat\",\"hesap aç\"] }\n  },\n  formatlar: { karusel:[1080,1350], poster:[1080,1350], cover:[1080,1920], thumbnail:[1280,720], tg_karta:[1080,1350] },\n  arxetiplar: [\"A1_MUQOVA\",\"A2_DALIL\",\"A3_TEZIS\",\"A4_YAKUN\",\"P1_POSTER\"],\n  komponentlar: [\"K_RAQAM\",\"K_TAQQOS\",\"K_KARTA\",\"K_QADAM\",\"K_USTUN\",\"K_KESISH\",\"K_KVADRAT\",\"K_IQTIBOS\"],\n  bosqich: \"ISITISH\"  // mahsulot, narx, sayt, challenge YO'Q\n};\nreturn $input.all().map(function(i){ return { json: Object.assign({}, i.json, { vizual_tizim: V }) }; });"
+    },
+    "DZ · Karusel jadvali": {
+      "turi": "unknown"
+    },
+    "DZ · s_jadval": {
+      "turi": "unknown"
+    },
+    "DZ · Kirish tayyor": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "var inp = $(\"DZ · VIZUAL_TIZIM\").first().json;\nvar kar = $(\"DZ · Karusel jadvali\").all().map(function(i){return i.json;});\nvar sj = $(\"DZ · s_jadval\").all().map(function(i){return i.json;});\nvar kod = String(inp.karusel_kod||\"\");\nvar mavzu = String(inp.mavzu_kod||\"\");\nvar slaydlar = kar.filter(function(r){ var k=String(r.karusel||\"\"); return (kod && k.indexOf(kod+\" \")===0) || (!kod && k.indexOf(\" \"+mavzu+\" \")>=0); })\n  .sort(function(a,b){ return Number(a.slayd)-Number(b.slayd); })\n  .map(function(r){ return { n:Number(r.slayd), sarlavha:r.sarlavha||\"\", tana:r.tana||\"\", vizual:r.vizual||\"\" }; });\nvar faktlar = sj.filter(function(r){ return String(r.mavzu_kodlar||\"\").split(\",\").map(function(s){return s.trim();}).indexOf(mavzu)>=0 && String(r.faol)!==\"false\"; })\n  .map(function(r){ return { s_id:r.s_id, ekran:r.matn_tr, manba:r.manba, manba_toliq:r.manba_toliq, rang:r.rang, meta_tiktok:r.meta_tiktok, daraja:r.daraja }; });\nvar xato = [];\nif(!slaydlar.length) xato.push(\"karusel jadvalida bu kod/mavzu uchun slayd yoq\");\nif(!faktlar.length) xato.push(\"s_jadval'da bu mavzu uchun fakt yoq\");\nreturn [{ json: Object.assign({}, inp, { slaydlar:slaydlar, faktlar:faktlar, kirish_xato:xato }) }];"
+    },
+    "DZ · Art-direktor": {
+      "turi": "ai",
+      "model": "claude-sonnet-4-6",
+      "maxTokens": 4000,
+      "system": "",
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
+    },
+    "DZ · Reja parse": {
+      "turi": "code",
+      "mode": "runOnceForEachItem",
+      "kod": "var raw = String($json.content||$json.text||$json.message||(($json.content||[])[0]||{}).text||\"\");\nif(!raw && $json.merged_response) raw = String($json.merged_response);\nvar s = raw.indexOf(\"{\"), e = raw.lastIndexOf(\"}\");\ntry { var reja = JSON.parse(raw.slice(s, e+1)); return { json: Object.assign({}, $(\"DZ · Kirish tayyor\").first().json, { reja: reja }) }; }\ncatch(err){ return { json: { xato:true, tur:\"PARSE_FAIL\", xabar:String(err).slice(0,200), raw: raw.slice(0,500) } }; }"
+    },
+    "DZ · RENDER — shablonlar (qurilsin)": {
+      "turi": "unknown"
+    },
+    "DZ · Cloudflare render": {
+      "turi": "http",
+      "method": "POST",
+      "url": "https://api.cloudflare.com/client/v4/accounts/e7d297b69ead02b6ab0a16480f08a42d/browser-rendering/screenshot",
+      "body": "={{ JSON.stringify({ html: $json.html, viewport: { width: $json.w || 1080, height: $json.h || 1350 }, gotoOptions: { waitUntil: \"networkidle0\" }, waitForSelector: { selector: \"body.ready\", timeout: 15000 }, screenshotOptions: { type: \"png\" } }) }}",
+      "sendBody": true,
+      "creds": {
+        "cloudflareApi": "Cloudflare account"
+      }
+    },
+    "DZ · NAZORATCHI (qurilsin)": {
+      "turi": "unknown"
+    },
+    "DZ · Yetkazish (qurilsin)": {
+      "turi": "unknown"
+    }
+  },
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "DZ · Test kirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · Test kirish": {
+      "main": [
+        [
+          {
+            "node": "DZ · VIZUAL_TIZIM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "DZ · VIZUAL_TIZIM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · VIZUAL_TIZIM": {
+      "main": [
+        [
+          {
+            "node": "DZ · Karusel jadvali",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · Karusel jadvali": {
+      "main": [
+        [
+          {
+            "node": "DZ · s_jadval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · s_jadval": {
+      "main": [
+        [
+          {
+            "node": "DZ · Kirish tayyor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · Kirish tayyor": {
+      "main": [
+        [
+          {
+            "node": "DZ · Art-direktor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · Art-direktor": {
+      "main": [
+        [
+          {
+            "node": "DZ · Reja parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · Reja parse": {
+      "main": [
+        [
+          {
+            "node": "DZ · RENDER — shablonlar (qurilsin)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · RENDER — shablonlar (qurilsin)": {
+      "main": [
+        [
+          {
+            "node": "DZ · Cloudflare render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · Cloudflare render": {
+      "main": [
+        [
+          {
+            "node": "DZ · NAZORATCHI (qurilsin)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DZ · NAZORATCHI (qurilsin)": {
+      "main": [
+        [
+          {
+            "node": "DZ · Yetkazish (qurilsin)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "vaqt": "2026-09-24T01:01:12.457Z"
+}
