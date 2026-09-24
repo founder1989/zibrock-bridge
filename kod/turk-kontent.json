@@ -1353,7 +1353,6 @@
         "text": "={{ \"<b>\" + $(\"OR · Mavzu parse\").item.json.mavzu_kod + \" · 13 ish boshlandi\" + ($(\"OR · Mavzu parse\").item.json.test_rejim ? \" [TEST]\" : \"\") + \"</b>\\n\\n⏱ Boshlandi: \" + new Date().toLocaleTimeString(\"tr-TR\") + \"\\n🆔 Job: \" + $(\"OR · 13 ish tayyorlash\").first().json.job_id }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": 1,
           "parse_mode": "HTML"
         }
       },
@@ -2028,7 +2027,7 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ String(\"❌ Xato: \" + ($json.workflow && $json.workflow.name || \"n8n\") + \" | Node: \" + ($json.execution && $json.execution.lastNodeExecuted || \"?\") + \"\\nXabar: \" + ($json.error && $json.error.message || JSON.stringify($json))).split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\") }}",
+        "text": "={{ (function(){ var e = $json.execution || {}; var er = e.error || {}; var esc = function(s){ return String(s).split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\"); }; var node = (er.node && er.node.name) || e.lastNodeExecuted || \"?\"; var msg = String(er.description || er.message || \"noma'lum xato\"); if (msg.length > 200) msg = msg.slice(0, 199) + \"…\"; var job = \"\"; try { job = (er.context && er.context.job_id) || \"\"; } catch (x) {} var q = [\"❌ \" + esc(node), esc(msg)]; if (job) q.push(\"job: \" + esc(job)); if (e.url) q.push(esc(e.url)); return q.join(\"\\n\"); })() }}",
         "additionalFields": {
           "appendAttribution": false,
           "message_thread_id": 13,
@@ -8847,6 +8846,39 @@
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
+    },
+    "OR · /mavzu buyrug'i": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "018b1106-3433-4f92-ad55-8834eb2dedf7",
+      "position": [
+        -400,
+        -1100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cedb5792-8d5e-46f8-93c9-b52c64c43072",
+              "leftValue": "={{ String($json.text || \"\").trim().toLowerCase() }}",
+              "rightValue": "/mavzu",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
     }
   },
   "connections": {
@@ -8876,7 +8908,7 @@
       "main": [
         [
           {
-            "node": "Marshrut",
+            "node": "OR · /mavzu buyrug'i",
             "type": "main",
             "index": 0
           }
@@ -12334,6 +12366,24 @@
           }
         ]
       ]
+    },
+    "OR · /mavzu buyrug'i": {
+      "main": [
+        [
+          {
+            "node": "OR · Orkestr (F8)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marshrut",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodeGroups": [
@@ -12667,7 +12717,7 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "versionId": "5917053b-7092-406c-ba01-c99f034a5f00",
-  "updatedAt": "2026-09-24T01:38:25.827Z",
-  "vaqt": "2026-09-24T01:40:47.819Z"
+  "versionId": "83b6ffb3-db33-499a-912a-994e51a6cdaa",
+  "updatedAt": "2026-09-24T02:29:17.784Z",
+  "vaqt": "2026-09-24T02:29:23.452Z"
 }
