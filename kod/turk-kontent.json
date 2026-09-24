@@ -1939,7 +1939,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "var matn = $json.matn || \"\";\nvar variant = $json.variant || \"full\";\nvar mahsulot_kod = $json.mahsulot_kod || \"\";\nvar pasport = $json.pasport || {};\nvar avtotuzatish = [];\nvar result_matn = matn;\n// Avtotuzatish: caption limit\nvar belgi_max = parseInt(pasport.belgi_max || 0);\nif (belgi_max > 0 && result_matn.length > belgi_max) {\n  result_matn = result_matn.slice(0, belgi_max);\n  avtotuzatish.push(\"Caption qisqartirildi\");\n}\n// Til darvozasi\nvar uzbek_words = [\"va \", \" bilan \", \" uchun \", \" emas \", \" qilish \", \" boladi \", \" bolsa \", \" kerak \"];\nvar low = result_matn.toLowerCase();\nvar uzbek_count = 0;\nfor (var ui = 0; ui < uzbek_words.length; ui++) {\n  if (low.indexOf(uzbek_words[ui]) >= 0) uzbek_count++;\n}\nvar apostrophe_count = 0;\nfor (var ci = 0; ci < result_matn.length; ci++) {\n  var code = result_matn.charCodeAt(ci);\n  if (code === 39 || code === 0x2019 || code === 0x02BB || code === 0x02BC) apostrophe_count++;\n}\nvar turkish_count = 0;\nvar total_alpha = 0;\nfor (var ti = 0; ti < result_matn.length; ti++) {\n  var ch = result_matn.charAt(ti);\n  if (/[a-zA-Z]/.test(ch)) total_alpha++;\n  if (\"çğışöüÇĞİŞÖÜ\".indexOf(ch) >= 0) turkish_count++;\n}\nvar turkish_ratio = total_alpha > 0 ? turkish_count / total_alpha : 0;\nvar til_xato = (uzbek_count >= 2) || (apostrophe_count >= 3) || (total_alpha > 50 && turkish_ratio < 0.005);\nif (til_xato) {\n  return {json:{holat:\"FAIL\",tur:\"TIL_XATO\",xabar:\"Matn turkcha emas.\",matn_original:matn,matn_korr:matn,avtotuzatish:avtotuzatish,uzbek_count:uzbek_count,apostrophe_count:apostrophe_count,turkish_ratio:turkish_ratio}};\n}\n// Kod hakam\nvar xatolar = [];\nvar uzunlik_min_s = parseFloat(pasport.uzunlik_min_s || 0);\nvar uzunlik_max_s = parseFloat(pasport.uzunlik_max_s || 0);\nif (uzunlik_min_s > 0 && uzunlik_max_s > 0) {\n  var soz_arr = result_matn.split(\" \");\n  var soz_soni = 0;\n  for (var si = 0; si < soz_arr.length; si++) { if (soz_arr[si].length > 0) soz_soni++; }\n  var min_soz = Math.round(uzunlik_min_s * 2.2);\n  var max_soz = Math.round(uzunlik_max_s * 2.6);\n  if (soz_soni < min_soz) xatolar.push(\"Soz soni \" + soz_soni + \", min \" + min_soz);\n  if (soz_soni > max_soz) xatolar.push(\"Soz soni \" + soz_soni + \", max \" + max_soz);\n}\nreturn {json: Object.assign({}, $json, {holat: xatolar.length === 0 ? \"PASS\" : \"FAIL\", tur: xatolar.length === 0 ? \"\" : \"KORREKTOR_FAIL\", xatolar: xatolar, matn_korr: result_matn, avtotuzatish: avtotuzatish})};"
+        "jsCode": "var matn = $json.matn || \"\";\nvar variant = $json.variant || \"full\";\nvar mahsulot_kod = $json.mahsulot_kod || \"\";\nvar pasport = $json.pasport || {};\nvar avtotuzatish = [];\nvar result_matn = matn;\n// Avtotuzatish: caption limit\nvar belgi_max = parseInt(pasport.belgi_max || 0);\nif (belgi_max > 0 && result_matn.length > belgi_max) {\n  result_matn = result_matn.slice(0, belgi_max);\n  avtotuzatish.push(\"Caption qisqartirildi\");\n}\n// Til darvozasi — ikki tomonlama ball (apostrof o'zi ball bermaydi)\nvar APO = /['\\u2019\\u02BB\\u02BC]/g;\nvar norm = result_matn.replace(APO, \"'\");\nvar lowTR = norm.replace(/İ/g, \"i\").replace(/I/g, \"ı\").toLowerCase();\nvar tokens = lowTR.match(/[a-zçğıöşüâîû']+/g) || [];\ntokens = tokens.map(function (t) { return t.replace(/^'+|'+$/g, \"\"); }).filter(Boolean);\nvar UZ_SOZ = [\"va\",\"uchun\",\"bilan\",\"emas\",\"lekin\",\"kerak\",\"ham\",\"esa\",\"bo'ladi\",\"qilish\",\"qildi\",\"baribir\",\"savdo\",\"ko'rdi\",\"hamma\",\"yana\",\"faqat\",\"shuning\"];\n// Qo'shimcha (sinov to'plami talabi): keng tarqalgan o'zbek so'zlari\n// \"zarar\" ro'yxatdan chiqarildi: turkchada ham standart so'z (\"zarar etti\", \"zarar ediyor\")\nvar UZ_SOZ_QOSH = [\"juda\",\"muhim\",\"tizim\",\"sizga\",\"ishlab\",\"beradi\"];\nvar TR_SOZ = [\"ve\",\"bir\",\"bu\",\"için\",\"ile\",\"değil\",\"da\",\"de\",\"çok\",\"olarak\",\"daha\",\"gibi\",\"ama\",\"her\",\"sonra\",\"yüzde\"];\nvar uz_sozlar = 0, uz_ball = 0, tr_ball = 0;\ntokens.forEach(function (t) { if (UZ_SOZ.indexOf(t) >= 0 || UZ_SOZ_QOSH.indexOf(t) >= 0) uz_sozlar++; if (TR_SOZ.indexOf(t) >= 0) tr_ball++; if (t !== \"x\" && /[qx]/.test(t)) uz_ball++; });\nvar byMatch = lowTR.match(/(^|[^a-zçğıöşü])bu yerda([^a-zçğıöşü]|$)/g); if (byMatch) uz_sozlar += byMatch.length;\nuz_ball += uz_sozlar;\nuz_ball += (lowTR.match(/[og]'[a-zçğıöşü]/g) || []).length;\ntr_ball += (norm.match(/[çşğıöüÇŞĞÖÜİ]/g) || []).length;\nvar uzbek_count = uz_sozlar;\nvar apostrophe_count = 0;\nvar turkish_count = 0;\nvar total_alpha = 0;\nfor (var ti = 0; ti < result_matn.length; ti++) {\n  var ch = result_matn.charAt(ti);\n  if (/[a-zA-Z]/.test(ch)) total_alpha++;\n  if (\"çğışöüÇĞİŞÖÜ\".indexOf(ch) >= 0) turkish_count++;\n}\nvar turkish_ratio = total_alpha > 0 ? turkish_count / total_alpha : 0;\nvar til_xato = (uz_sozlar >= 2) || (uz_ball > tr_ball);\nif (til_xato) {\n  return {json:{holat:\"FAIL\",tur:\"TIL_XATO\",xabar:\"Matn turkcha emas.\",matn_original:matn,matn_korr:matn,avtotuzatish:avtotuzatish,uzbek_count:uzbek_count,apostrophe_count:apostrophe_count,turkish_ratio:turkish_ratio,uz_ball:uz_ball,tr_ball:tr_ball}};\n}\n// Kod hakam\nvar xatolar = [];\nvar uzunlik_min_s = parseFloat(pasport.uzunlik_min_s || 0);\nvar uzunlik_max_s = parseFloat(pasport.uzunlik_max_s || 0);\nif (uzunlik_min_s > 0 && uzunlik_max_s > 0) {\n  var soz_arr = result_matn.split(\" \");\n  var soz_soni = 0;\n  for (var si = 0; si < soz_arr.length; si++) { if (soz_arr[si].length > 0) soz_soni++; }\n  var min_soz = Math.round(uzunlik_min_s * 2.2);\n  var max_soz = Math.round(uzunlik_max_s * 2.6);\n  if (soz_soni < min_soz) xatolar.push(\"Soz soni \" + soz_soni + \", min \" + min_soz);\n  if (soz_soni > max_soz) xatolar.push(\"Soz soni \" + soz_soni + \", max \" + max_soz);\n}\nreturn {json: Object.assign({}, $json, {holat: xatolar.length === 0 ? \"PASS\" : \"FAIL\", tur: xatolar.length === 0 ? \"\" : \"KORREKTOR_FAIL\", xatolar: xatolar, matn_korr: result_matn, avtotuzatish: avtotuzatish, uz_ball: uz_ball, tr_ball: tr_ball})};"
       },
       "creds": {}
     },
@@ -8269,7 +8269,7 @@
         },
         "options": {
           "maxTokens": 3000,
-          "system": "Telegraph uchun chuqur maqola yaratgin. Siz registri. JSON qaytargin:\n{\"title\":\"≤60 belgi\",\"telegraph_nodes\":[...],\"announcement_html\":\"≤400 belgi HTML\"}\ntelegraph_nodes: [{tag:\"h3\",children:[\"...\"]},{tag:\"p\",children:[\"...\"]},{tag:\"blockquote\",children:[\"...\"]},{tag:\"ul\",children:[{tag:\"li\",children:[\"...\"]}]}]\nMAJBURIY BO'LIMLAR (900-1800 so'z):\n- Kirish paragraf (ilgak)\n- h3 \"Ne ölçüldü\" (fakt+manba+n+yil)\n- h3 \"Mekanizma\"\n- h3 \"Bu veri neyi söylemiyor\" (MAJBURIY, noaniqlik)\n- h3 \"Kaynaklar\" (raqamlangan ro'yxat, manba_toliq)\nannouncement_html: <b>sarlavha</b> + 2 qator + \"Detaylı analiz: {link}\"\nEpizod bloklaridan matn oling, yangi raqam QOSHMA. Faqat JSON."
+          "system": "Telegraph uchun chuqur maqola yaratgin. Siz registri. JSON qaytargin:\nKontent tili: FAQAT TURKCHA (caption_html va izoh turk tilida; o'zbekcha yozma).\n{\"title\":\"≤60 belgi\",\"telegraph_nodes\":[...],\"announcement_html\":\"≤400 belgi HTML\"}\ntelegraph_nodes: [{tag:\"h3\",children:[\"...\"]},{tag:\"p\",children:[\"...\"]},{tag:\"blockquote\",children:[\"...\"]},{tag:\"ul\",children:[{tag:\"li\",children:[\"...\"]}]}]\nMAJBURIY BO'LIMLAR (900-1800 so'z):\n- Kirish paragraf (ilgak)\n- h3 \"Ne ölçüldü\" (fakt+manba+n+yil)\n- h3 \"Mekanizma\"\n- h3 \"Bu veri neyi söylemiyor\" (MAJBURIY, noaniqlik)\n- h3 \"Kaynaklar\" (raqamlangan ro'yxat, manba_toliq)\nannouncement_html: <b>sarlavha</b> + 2 qator + \"Detaylı analiz: {link}\"\nEpizod bloklaridan matn oling, yangi raqam QOSHMA. Faqat JSON."
         }
       },
       "creds": {
@@ -10336,7 +10336,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "// QULF bloklar so'zma-so'z qoladi; qolgan bloklar minSoz gacha kengaytiriladi (pasport o'zgarmaydi)\nvar ds = $(\"YT · Bloklarni yig'ish\").first().json;\nvar bl = (ds.bloklar || []).slice();\nvar wc = function (s) { return String(s || \"\").split(/\\s+/).filter(Boolean).length; };\nvar matnOf = function (b) { return b.matn || b.matn_tr || \"\"; };\nvar qulfSoz = 0, ochiq = [], kontekst = [];\nbl.forEach(function (b) { var w = wc(matnOf(b)); if (String(b.rejim || \"\").toUpperCase() === \"QULF\") { qulfSoz += w; kontekst.push(\"[\" + b.blok + \"] \" + matnOf(b)); } else { ochiq.push({ b: b, w: w }); } });\nvar minSoz = parseInt(ds.minSoz || 0, 10) || 0;\nvar jami = qulfSoz + ochiq.reduce(function (a, x) { return a + x.w; }, 0);\nvar byudjet = Math.max(0, minSoz - qulfSoz);\nvar maqsad = Math.round(byudjet * 1.1);\nvar sekJami = ochiq.reduce(function (a, x) { return a + (parseFloat(x.b.sek) || 1); }, 0) || 1;\nvar reja = ochiq.map(function (x) { var ul = (parseFloat(x.b.sek) || 1) / sekJami; var mn = Math.max(x.w, Math.round(maqsad * ul)); return { id: x.b.id, blok: x.b.blok, rejim: x.b.rejim, sek: x.b.sek, asl_matn: matnOf(x.b), asl_soz: x.w, min_soz: mn, max_soz: Math.round(mn * 1.3) }; });\nvar faktlar_qisqa = (ds.faktlar || []).map(function (f) { return { s_id: f.s_id, matn: f.matn || f.matn_tr, manba: f.manba }; });\nreturn [{ json: Object.assign({}, ds, { kengaytirish: ochiq.length > 0 && jami < minSoz, qulf_soz: qulfSoz, jami_soz: jami, byudjet: byudjet, reja: reja, faktlar_qisqa: faktlar_qisqa, qulf_kontekst: kontekst.join(\"\\n\") }) }];"
+        "jsCode": "// QULF bloklar so'zma-so'z qoladi; qolgan bloklar minSoz gacha kengaytiriladi (pasport o'zgarmaydi)\nvar ds = $(\"YT · Bloklarni yig'ish\").first().json;\nvar bl = (ds.bloklar || []).slice();\nvar wc = function (s) { return String(s || \"\").split(/\\s+/).filter(Boolean).length; };\nvar matnOf = function (b) { return b.matn || b.matn_tr || \"\"; };\nvar qulfSoz = 0, ochiq = [], kontekst = [];\nbl.forEach(function (b) { var w = wc(matnOf(b)); if (String(b.rejim || \"\").toUpperCase() === \"QULF\") { qulfSoz += w; kontekst.push(\"[\" + b.blok + \"] \" + matnOf(b)); } else { ochiq.push({ b: b, w: w }); } });\nvar minSoz = parseInt(ds.minSoz || 0, 10) || 0;\nvar jami = qulfSoz + ochiq.reduce(function (a, x) { return a + x.w; }, 0);\nvar byudjet = Math.max(0, minSoz - qulfSoz);\nvar maqsad = Math.round(byudjet * 1.25);\nvar sekJami = ochiq.reduce(function (a, x) { return a + (parseFloat(x.b.sek) || 1); }, 0) || 1;\nvar reja = ochiq.map(function (x) { var ul = (parseFloat(x.b.sek) || 1) / sekJami; var mn = Math.max(x.w, Math.round(maqsad * ul)); return { id: x.b.id, blok: x.b.blok, rejim: x.b.rejim, sek: x.b.sek, asl_matn: matnOf(x.b), asl_soz: x.w, min_soz: mn, max_soz: Math.round(mn * 1.3) }; });\nvar faktlar_qisqa = (ds.faktlar || []).map(function (f) { return { s_id: f.s_id, matn: f.matn || f.matn_tr, manba: f.manba }; });\nreturn [{ json: Object.assign({}, ds, { kengaytirish: ochiq.length > 0 && jami < minSoz, qulf_soz: qulfSoz, jami_soz: jami, byudjet: byudjet, reja: reja, faktlar_qisqa: faktlar_qisqa, qulf_kontekst: kontekst.join(\"\\n\") }) }];"
       },
       "creds": {}
     },
@@ -10415,7 +10415,86 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "// Kengaytirilgan bloklarni asl tartibda yig'adi; QULF bloklar so'zma-so'z\nvar rj = $(\"YT · Kengaytirish rejasi\").first().json;\nvar raw = ($json.content && $json.content[0] && $json.content[0].text) || \"\";\nvar map = {}; var parseXato = false;\ntry { var s = raw.indexOf(\"{\"), e = raw.lastIndexOf(\"}\"); var p = JSON.parse(raw.slice(s, e + 1)); (p.bloklar || []).forEach(function (b) { map[String(b.id)] = String(b.matn || \"\"); }); } catch (err) { parseXato = true; }\nvar wc = function (t) { return String(t || \"\").split(/\\s+/).filter(Boolean).length; };\nvar ishlatildi = 0;\nvar qism = (rj.bloklar || []).map(function (b) { var asl = b.matn || b.matn_tr || \"\"; if (String(b.rejim || \"\").toUpperCase() === \"QULF\") return asl; var k = map[String(b.id)]; if (k && wc(k) >= wc(asl)) { ishlatildi++; return k; } return asl; });\nvar tts = qism.filter(Boolean).join(\"\\n\\n\");\nreturn [{ json: Object.assign({}, rj, { tts_final: tts, rejim_info: \"KENGAYTIRILGAN (QULF so'zma-so'z, \" + ishlatildi + \"/\" + (rj.reja || []).length + \" blok kengaytirildi)\" + (parseXato ? \" PARSE_FAIL\" : \"\"), kengaytirilgan_soz: wc(tts) }) }];"
+        "jsCode": "// Kengaytirilgan bloklarni asl tartibda yig'adi; QULF bloklar so'zma-so'z\nvar rj = $(\"YT · Kengaytirish rejasi\").first().json;\nvar raw = ($json.content && $json.content[0] && $json.content[0].text) || \"\";\nvar map = {}; var parseXato = false;\ntry { var s = raw.indexOf(\"{\"), e = raw.lastIndexOf(\"}\"); var p = JSON.parse(raw.slice(s, e + 1)); (p.bloklar || []).forEach(function (b) { map[String(b.id)] = String(b.matn || \"\"); }); } catch (err) { parseXato = true; }\nvar wc = function (t) { return String(t || \"\").split(/\\s+/).filter(Boolean).length; };\nvar ishlatildi = 0;\nvar bloklar_yakuniy = (rj.bloklar || []).map(function (b) { var asl = b.matn || b.matn_tr || \"\"; var m = asl; if (String(b.rejim || \"\").toUpperCase() !== \"QULF\") { var k = map[String(b.id)]; if (k && wc(k) >= wc(asl)) { ishlatildi++; m = k; } } return { id: b.id, blok: b.blok, rejim: b.rejim, matn: m }; });\nvar tts = bloklar_yakuniy.map(function (b) { return b.matn; }).filter(Boolean).join(\"\\n\\n\");\nreturn [{ json: Object.assign({}, rj, { tts_final: tts, rejim_info: \"KENGAYTIRILGAN (QULF so'zma-so'z, \" + ishlatildi + \"/\" + (rj.reja || []).length + \" blok kengaytirildi)\" + (parseXato ? \" PARSE_FAIL\" : \"\"), kengaytirilgan_soz: wc(tts), bloklar_yakuniy: bloklar_yakuniy }) }];"
+      },
+      "creds": {}
+    },
+    "YT · Kamlik bormi?": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "880d74e1-ee3b-4e48-ab40-62a72780b8fe",
+      "position": [
+        -112,
+        2100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "974118f5-3a42-4504-84ae-6c893c710311",
+              "leftValue": "={{ (parseInt($json.kengaytirilgan_soz, 10) || 0) < (parseInt($json.minSoz, 10) || 0) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "YT · Claude - To'ldirish": {
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "id": "2020b980-7e14-4088-a44f-d3ac68f2c411",
+      "position": [
+        108,
+        2100
+      ],
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ (function () { var bl = ($json.bloklar_yakuniy || []).filter(function (b) { return String(b.rejim) === \"90%\"; }).sort(function (a, b) { return String(b.matn).split(/\\s+/).length - String(a.matn).split(/\\s+/).length; })[0] || {}; var hozir = String(bl.matn || \"\").split(/\\s+/).filter(Boolean).length; var kam = (parseInt($json.minSoz, 10) || 0) - (parseInt($json.kengaytirilgan_soz, 10) || 0); return \"Mavzu: \" + $json.mavzu_kod + \"\\n\\nFAKTLAR:\\n\" + JSON.stringify($json.faktlar_qisqa, null, 2) + \"\\n\\nKENGAYTIRILADIGAN BLOKLAR:\\n\" + JSON.stringify([{ id: bl.id, blok: bl.blok, asl_matn: bl.matn, asl_soz: hozir, min_soz: hozir + Math.ceil(kam * 1.2), max_soz: hozir + Math.ceil(kam * 1.6) }], null, 2); })() }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 4000,
+          "system": "Sen YouTube uzun video skriptining muharririsan. Kontent tili: FAQAT TURKCHA. Siz registri.\nVAZIFA: berilgan BITTA blokni ko'rsatilgan maqsad so'z sonigacha KENGAYTIR (qo'shimcha to'ldirish).\nQOIDALAR:\n- Faqat berilgan FAKTLAR (s_id bilan) ishlatiladi. Yangi raqam, foiz, yil, manba IXTIRO QILINMAYDI. Har raqam faktlar ro'yxatida bo'lishi shart.\n- Blokning ma'nosi va skriptdagi o'rni o'zgarmaydi. Asl blokdagi barcha fikrlar saqlanadi; faqat izoh, faktlardan misol va o'tish jumlalari bilan chuqurlashtir.\n- QULF bloklar (kontekst) o'zgartirilmaydi va qaytarilmaydi.\n- METASAFE: daromad va'dasi, kafolat, investitsiya tavsiyasi YO'Q.\nJSON qaytar: {\"bloklar\":[{\"id\":<blok id>,\"matn\":\"...\"}]}\nFaqat JSON."
+        }
+      },
+      "creds": {
+        "anthropicApi": "Anthropic account 2"
+      }
+    },
+    "YT · To'ldirilgan matn": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "00a1d13f-6adc-4db7-ad98-c3198bf2f545",
+      "position": [
+        328,
+        2100
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Bir martalik to'ldirish: eng katta 90% blok almashtiriladi (faqat uzunroq bo'lsa)\nvar km = $(\"YT · Kengaytirilgan matn\").first().json;\nvar raw = ($json.content && $json.content[0] && $json.content[0].text) || \"\";\nvar wc = function (t) { return String(t || \"\").split(/\\s+/).filter(Boolean).length; };\nvar yangi = null, id = null;\ntry { var s = raw.indexOf(\"{\"), e = raw.lastIndexOf(\"}\"); var p = JSON.parse(raw.slice(s, e + 1)); if (p.bloklar && p.bloklar[0]) { yangi = String(p.bloklar[0].matn || \"\"); id = String(p.bloklar[0].id); } } catch (err) {}\nvar bl = (km.bloklar_yakuniy || []).map(function (b) { if (yangi && String(b.id) === id && wc(yangi) > wc(b.matn)) return Object.assign({}, b, { matn: yangi }); return b; });\nvar tts = bl.map(function (b) { return b.matn; }).filter(Boolean).join(\"\\n\\n\");\nreturn [{ json: Object.assign({}, km, { tts_final: tts, bloklar_yakuniy: bl, kengaytirilgan_soz: wc(tts), rejim_info: km.rejim_info + \" + to'ldirish (\" + (km.kengaytirilgan_soz || 0) + \" → \" + wc(tts) + \")\" }) }];"
       },
       "creds": {}
     }
@@ -14411,6 +14490,46 @@
       "main": [
         [
           {
+            "node": "YT · Kamlik bormi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · Kamlik bormi?": {
+      "main": [
+        [
+          {
+            "node": "YT · Claude - To'ldirish",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "YT · Yakuniy matn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · Claude - To'ldirish": {
+      "main": [
+        [
+          {
+            "node": "YT · To'ldirilgan matn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT · To'ldirilgan matn": {
+      "main": [
+        [
+          {
             "node": "YT · Yakuniy matn",
             "type": "main",
             "index": 0
@@ -14606,7 +14725,10 @@
         "e043a711-2798-48ab-a777-50e0b37d5139",
         "03239216-152c-4625-99bd-58dcbec337ba",
         "d5bc55de-2f15-4fb7-af16-a39df0fcbb8b",
-        "425b0e7c-5c41-471a-847f-d7842fc0c141"
+        "425b0e7c-5c41-471a-847f-d7842fc0c141",
+        "880d74e1-ee3b-4e48-ab40-62a72780b8fe",
+        "2020b980-7e14-4088-a44f-d3ac68f2c411",
+        "00a1d13f-6adc-4db7-ad98-c3198bf2f545"
       ],
       "description": "Epizod bloklaridan YT Long matn → K1 → R7 preview (thread 3)"
     },
@@ -14790,7 +14912,7 @@
     "availableInMCP": true,
     "errorWorkflow": "5kLZUkHJZpPBsYI6"
   },
-  "versionId": "e76bbbd4-dffe-418d-b9bc-98a0f234fed1",
-  "updatedAt": "2026-09-24T04:29:28.182Z",
-  "vaqt": "2026-09-24T04:29:59.462Z"
+  "versionId": "227d366d-a687-479c-981b-f7d0a66bed09",
+  "updatedAt": "2026-09-24T04:37:52.192Z",
+  "vaqt": "2026-09-24T04:38:39.864Z"
 }
