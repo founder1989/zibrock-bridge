@@ -383,20 +383,8 @@
     },
     "PR · Nazorat PASS?": {
       "main": [
-        [
-          {
-            "node": "PR · komponentlar",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "PR · Qayta urinish",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [],
+        []
       ]
     },
     "PR · Qayta urinish": {
@@ -591,5 +579,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-24T16:17:30.750Z"
+  "vaqt": "2026-09-24T16:26:08.288Z"
 }
