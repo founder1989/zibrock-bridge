@@ -41,7 +41,7 @@
     "DZ · Reja parse": {
       "turi": "code",
       "mode": "runOnceForEachItem",
-      "kod": "var raw = String($json.content||$json.text||$json.message||(($json.content||[])[0]||{}).text||\"\");\nif(!raw && $json.merged_response) raw = String($json.merged_response);\nvar s = raw.indexOf(\"{\"), e = raw.lastIndexOf(\"}\");\ntry { var reja = JSON.parse(raw.slice(s, e+1)); return { json: Object.assign({}, $(\"DZ · Kirish tayyor\").first().json, { reja: reja }) }; }\ncatch(err){ return { json: { xato:true, tur:\"PARSE_FAIL\", xabar:String(err).slice(0,200), raw: raw.slice(0,500) } }; }"
+      "kod": "var raw = String($json.merged_response || (Array.isArray($json.content) && $json.content[0] && $json.content[0].text) || $json.text || \"\");\nvar s = raw.indexOf(\"{\"), e = raw.lastIndexOf(\"}\");\ntry { var reja = JSON.parse(raw.slice(s, e+1)); return { json: Object.assign({}, $(\"DZ · Kirish tayyor\").first().json, { reja: reja }) }; }\ncatch(err){ return { json: { xato:true, tur:\"PARSE_FAIL\", xabar:String(err).slice(0,200), raw: raw.slice(0,500) } }; }"
     },
     "DZ · RENDER — shablonlar (qurilsin)": {
       "turi": "unknown"
@@ -197,5 +197,5 @@
       ]
     }
   },
-  "vaqt": "2026-09-24T01:01:12.457Z"
+  "vaqt": "2026-09-24T01:41:02.291Z"
 }
