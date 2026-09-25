@@ -1293,8 +1293,8 @@
         "workflowId": {
           "__rl": true,
           "mode": "id",
-          "value": "5kLZUkHJZpPBsYI6",
-          "cachedResultName": "turk kontent"
+          "value": "={{ ({\"tiktok\":\"ogeZ1G8CyksZLWRO\",\"reel\":\"Kb7kybmk2jeGnzsv\",\"yt_short\":\"CL5NQIgXvGBGrdvX\",\"yt_long\":\"df1nlwmMt7rZ4oDz\",\"carousel\":\"qg2ig8wN4oDzGTXZ\",\"tg_paket\":\"0XHhPQ1sb3VWbAwO\",\"thumbnail\":\"zdORqy2jvPVIpnlR\"})[$json.mahsulot_kod] || \"5kLZUkHJZpPBsYI6\" }}",
+          "cachedResultName": "L-* (mahsulot_kod bo'yicha)"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -16217,7 +16217,7 @@
     "errorWorkflow": "CtOE5AWwKoi18CaL",
     "saveExecutionProgress": false
   },
-  "versionId": "08a42d52-37d3-4b1e-9e84-65607ab2111b",
-  "updatedAt": "2026-09-24T20:07:49.827Z",
-  "vaqt": "2026-09-24T20:09:18.038Z"
+  "versionId": "81d0beee-93b7-4598-9e84-7fa392f26c07",
+  "updatedAt": "2026-09-25T10:37:13.677Z",
+  "vaqt": "2026-09-25T10:40:39.049Z"
 }
