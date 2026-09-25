@@ -11492,11 +11492,11 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ \"❌ <b>Noma'lum liniya kodi</b> [TEST]\\n\\n\" + ($json.liniya_xato || []).join(\", \") + \"\\nRuxsat etilgan: AN, TT, RL, SH, YT, KR, TG, TH\\n0 ish boshlandi. Buyruq: \" + String($json.text || \"\").split(\"<\").join(\"&lt;\") }}",
+        "text": "={{ (function(){var v;try{v=$(\"OR · Mavzu parse\").first().json.test_rejim;}catch(x){}var e=function(s){return String(s==null?\"\":s).split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\");};return \"❌ <b>Noma'lum liniya kodi</b>\" + (v===true?\" [TEST]\":\"\") + \"\\n\\n\" + e(($json.liniya_xato || []).join(\", \")) + \"\\nRuxsat etilgan: AN, TT, RL, SH, YT, KR, TG, TH\\n0 ish boshlandi. Buyruq: \" + String($json.text || \"\").split(\"<\").join(\"&lt;\");})() }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML",
-          "message_thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? undefined : 427 }}"
+          "message_thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? 13 : 427 }}"
         }
       },
       "executeOnce": true,
@@ -16217,7 +16217,7 @@
     "errorWorkflow": "CtOE5AWwKoi18CaL",
     "saveExecutionProgress": false
   },
-  "versionId": "e876b66a-5db8-4d7a-aaa5-30632582243d",
-  "updatedAt": "2026-09-25T10:56:49.769Z",
-  "vaqt": "2026-09-25T10:57:05.330Z"
+  "versionId": "0eea3de5-c4cb-45d5-9c31-2fbcaf48a939",
+  "updatedAt": "2026-09-25T14:00:00.744Z",
+  "vaqt": "2026-09-25T14:00:18.334Z"
 }
