@@ -384,10 +384,11 @@
       ],
       "parameters": {
         "chatId": "={{ $json.chatId || $json.message && $json.message.chat && $json.message.chat.id }}",
-        "text": "={{ $json.xabar || \"❌ Xato yuz berdi\" }}",
+        "text": "={{ String(($json.xabar || \"❌ Xato yuz berdi\")).replace(/&/g,\"&amp;\").replace(/</g,\"&lt;\").replace(/>/g,\"&gt;\") /* B-79 esc */ }}",
         "additionalFields": {
           "appendAttribution": false,
-          "message_thread_id": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}"
+          "message_thread_id": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}",
+          "parse_mode": "HTML"
         }
       },
       "webhookId": "d9255218-c40d-41b0-9209-d2510c4e2a0f",
@@ -4969,7 +4970,7 @@
     "errorWorkflow": "CtOE5AWwKoi18CaL",
     "saveExecutionProgress": false
   },
-  "versionId": "587035b2-90ba-4cc5-9cdf-eff4b2baf3eb",
-  "updatedAt": "2026-09-27T23:01:42.875Z",
-  "vaqt": "2026-09-27T23:08:55.880Z"
+  "versionId": "5553c484-b570-4da0-ac33-0add63671dd0",
+  "updatedAt": "2026-09-27T23:51:23.749Z",
+  "vaqt": "2026-09-27T23:52:01.099Z"
 }
