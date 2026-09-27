@@ -949,7 +949,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "var brif=$(\"OR · Analitik chaqirish\").first().json; // B-46.2: kirish endi \"OR · Qoida versiyasi o'qish\" orqali keladi\nvar test_rejim=brif.test_rejim||false;\n// 21.4: mavzu_kod kelmasa T1 ga o'tilmaydi — eskalatsiya (XM → thread 13, test: 427) + to'xtash\nvar __tm=(brif.test_rejim===false)?\"\":\"[TEST] \";\nif(!brif.mavzu_kod)throw new Error(__tm+\"MAVZU_KOD_YOQ: OR · 13 ish tayyorlash — brif'da mavzu_kod yo'q, T1 ga o'tilmadi (job \"+(brif.job_id||\"?\")+\")\");\nvar __K0=null;try{__K0=$(\"KONSTANTALAR\").first().json;}catch(e){}\nif(__K0&&__K0.mavzular&&!__K0.mavzular[brif.mavzu_kod])throw new Error(__tm+\"MAVZU_KOD_NOMALUM: OR · 13 ish tayyorlash — KONSTANTALAR.mavzular da \\\"\"+brif.mavzu_kod+\"\\\" yo'q, T1 ga o'tilmadi\");\nvar cta_map=brif.cta_map||{};\n// T1-T3 da taqiq mahsulotlar tashlanadi (cta_map dan)\nvar jobs=[];\nvar tiktok_v=[0,1,2,3];var reel_v=[0,1];var short_v=[0,1,2];\ntiktok_v.forEach(function(v){jobs.push({mahsulot_kod:\"tiktok\",variant_idx:v});});\nreel_v.forEach(function(v){jobs.push({mahsulot_kod:\"reel\",variant_idx:v});});\nshort_v.forEach(function(v){jobs.push({mahsulot_kod:\"yt_short\",variant_idx:v});});\njobs.push({mahsulot_kod:\"yt_long\",variant_idx:0});\njobs.push({mahsulot_kod:\"carousel\",variant_idx:0});\njobs.push({mahsulot_kod:\"tg_paket\",variant_idx:0});\njobs.push({mahsulot_kod:\"thumbnail\",variant_idx:0});\n// Avatar: \"Mavzu va Avatar Aniqlash\" qoidasi (avatar= buyrug'i > KONSTANTALAR.mavzular[mk].avatar > a1)\nvar avt={};try{var K=$(\"KONSTANTALAR\").first().json;var mk=brif.mavzu_kod;var txt=\"\";try{txt=String($(\"OR · Mavzu parse\").first().json.text||\"\");}catch(e){}var am=txt.match(/avatar *= *(a[12])/i);var majburiy=am?am[1].toLowerCase():null;var mv=K.mavzular[mk];var ak=majburiy||mv.avatar||\"a1\";avt={avatar_kod:ak,talking_photo_id:K.avatarlar[ak].talking_photo_id,voice_id:K.ovozlar[K.avatarlar[ak].ovoz].voice_id};}catch(e){}\n// 27.1: liniya filtri test va production'da (Mavzu parse.liniyalar + liniya_n: KOD:N = birinchi N variant); ro'yxatsiz — hamma 13 ish\nvar __lin=null;try{__lin=$(\"OR · Mavzu parse\").first().json.liniyalar||null;}catch(e){}\nvar __ln=null;try{__ln=$(\"OR · Mavzu parse\").first().json.liniya_n||null;}catch(e){}\nif(__lin){var __MAP={tiktok:\"TT\",reel:\"RL\",yt_short:\"SH\",yt_long:\"YT\",carousel:\"KR\",tg_paket:\"TG\",thumbnail:\"TH\"};jobs=jobs.filter(function(j){var k=__MAP[j.mahsulot_kod];if(__lin.indexOf(k)<0)return false;if(__ln&&__ln[k])return j.variant_idx<__ln[k];return true;});}\nvar brif2=Object.assign({},brif,avt);\n// 26.1: so'z kalibri paket orqali liniyalarga\ntry{brif2.soz_kalibr=$(\"KONSTANTALAR\").first().json.soz_kalibr||null;}catch(e){}\n// B-38.2: format (yakka_fakt | solishtirish | dinamika | mif_haqiqat | suhbat | mexanizm) — hozircha hamma ishga \"yakka_fakt\"\n// B-46.2: qoida versiyasi + A/B varianti har ishga (hozircha xulq o'zgarmaydi — qoidalar H-3 da quriladi)\nvar __QV=null;try{__QV=($(\"OR · Qoida versiyasi o'qish\").all()||[]).map(function(i){return i.json;}).filter(function(r){return r&&r.kalit===\"harakat_qoidalari\"&&r.faol===true;})[0]||null;}catch(e){}\nvar __qvVer=__QV?String(__QV.versiya||\"—\"):\"—\";\nvar __abW={A:0.8,B:0.2};try{var __il=JSON.parse(__QV.qiymat_json).ab_tajriba.ilgak_joylashuvi;__abW={A:Number(__il.A_raqam_birinchi)||0,B:Number(__il.B_avatar_birinchi)||0};}catch(e){}\nvar __AB_MK={tiktok:1,reel:1,yt_short:1};\nfunction __abHash(s){var h=0x811c9dc5;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}h^=h>>>16;h=Math.imul(h,0x85ebca6b)>>>0;h^=h>>>13;h=Math.imul(h,0xc2b2ae35)>>>0;h^=h>>>16;return h>>>0;} // FNV-1a + murmur3 fmix32 (barqaror)\nfunction __abV(j){if(!__AB_MK[j.mahsulot_kod]||!__QV)return \"—\";var u=__abHash(String(j.job_id||\"\")+\"|\"+j.mahsulot_kod+\"|\"+(j.variant_idx||0))/4294967296;var sA=__abW.A/((__abW.A+__abW.B)||1);return u<sA?\"A\":\"B\";}\n// B-54.5a: ilgak tajribasi (o'lchov) — TT: variant_idx 0,2 → K, 1,3 → Q; RL/SH: mavzu kodi hash bo'yicha navbatma-navbat (RL va SH qarama-qarshi)\nvar __IT=null;try{__IT=JSON.parse(__QV.qiymat_json).ilgak_tajriba||null;}catch(e){}\nfunction __ilgV(j){if(!__AB_MK[j.mahsulot_kod]||!__IT)return \"—\";if(j.mahsulot_kod===\"tiktok\")return (Number(j.variant_idx||0)%2===0)?\"K\":\"Q\";var p=__abHash(String(j.mavzu_kod||\"\"))%2;if(j.mahsulot_kod===\"yt_short\")p=1-p;return p===0?\"Q\":\"K\";}\nreturn jobs.map(function(j){var fm=j.format||\"yakka_fakt\";var __m=Object.assign({},brif2,j);var __v=__abV(__m);var __iv=__ilgV(__m);var __nt=null,__zax=1.5;try{var __ntm=JSON.parse(__QV.qiymat_json).nutq_tezligi_maqsad||{};__nt=Number(__ntm.byudjet_qiymat)||Number(__ntm.qiymat)||null; /* v1.8: byudjet surat_oraliq pastki chegarasidan */__zax=Number(__ntm.byudjet_zaxira_s);if(!(__zax>=0))__zax=1.5;}catch(e){} /* B-60.1: byudjet MAQSADLI tezlikdan (o'lchangan emas) */ var __im=(__IT&&__iv!==\"—\")?(Number(((__iv===\"Q\"?__IT.Q_qisqa:__IT.K_kontekst)||{}).ovoz_max_s)||null):null;return{json:{...brif2,...j,format:fm,test_rejim:test_rejim,qoida_versiya:__qvVer,ab_variant:__v,ilgak_variant:__iv,ilgak_max_s:__im,nutq_tezligi:__nt,byudjet_zaxira_s:__zax,brif:Object.assign({},brif2,{format:fm,qoida_versiya:__qvVer,ab_variant:__v,ilgak_variant:__iv,ilgak_max_s:__im,nutq_tezligi:__nt,byudjet_zaxira_s:__zax})}};});"
+        "jsCode": "var brif=$(\"OR · Analitik chaqirish\").first().json; // B-46.2: kirish endi \"OR · Qoida versiyasi o'qish\" orqali keladi\nvar test_rejim=brif.test_rejim||false;\n// 21.4: mavzu_kod kelmasa T1 ga o'tilmaydi — eskalatsiya (XM → thread 13, test: 427) + to'xtash\nvar __tm=(brif.test_rejim===false)?\"\":\"[TEST] \";\nif(!brif.mavzu_kod)throw new Error(__tm+\"MAVZU_KOD_YOQ: OR · 13 ish tayyorlash — brif'da mavzu_kod yo'q, T1 ga o'tilmadi (job \"+(brif.job_id||\"?\")+\")\");\nvar __K0=null;try{__K0=$(\"KONSTANTALAR\").first().json;}catch(e){}\nif(__K0&&__K0.mavzular&&!__K0.mavzular[brif.mavzu_kod])throw new Error(__tm+\"MAVZU_KOD_NOMALUM: OR · 13 ish tayyorlash — KONSTANTALAR.mavzular da \\\"\"+brif.mavzu_kod+\"\\\" yo'q, T1 ga o'tilmadi\");\nvar cta_map=brif.cta_map||{};\n// T1-T3 da taqiq mahsulotlar tashlanadi (cta_map dan)\nvar jobs=[];\nvar tiktok_v=[0,1,2,3];var reel_v=[0,1];var short_v=[0,1,2];\ntiktok_v.forEach(function(v){jobs.push({mahsulot_kod:\"tiktok\",variant_idx:v});});\nreel_v.forEach(function(v){jobs.push({mahsulot_kod:\"reel\",variant_idx:v});});\nshort_v.forEach(function(v){jobs.push({mahsulot_kod:\"yt_short\",variant_idx:v});});\njobs.push({mahsulot_kod:\"yt_long\",variant_idx:0});\njobs.push({mahsulot_kod:\"carousel\",variant_idx:0});\njobs.push({mahsulot_kod:\"tg_paket\",variant_idx:0});\njobs.push({mahsulot_kod:\"thumbnail\",variant_idx:0});\n// Avatar: \"Mavzu va Avatar Aniqlash\" qoidasi (avatar= buyrug'i > KONSTANTALAR.mavzular[mk].avatar > a1)\nvar avt={};try{var K=$(\"KONSTANTALAR\").first().json;var mk=brif.mavzu_kod;var txt=\"\";try{txt=String($(\"OR · Mavzu parse\").first().json.text||\"\");}catch(e){}var am=txt.match(/avatar *= *(a[12])/i);var majburiy=am?am[1].toLowerCase():null;var mv=K.mavzular[mk];var ak=majburiy||mv.avatar||\"a1\";avt={avatar_kod:ak,talking_photo_id:K.avatarlar[ak].talking_photo_id,voice_id:K.ovozlar[K.avatarlar[ak].ovoz].voice_id};}catch(e){}\n// 27.1: liniya filtri test va production'da (Mavzu parse.liniyalar + liniya_n: KOD:N = birinchi N variant); ro'yxatsiz — hamma 13 ish\nvar __lin=null;try{__lin=$(\"OR · Mavzu parse\").first().json.liniyalar||null;}catch(e){}\nvar __ln=null;try{__ln=$(\"OR · Mavzu parse\").first().json.liniya_n||null;}catch(e){}\nif(__lin){var __MAP={tiktok:\"TT\",reel:\"RL\",yt_short:\"SH\",yt_long:\"YT\",carousel:\"KR\",tg_paket:\"TG\",thumbnail:\"TH\"};jobs=jobs.filter(function(j){var k=__MAP[j.mahsulot_kod];if(__lin.indexOf(k)<0)return false;if(__ln&&__ln[k])return j.variant_idx<__ln[k];return true;});}\nvar brif2=Object.assign({},brif,avt);\n// 26.1: so'z kalibri paket orqali liniyalarga\ntry{brif2.soz_kalibr=$(\"KONSTANTALAR\").first().json.soz_kalibr||null;}catch(e){}\n// B-38.2: format (yakka_fakt | solishtirish | dinamika | mif_haqiqat | suhbat | mexanizm) — hozircha hamma ishga \"yakka_fakt\"\n// B-46.2: qoida versiyasi + A/B varianti har ishga (hozircha xulq o'zgarmaydi — qoidalar H-3 da quriladi)\nvar __QV=null;try{__QV=($(\"OR · Qoida versiyasi o'qish\").all()||[]).map(function(i){return i.json;}).filter(function(r){return r&&r.kalit===\"harakat_qoidalari\"&&r.faol===true;})[0]||null;}catch(e){}\nvar __qvVer=__QV?String(__QV.versiya||\"—\"):\"—\";\nvar __abW={A:0.8,B:0.2};try{var __il=JSON.parse(__QV.qiymat_json).ab_tajriba.ilgak_joylashuvi;__abW={A:Number(__il.A_raqam_birinchi)||0,B:Number(__il.B_avatar_birinchi)||0};}catch(e){}\nvar __AB_MK={tiktok:1,reel:1,yt_short:1};\nfunction __abHash(s){var h=0x811c9dc5;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}h^=h>>>16;h=Math.imul(h,0x85ebca6b)>>>0;h^=h>>>13;h=Math.imul(h,0xc2b2ae35)>>>0;h^=h>>>16;return h>>>0;} // FNV-1a + murmur3 fmix32 (barqaror)\nfunction __abV(j){if(!__AB_MK[j.mahsulot_kod]||!__QV)return \"—\";var u=__abHash(String(j.job_id||\"\")+\"|\"+j.mahsulot_kod+\"|\"+(j.variant_idx||0))/4294967296;var sA=__abW.A/((__abW.A+__abW.B)||1);return u<sA?\"A\":\"B\";}\n// B-54.5a: ilgak tajribasi (o'lchov) — TT: variant_idx 0,2 → K, 1,3 → Q; RL/SH: mavzu kodi hash bo'yicha navbatma-navbat (RL va SH qarama-qarshi)\nvar __IT=null;try{__IT=JSON.parse(__QV.qiymat_json).ilgak_tajriba||null;}catch(e){}\nfunction __ilgV(j){if(!__AB_MK[j.mahsulot_kod]||!__IT)return \"—\";if(j.mahsulot_kod===\"tiktok\")return (Number(j.variant_idx||0)%2===0)?\"K\":\"Q\";var p=__abHash(String(j.mavzu_kod||\"\"))%2;if(j.mahsulot_kod===\"yt_short\")p=1-p;return p===0?\"Q\":\"K\";}\nvar __YET_TEST = \"orkestr\", __YET_PROD = \"liniya\"; /* B-62.4 FEATURE FLAG: liniya = hozirgi xulq (liniya o'zi yuboradi); orkestr = paket qaytaradi, orkestr mavzu yakuniy tekshiruvidan keyin yuboradi. Qaytish: qiymatni \"liniya\" ga */\nreturn jobs.map(function(j){var fm=j.format||\"yakka_fakt\";var __m=Object.assign({},brif2,j);var __v=__abV(__m);var __iv=__ilgV(__m);var __nt=null,__zax=1.5;try{var __ntm=JSON.parse(__QV.qiymat_json).nutq_tezligi_maqsad||{};__nt=Number(__ntm.byudjet_qiymat)||Number(__ntm.qiymat)||null; /* v1.8: byudjet surat_oraliq pastki chegarasidan */__zax=Number(__ntm.byudjet_zaxira_s);if(!(__zax>=0))__zax=1.5;}catch(e){} /* B-60.1: byudjet MAQSADLI tezlikdan (o'lchangan emas) */ var __im=(__IT&&__iv!==\"—\")?(Number(((__iv===\"Q\"?__IT.Q_qisqa:__IT.K_kontekst)||{}).ovoz_max_s)||null):null;return{json:{...brif2,...j,format:fm,test_rejim:test_rejim,yetkazish:(test_rejim===false?__YET_PROD:__YET_TEST),qoida_versiya:__qvVer,ab_variant:__v,ilgak_variant:__iv,ilgak_max_s:__im,nutq_tezligi:__nt,byudjet_zaxira_s:__zax,brif:Object.assign({},brif2,{format:fm,qoida_versiya:__qvVer,ab_variant:__v,ilgak_variant:__iv,ilgak_max_s:__im,nutq_tezligi:__nt,byudjet_zaxira_s:__zax})}};});"
       },
       "alwaysOutputData": true,
       "creds": {}
@@ -3032,7 +3032,7 @@
       ],
       "parameters": {
         "chatId": "-1004462774154",
-        "text": "={{ (function () { var r = $(\"OR · Liniyalar natijasi\").first().json; var s = \"<b>\" + r.mavzu_kod + \" · \" + r.jami + \" ish tugadi\" + (r.test_rejim === false ? \"\" : \" [TEST]\") + \"</b>\\n✅ PASS: \" + r.pass_n + \"  ❌ FAIL: \" + r.fail_n + \"\\n\\n\"; s += r.natija.map(function (x) { return (x.holat === \"FAIL\" ? \"❌ \" : (x.holat === \"PASS\" ? \"✅ \" : \"❔ \")) + x.liniya + (x.xato ? \" — \" + String(x.xato).split(\"<\").join(\"&lt;\").slice(0, 120) : \"\"); }).join(\"\\n\"); return s || \"0 ish\"; })() }}",
+        "text": "={{ (function () { var r = (function () { try { return $(\"OR · Mavzu yakuniy tekshiruv\").first().json; } catch (e) { return $(\"OR · Liniyalar natijasi\").first().json; } })(); /* B-63.7/62.4: yakuniy tekshiruvdan keyingi holat */ var s = \"<b>\" + r.mavzu_kod + \" · \" + r.jami + \" ish tugadi\" + (r.test_rejim === false ? \"\" : \" [TEST]\") + \"</b>\\n✅ PASS: \" + r.pass_n + \"  ❌ FAIL: \" + r.fail_n + \"\\n\\n\"; s += r.natija.map(function (x) { return (x.holat === \"FAIL\" ? \"❌ \" : (x.holat === \"PASS\" ? \"✅ \" : \"❔ \")) + x.liniya + (x.xato ? \" — \" + String(x.xato).split(\"<\").join(\"&lt;\").slice(0, 120) : \"\"); }).join(\"\\n\"); return s || \"0 ish\"; })() }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML",
@@ -3138,6 +3138,103 @@
       },
       "onError": "continueRegularOutput",
       "alwaysOutputData": true,
+      "creds": {}
+    },
+    "OR · Mavzu yakuniy tekshiruv": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "e4404093-dfd1-47a2-9b94-7b708ed14cd0",
+      "position": [
+        -880,
+        1300
+      ],
+      "parameters": {
+        "jsCode": "// B-62.4: MAVZU YAKUNIY TEKSHIRUVI — bitta mavzuning barcha mahsulot paketlari (yetkazish=orkestr) tasdiqqa yuborishdan OLDIN: raqamlar faktdagi shaklda va hamma joyda bir xil, ziddiyat yo'q, CTA/voronka qoidasi (cta_mavzu + qoidalar.cta_qoidasi). Buzilsa — o'sha mahsulot ❌ sabab bilan.\nvar S = Object.assign({}, $json);\nvar items = []; try { items = $(\"OR · Mahsulot dispatch\").all().map(function (i) { return i.json; }); } catch (e) { items = []; }\nvar P = items.filter(function (x) { return x && x.mahsulot_paketi === true; }).map(function (x) { return JSON.parse(JSON.stringify(x)); });\nif (!P.length) return [{ json: Object.assign(S, { pakets: [], yakuniy: { rejim: \"liniya\" } }) }];\nvar AN = {}; try { AN = $(\"OR · Analitik chaqirish\").first().json || {}; } catch (e) {}\nvar F = (AN.faktlar || []).filter(function (f) { return f && f.faol !== false; }), CTA = AN.cta_map || {};\nvar Q = {}; try { Q = JSON.parse(($(\"OR · Qoida versiyasi o'qish\").first().json || {}).qiymat_json || \"{}\"); } catch (e) { Q = {}; }\nvar low = function (t) { return String(t || \"\").toLocaleLowerCase(\"tr\"); };\nvar num = function (x) { x = String(x).replace(/[.,]+$/, \"\"); if (/^\\d{1,3}(\\.\\d{3})+$/.test(x)) return Number(x.replace(/\\./g, \"\")); return Number(x.replace(/\\./g, \"\").replace(\",\", \".\")); };\nvar FT = F.map(function (f) { return [f.qiymat, f.matn_tr, f.ekran_tr, f.manba_tr, f.manba, f.yil, f.n].join(\" \"); }).join(\" \\n \");\nvar FV = (FT.match(/\\d[\\d.,]*/g) || []).map(num);\nvar tok = function (t) { return (String(t || \"\").match(/\\d[\\d.,]*/g) || []).map(function (x) { return x.replace(/[.,]+$/, \"\"); }); };\nvar TAQ = (((Q.cta_qoidasi || {}).bosqichlar || {}).ISITISH || {}).taqiq || [];\nvar KEY = { \"TR-C-1\": [\"takip et\"], \"TR-C-2\": [\"tam cevab\", \"kanalda\", \"analiz\"], \"TR-C-3\": [\"abone ol\"], \"TR-C-4\": [\"kaynak listesi\"], \"TR-C-5\": [\"gönder\"], \"TR-C-6\": [\"kaydet\"] };\nvar CTAFRAZ = /(takip et|abone ol|kaydet|gönder|paylaş|kanalda|linke|bio)/i;\nvar VOR = { tiktok: 1, reel: 1, carousel: 1 };\nvar shakl = {}; // qiymat → birinchi ko'rilgan shakl (mahsulotlararo bir xillik)\nP.forEach(function (p) {\n  if (p.holat !== \"PASS\") return;\n  var m = p.maydonlar || {}, X = [];\n  var ekran = (m.sceneBlocks || []).map(function (b) { return [b.raqam, b.matn, b.yorliq].join(\" \"); }).join(\" \");\n  var pub = [m.tavsif, m.caption, m.sarlavha].join(\" \\n \"), all = [m.tts_matn, pub, ekran].join(\" \\n \");\n  tok(all).forEach(function (t) { var v = num(t); if (isNaN(v)) return; var yil = v >= 1900 && v <= 2100 && /^\\d{4}$/.test(t);\n    if (!FV.some(function (y) { return Math.abs(y - v) < 1e-9; })) { X.push(\"raqam «\" + t + \"» faktlarda yo'q\"); return; }\n    if (!yil && FT.indexOf(t) < 0) X.push(\"raqam «\" + t + \"» fakt shaklida emas\");\n    var k = String(v); if (!yil) { if (shakl[k] && shakl[k].t !== t) X.push(\"raqam shakli boshqa mahsulotdagidan farq qiladi: «\" + t + \"» vs «\" + shakl[k].t + \"» (\" + shakl[k].l + \")\"); else if (!shakl[k]) shakl[k] = { t: t, l: p.liniya + (p.variant_idx ? \"#\" + (p.variant_idx + 1) : \"\") }; } });\n  var c = CTA[p.mahsulot_kod] || null, txt = low([m.tts_matn, m.tavsif, m.caption].join(\" \"));\n  if (c) { if (c.kod === \"TR-C-0\" || c.kod === \"TAQIQ\") { if (CTAFRAZ.test(txt)) X.push(\"CTA \" + c.kod + \": chaqiriq bo'lmasligi kerak («\" + txt.match(CTAFRAZ)[1] + \"»)\"); }\n    else { var ks = KEY[c.kod] || low(c.matn).split(/[^a-zçğıöşü]+/).filter(function (w) { return w.length > 4; }).slice(0, 2); if (ks.length && !ks.some(function (k) { return txt.indexOf(k) >= 0; })) X.push(\"CTA \" + c.kod + \" («\" + c.matn + \"») mahsulotda yo'q\"); } }\n  TAQ.forEach(function (w) { if (txt.indexOf(low(w)) >= 0) X.push(\"isitish bosqichi: sotuv CTA «\" + w + \"»\"); });\n  if (VOR[p.mahsulot_kod] && /(youtube|telegram|t\\.me)/i.test(all)) X.push(\"voronka: \" + p.mahsulot_kod + \" da boshqa platforma nomi\");\n  if (X.length) { var u = X.filter(function (v, i, a) { return a.indexOf(v) === i; }); p.holat = \"FAIL\"; p.yakuniy_xatolar = u; p.xabar_html = \"❌ \" + p.liniya + \" v\" + (p.variant_idx || 0) + \" | \" + p.mavzu_kod + \" — MAVZU YAKUNIY TEKSHIRUVI:\\n• \" + u.join(\"\\n• \").split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\"); }\n});\nvar nat = (S.natija || []).map(function (n) { var p = P.filter(function (q) { return q.mahsulot_kod === n.mahsulot_kod && Number(q.variant_idx || 0) === Number(n.variant_idx || 0); })[0]; if (p && p.holat === \"FAIL\" && n.holat === \"PASS\") return Object.assign({}, n, { holat: \"FAIL\", xato: \"MAVZU YAKUNIY: \" + (p.yakuniy_xatolar || []).join(\"; \").slice(0, 280) }); return n; });\nS.natija = nat; S.pass_n = nat.filter(function (n) { return n.holat === \"PASS\"; }).length; S.fail_n = nat.filter(function (n) { return n.holat === \"FAIL\"; }).length;\nS.pakets = P; S.yakuniy = { rejim: \"orkestr\", tekshirildi: P.length, rad: P.filter(function (p) { return p.yakuniy_xatolar; }).length };\nreturn [{ json: S }];"
+      },
+      "creds": {}
+    },
+    "OR · Paket bormi?": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "id": "3d63c8f2-fc49-430a-aef9-296ffda3341a",
+      "position": [
+        -700,
+        1300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a068733-ddc1-490e-b938-324e571f1f81",
+              "leftValue": "={{ ($json.pakets || []).length > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "OR · Paketlarni ajratish": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "cc1e028f-6e07-487a-868d-e8d308fa4514",
+      "position": [
+        -520,
+        1400
+      ],
+      "parameters": {
+        "jsCode": "// B-62.4: har mahsulot paketi — alohida yetkazish xabari (✅ tekshiruvdan o'tgan yoki ❌ sabab bilan)\nreturn ($json.pakets || []).map(function (p) { return { json: p }; });"
+      },
+      "creds": {}
+    },
+    "OR · Yetkazish": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "id": "b3df6f5c-7045-41dd-8782-140c3105bd62",
+      "position": [
+        -340,
+        1400
+      ],
+      "parameters": {
+        "chatId": "-1004462774154",
+        "text": "={{ $json.xabar_html }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML",
+          "message_thread_id": "={{ Number($json.thread_id) || 427 }}",
+          "disable_web_page_preview": false
+        }
+      },
+      "onError": "continueRegularOutput",
+      "webhookId": "5dde0690-48cb-4686-aad8-d5fd00ffdb46",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
+    },
+    "OR · Xulosa tiklash": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "532ac3e1-84b1-4737-b843-93797be2d70b",
+      "position": [
+        -160,
+        1400
+      ],
+      "parameters": {
+        "jsCode": "// B-62.4: yetkazishdan keyin mavzu xulosasi (yakuniy tekshiruvdan keyingi holat)\nreturn $(\"OR · Mavzu yakuniy tekshiruv\").all().map(function (i) { return { json: i.json }; });"
+      },
       "creds": {}
     }
   },
@@ -4484,7 +4581,7 @@
       "main": [
         [
           {
-            "node": "OR · Qulf bo'shatish",
+            "node": "OR · Mavzu yakuniy tekshiruv",
             "type": "main",
             "index": 0
           }
@@ -4530,6 +4627,68 @@
           }
         ]
       ]
+    },
+    "OR · Mavzu yakuniy tekshiruv": {
+      "main": [
+        [
+          {
+            "node": "OR · Paket bormi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Paket bormi?": {
+      "main": [
+        [
+          {
+            "node": "OR · Paketlarni ajratish",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OR · Qulf bo'shatish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Paketlarni ajratish": {
+      "main": [
+        [
+          {
+            "node": "OR · Yetkazish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Yetkazish": {
+      "main": [
+        [
+          {
+            "node": "OR · Xulosa tiklash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Xulosa tiklash": {
+      "main": [
+        [
+          {
+            "node": "OR · Qulf bo'shatish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodeGroups": [
@@ -4556,7 +4715,12 @@
         "f15ed723-909b-4b4d-847f-1b01de9b94e3",
         "08492a4a-6338-434d-8b93-da95c2edd5ff",
         "146d2647-eb04-4b87-8f99-2dade306e246",
-        "765cdd77-7fc2-4522-a582-fa8ac884cbff"
+        "765cdd77-7fc2-4522-a582-fa8ac884cbff",
+        "e4404093-dfd1-47a2-9b94-7b708ed14cd0",
+        "3d63c8f2-fc49-430a-aef9-296ffda3341a",
+        "cc1e028f-6e07-487a-868d-e8d308fa4514",
+        "b3df6f5c-7045-41dd-8782-140c3105bd62",
+        "532ac3e1-84b1-4737-b843-93797be2d70b"
       ],
       "description": "/mavzu T1 → brif → 13 ish parallel tarqatish → General xabar"
     },
@@ -4634,7 +4798,7 @@
     "errorWorkflow": "CtOE5AWwKoi18CaL",
     "saveExecutionProgress": false
   },
-  "versionId": "534bc98d-0342-412c-aabc-70d02a9897c3",
-  "updatedAt": "2026-09-27T16:29:13.894Z",
-  "vaqt": "2026-09-27T16:29:19.595Z"
+  "versionId": "a764eaa6-b5ea-466b-ba7c-0e1a03e70a4d",
+  "updatedAt": "2026-09-27T17:15:52.993Z",
+  "vaqt": "2026-09-27T17:15:58.872Z"
 }
