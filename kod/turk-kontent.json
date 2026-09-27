@@ -3352,6 +3352,17 @@
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
       }
+    },
+    "ARXIV · eski AI yo'li uzilgan (B-67)": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "id": "4528d04a-8a38-4e92-82c4-e14c845a1b03",
+      "position": [
+        -584,
+        172
+      ],
+      "parameters": {},
+      "creds": {}
     }
   },
   "connections": {
@@ -3479,7 +3490,7 @@
         ],
         [
           {
-            "node": "Input Merge",
+            "node": "ARXIV · eski AI yo'li uzilgan (B-67)",
             "type": "main",
             "index": 0
           }
@@ -4958,7 +4969,7 @@
     "errorWorkflow": "CtOE5AWwKoi18CaL",
     "saveExecutionProgress": false
   },
-  "versionId": "31cbf0f7-0df0-427f-a6ab-6c7e588bf792",
-  "updatedAt": "2026-09-27T19:32:07.168Z",
-  "vaqt": "2026-09-27T19:32:12.744Z"
+  "versionId": "432b1b59-303f-4167-b388-ded07a2ef6a7",
+  "updatedAt": "2026-09-27T19:57:40.205Z",
+  "vaqt": "2026-09-27T19:57:43.702Z"
 }
