@@ -3247,6 +3247,111 @@
         "jsCode": "// B-62.4: yetkazishdan keyin mavzu xulosasi (yakuniy tekshiruvdan keyingi holat)\nreturn $(\"OR · Mavzu yakuniy tekshiruv\").all().map(function (i) { return { json: i.json }; });"
       },
       "creds": {}
+    },
+    "OR · Bosqich qoidasi o'qish": {
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "id": "46c6a698-4ae0-4a98-83fe-515a9c322b13",
+      "position": [
+        -1880,
+        1036
+      ],
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dfg0w5szLLqtoNWZ"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "kalit",
+              "condition": "eq",
+              "keyValue": "harakat_qoidalari"
+            },
+            {
+              "keyName": "faol",
+              "condition": "isTrue"
+            }
+          ]
+        },
+        "limit": 1,
+        "orderBy": true,
+        "orderByColumn": "id",
+        "orderByDirection": "DESC"
+      },
+      "alwaysOutputData": true,
+      "creds": {}
+    },
+    "OR · Bosqich tekshiruvi": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "id": "87178705-3be2-4c0e-9911-604b236d495a",
+      "position": [
+        -1700,
+        1036
+      ],
+      "parameters": {
+        "jsCode": "// B-67 qaror 1: mavzu nashri bosqich qoidasi bilan to'siladi (qoidalar bosqich_taqiq; masalan T2 — yo'naltirish, yurist javobigacha). Faqat production; test ruxsat (nashr yo'q).\nvar p = $(\"OR · Mavzu parse\").first().json || {}; var Q = {}; try { Q = JSON.parse(($input.first().json || {}).qiymat_json || \"{}\"); } catch (e) { Q = {}; }\nif (!Q.bosqich_taqiq) throw new Error(\"QOIDA_KALITI_YOQ: harakat_qoidalari.bosqich_taqiq\");\nvar t = Q.bosqich_taqiq[String(p.mavzu_kod || \"\")] || null; var bl = !!(t && (t.rejim !== \"production\" || p.test_rejim !== true));\nreturn [{ json: Object.assign({}, p, { bosqich_taqiq: bl ? (t.sabab || \"bosqich taqiqi\") : null }) }];"
+      },
+      "creds": {}
+    },
+    "OR · Bosqich taqiqi?": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "id": "c8ad8e92-269b-4192-9094-8cb1e82483d4",
+      "position": [
+        -1520,
+        1036
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c6fde11-4da8-42d1-a60b-1785a511385a",
+              "leftValue": "={{ String(!!$json.bosqich_taqiq) }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "creds": {}
+    },
+    "OR · Bosqich taqiqi xabari": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "id": "3861886d-123a-4b38-aaa7-8757bff78178",
+      "position": [
+        -1340,
+        936
+      ],
+      "parameters": {
+        "chatId": "-1004462774154",
+        "text": "={{ \"⛔ \" + $json.mavzu_kod + \" nashri to'xtatildi — bosqich qoidasi: \" + $json.bosqich_taqiq + \". Test rejimi ruxsat (/mavzu \" + $json.mavzu_kod + \" test).\" }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "message_thread_id": "={{ (function () { try { return $(\"OR · Mavzu parse\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
+          "parse_mode": "HTML"
+        }
+      },
+      "webhookId": "65659270-1cb3-40ce-a706-dcd2ad44b3bc",
+      "creds": {
+        "telegramApi": "ZIBROCK turk_kontentbot"
+      }
     }
   },
   "connections": {
@@ -3702,7 +3807,7 @@
         ],
         [
           {
-            "node": "OR · Band o'qish",
+            "node": "OR · Bosqich qoidasi o'qish",
             "type": "main",
             "index": 0
           }
@@ -4700,6 +4805,46 @@
           }
         ]
       ]
+    },
+    "OR · Bosqich qoidasi o'qish": {
+      "main": [
+        [
+          {
+            "node": "OR · Bosqich tekshiruvi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Bosqich tekshiruvi": {
+      "main": [
+        [
+          {
+            "node": "OR · Bosqich taqiqi?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Bosqich taqiqi?": {
+      "main": [
+        [
+          {
+            "node": "OR · Bosqich taqiqi xabari",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OR · Band o'qish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodeGroups": [
@@ -4731,7 +4876,11 @@
         "3d63c8f2-fc49-430a-aef9-296ffda3341a",
         "cc1e028f-6e07-487a-868d-e8d308fa4514",
         "b3df6f5c-7045-41dd-8782-140c3105bd62",
-        "532ac3e1-84b1-4737-b843-93797be2d70b"
+        "532ac3e1-84b1-4737-b843-93797be2d70b",
+        "46c6a698-4ae0-4a98-83fe-515a9c322b13",
+        "87178705-3be2-4c0e-9911-604b236d495a",
+        "c8ad8e92-269b-4192-9094-8cb1e82483d4",
+        "3861886d-123a-4b38-aaa7-8757bff78178"
       ],
       "description": "/mavzu T1 → brif → 13 ish parallel tarqatish → General xabar"
     },
@@ -4809,7 +4958,7 @@
     "errorWorkflow": "CtOE5AWwKoi18CaL",
     "saveExecutionProgress": false
   },
-  "versionId": "be36ccae-19f7-4e5b-a1f1-160ba19f6733",
-  "updatedAt": "2026-09-27T17:32:32.275Z",
-  "vaqt": "2026-09-27T17:32:36.101Z"
+  "versionId": "328207ea-cc32-4a83-b8dd-0a43676be46e",
+  "updatedAt": "2026-09-27T19:15:41.559Z",
+  "vaqt": "2026-09-27T19:15:47.305Z"
 }
