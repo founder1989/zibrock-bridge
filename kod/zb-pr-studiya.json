@@ -6,7 +6,7 @@
     "PR · Test kirish": {
       "turi": "code",
       "mode": "runOnceForAllItems",
-      "kod": "return [{ json: { job_id:\"PR-TEST-001\", mavzu_kod:\"T1\", mahsulot_kod:\"tiktok\", variant_idx:0, akkaunt:\"ig_yuzde97\", test_rejim:true,\n  tts_matn:\"Yüz yatırımcıdan doksan yedisi para kaybetti. Bu bir tahmin değil. Brezilya'da on dokuz bin altı yüz kırk altı günlük trader izlendi. Sonuç: yüzde doksan yedisi zararda. Avrupa'da da tablo benzer: yüzde yetmiş dört ile seksen dokuz arası. Sorun bilgi eksikliği değil. Sorun biyoloji.\" } }];"
+      "kod": "// LAB webhook: kiruvchi ma'lumot bo'lsa (Webhook (LAB test) → LAB · Webhook kirish) o'shani o'tkazadi; Manual (bo'sh {}) → quyidagi namuna\nvar LAB_kir = $input.all().filter(function(i){ return i.json && Object.keys(i.json).length; });\nif (LAB_kir.length) return LAB_kir.map(function(i){ return { json: i.json }; });\nreturn [{ json: { job_id:\"PR-TEST-001\", mavzu_kod:\"T1\", mahsulot_kod:\"tiktok\", variant_idx:0, akkaunt:\"ig_yuzde97\", test_rejim:true,\n  tts_matn:\"Yüz yatırımcıdan doksan yedisi para kaybetti. Bu bir tahmin değil. Brezilya'da on dokuz bin altı yüz kırk altı günlük trader izlendi. Sonuç: yüzde doksan yedisi zararda. Avrupa'da da tablo benzer: yüzde yetmiş dört ile seksen dokuz arası. Sorun bilgi eksikliği değil. Sorun biyoloji.\" } }];"
     },
     "Execute Workflow Trigger": {
       "turi": "executeWorkflow",
@@ -224,6 +224,47 @@
     },
     "PR · brend_tizim": {
       "turi": "unknown"
+    },
+    "Webhook (LAB test)": {
+      "turi": "unknown",
+      "creds": {
+        "httpHeaderAuth": "LAB webhook"
+      }
+    },
+    "LAB · faqat_ping?": {
+      "turi": "if",
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "loose",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "d1c6ba0b-48fa-4d37-9c93-430b66ffbdec",
+            "leftValue": "={{ !!($json.body && $json.body.faqat_ping === true) }}",
+            "rightValue": "",
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      }
+    },
+    "LAB · Ping javobi": {
+      "turi": "unknown"
+    },
+    "LAB · Qabul javobi": {
+      "turi": "unknown"
+    },
+    "LAB · Webhook kirish": {
+      "turi": "code",
+      "mode": "runOnceForAllItems",
+      "kod": "// Webhook body → Execute Workflow Trigger bilan bir xil shakl (tekis json)\nreturn $input.all().map(function(i){ return { json: Object.assign({}, (i.json && i.json.body) || {}) }; });"
     }
   },
   "connections": {
@@ -589,7 +630,58 @@
           }
         ]
       ]
+    },
+    "Webhook (LAB test)": {
+      "main": [
+        [
+          {
+            "node": "LAB · faqat_ping?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LAB · faqat_ping?": {
+      "main": [
+        [
+          {
+            "node": "LAB · Ping javobi",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "LAB · Qabul javobi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LAB · Qabul javobi": {
+      "main": [
+        [
+          {
+            "node": "LAB · Webhook kirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LAB · Webhook kirish": {
+      "main": [
+        [
+          {
+            "node": "PR · Test kirish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "vaqt": "2026-09-26T23:15:53.277Z"
+  "vaqt": "2026-09-27T16:29:23.183Z"
 }
