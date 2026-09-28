@@ -290,6 +290,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "e6f1425f-7166-4e90-8bf2-473a42e25cbd",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -391,6 +392,7 @@
           "parse_mode": "HTML"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "d9255218-c40d-41b0-9209-d2510c4e2a0f",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -691,6 +693,7 @@
           "message_thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "aec62745-3a72-458e-a18c-bdf3431ab375",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -863,6 +866,7 @@
           "parse_mode": "HTML"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "46247bf6-3b3f-44d6-b765-010c828a3d47",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -1182,6 +1186,7 @@
           "message_thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? undefined : 427 }}"
         }
       },
+      "onError": "continueErrorOutput",
       "executeOnce": true,
       "webhookId": "28554842-356e-4d45-b85c-433cfa97aaa4",
       "creds": {
@@ -1360,6 +1365,7 @@
           "message_thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "ac43130e-be79-4171-ba7f-b4b79051108b",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -1933,6 +1939,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "c308cac5-51c8-4c8e-9e17-9b1602563532",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -2564,6 +2571,7 @@
           "message_thread_id": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "1e752ce7-db2d-4de3-8898-a77bfa81bd16",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -2586,6 +2594,7 @@
           "message_thread_id": 13
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "5baee3d9-5eed-4dd2-b828-dc0c89edbcb2",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -2667,6 +2676,7 @@
           "message_thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "58e348a9-82ee-4dca-85e1-0190b70453a8",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -2771,6 +2781,7 @@
           "message_thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? undefined : 427 }}"
         }
       },
+      "onError": "continueErrorOutput",
       "executeOnce": true,
       "webhookId": "28554842-356e-4d45-b85c-433cfa97aaa4",
       "creds": {
@@ -3051,6 +3062,7 @@
           "message_thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? undefined : 427 }}"
         }
       },
+      "onError": "continueErrorOutput",
       "executeOnce": true,
       "webhookId": "28554842-356e-4d45-b85c-433cfa97aaa4",
       "creds": {
@@ -3108,6 +3120,7 @@
           "message_thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? 13 : 427 }}"
         }
       },
+      "onError": "continueErrorOutput",
       "executeOnce": true,
       "webhookId": "28554842-356e-4d45-b85c-433cfa97aaa4",
       "creds": {
@@ -3230,7 +3243,7 @@
           "disable_web_page_preview": false
         }
       },
-      "onError": "continueRegularOutput",
+      "onError": "continueErrorOutput",
       "webhookId": "5dde0690-48cb-4686-aad8-d5fd00ffdb46",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -3349,6 +3362,7 @@
           "parse_mode": "HTML"
         }
       },
+      "onError": "continueErrorOutput",
       "webhookId": "65659270-1cb3-40ce-a706-dcd2ad44b3bc",
       "creds": {
         "telegramApi": "ZIBROCK turk_kontentbot"
@@ -3363,6 +3377,1386 @@
         172
       ],
       "parameters": {},
+      "creds": {}
+    },
+    "↺ Telegram - Motion Jarayonda": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "67c023c9-2cfe-44de-91d6-1a4651accba4",
+      "position": [
+        -1172,
+        -278
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $json.chatId }}",
+            "thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}",
+            "text": "⏳ *Grafik va ovoz tayyorlanmoqda...*\n\nMa'lumotlar tahlil qilinmoqda. 1-2 daqiqa kuting.",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · Telegram - Motion Jarayonda",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ Telegram - Xato": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "67baeb19-5547-48e8-bdc7-577c562d32eb",
+      "position": [
+        -260,
+        378
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $json.chatId || $json.message && $json.message.chat && $json.message.chat.id }}",
+            "thread_id": "={{ String($json.chatId)==='-1004462774154' ? 13 : undefined }}",
+            "text": "={{ String(($json.xabar || \"❌ Xato yuz berdi\")).replace(/&/g,\"&amp;\").replace(/</g,\"&lt;\").replace(/>/g,\"&gt;\") /* B-79 esc */ }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · Telegram - Xato",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ Telegram - Send Motion Video": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "622e7dfb-ff0e-4a42-b317-7e70865e2614",
+      "position": [
+        1964,
+        -278
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $(\"Build Render Body\").item.json.chatId }}",
+            "thread_id": "={{ $('Extract From Telegram').item.json.thread_id || undefined }}",
+            "text": "={{ \"✅ Grafik video tayyor!\\n\\n\" + ($(\"Build Render Body\").item.json.xulosa || \"ZIBROCK tahlili\") + \"\\n\\n🎬 Video: \" + String($json.response.url).split(\"&\").join(\"&amp;\") }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · Telegram - Send Motion Video",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ OR · T8 Eskalatsiya": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "f70fa79a-6c4f-47b0-8aab-9bdf650b5d11",
+      "position": [
+        -1716,
+        890
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "-1004462774154",
+            "thread_id": "={{ (function () { try { return $(\"OR · Mavzu parse\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
+            "text": "⚠️ T8 (\"$870.000\") — REAL rejim, AI ishlatilmaydi. Qo'lda ishlov kerak.",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · OR · T8 Eskalatsiya",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ OR · General xabar": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "33773375-ffde-4cd9-8a67-f0d97a130980",
+      "position": [
+        -1156,
+        922
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "-1004462774154",
+            "thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? undefined : 427 }}",
+            "text": "={{ \"<b>\" + $(\"OR · Mavzu parse\").item.json.mavzu_kod + \" · \" + $(\"OR · 13 ish tayyorlash\").all().filter(function (i) { return i.json && i.json.mahsulot_kod; }).length + \" ish boshlandi\" + ($(\"OR · Mavzu parse\").item.json.test_rejim ? \" [TEST]\" : \"\") + \"</b>\\n\\n⏱ Boshlandi: \" + new Date().toLocaleTimeString(\"tr-TR\") + \"\\n🆔 Job: \" + $(\"OR · 13 ish tayyorlash\").first().json.job_id }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · OR · General xabar",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ Telegram - Tayyorlanmoqda": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "4282a980-4ee0-4972-adde-ce2f38e63100",
+      "position": [
+        332,
+        602
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $(\"Faqat skript matnini ajratish\").item.json.chatId }}",
+            "thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}",
+            "text": "⏳ *Skript tayyorlanmoqda va tekshirilmoqda…*",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · Telegram - Tayyorlanmoqda",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ Telegram - Overlay Link (Bev)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "18b29bda-1f56-46fa-b8da-79890d5c529d",
+      "position": [
+        3260,
+        74
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $(\"Faqat skript matnini ajratish\").item.json.chatId }}",
+            "thread_id": "={{ $('Platforma Aniqlash (Bev)').item.json.threadId || undefined }}",
+            "text": "={{ \"✅ Videongiz tayyor!\\n\\n🎬 Ko'rish uchun: \" + String($json.hfVideoUrl).split(\"&\").join(\"&amp;\") }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · Telegram - Overlay Link (Bev)",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ Telegram - Overlay Link (AI)": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "04a5b461-8085-4f54-81cf-d4817261023f",
+      "position": [
+        3932,
+        266
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $(\"Input Merge\").item.json.chatId }}",
+            "thread_id": "={{ $('Platforma Aniqlash').item.json.threadId || undefined }}",
+            "text": "={{ \"✅ Videongiz tayyor! (9:16)\\n\\n🎬 Ko'rish: \" + String($json.hfVideoUrl).split(\"&\").join(\"&amp;\") }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · Telegram - Overlay Link (AI)",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ Telegram - Crop Xato": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "505970f0-62f6-47d3-b6ca-5e0c064e25c6",
+      "position": [
+        6012,
+        266
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "-1004462774154",
+            "thread_id": "13",
+            "text": "={{ \"❌ \" + ($json.xabar || (\"Hyperframes render xato. Status: \" + $json.status)) }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · Telegram - Crop Xato",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ Telegram - HeyGen boshlandi": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "b5ae9a95-a68a-4144-9920-1a4059c5a2d5",
+      "position": [
+        1232,
+        402
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $(\"Faqat skript matnini ajratish\").item.json.chatId }}",
+            "thread_id": "={{ $('Faqat skript matnini ajratish').item.json.thread_id || undefined }}",
+            "text": "🎬 *Skript K1 tekshiruvidan o'tdi.*\n\nHeyGen video yaratmoqda. Taxminan 2-3 daqiqa kuting.",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · Telegram - HeyGen boshlandi",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ OR · Band xabari": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "a57ce8f1-0f37-46b4-9d93-89f9cdc8437b",
+      "position": [
+        -1156,
+        1178
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "-1004462774154",
+            "thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? undefined : 427 }}",
+            "text": "={{ \"⏳ <b>Orkestr band</b>\" + ($json.test_rejim ? \" [TEST]\" : \"\") + \"\\n\\nOldingi /mavzu hali ishlayapti (boshlangan: \" + $json.band_boshlandi + \").\\nYangi buyruq (\" + $json.mavzu_kod + \") boshlanmadi — tugagach qayta yuboring.\" }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · OR · Band xabari",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ OR · Yakun xabari": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "607e9711-92b2-4af8-9993-0494ad21d86d",
+      "position": [
+        -372,
+        1274
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "-1004462774154",
+            "thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? undefined : 427 }}",
+            "text": "={{ (function () { var r = (function () { try { return $(\"OR · Mavzu yakuniy tekshiruv\").first().json; } catch (e) { return $(\"OR · Liniyalar natijasi\").first().json; } })(); /* B-63.7/62.4: yakuniy tekshiruvdan keyingi holat */ var s = \"<b>\" + r.mavzu_kod + \" · \" + r.jami + \" ish tugadi\" + (r.test_rejim === false ? \"\" : \" [TEST]\") + \"</b>\\n✅ PASS: \" + r.pass_n + \"  ❌ FAIL: \" + r.fail_n + \"\\n\\n\"; s += r.natija.map(function (x) { return (x.holat === \"FAIL\" ? \"❌ \" : (x.holat === \"PASS\" ? \"✅ \" : \"❔ \")) + x.liniya + (x.xato ? \" — \" + String(x.xato).split(\"<\").join(\"&lt;\").slice(0, 120) : \"\"); }).join(\"\\n\"); return s || \"0 ish\"; })() }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · OR · Yakun xabari",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ OR · Liniya xatosi": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "60c99051-e761-4f94-a243-382fffe7063b",
+      "position": [
+        -1828,
+        1466
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "-1004462774154",
+            "thread_id": "={{ (function () { var v; try { v = $(\"OR · Mavzu parse\").first().json.test_rejim; } catch (e) {} return v === false; })() ? 13 : 427 }}",
+            "text": "={{ (function(){var v;try{v=$(\"OR · Mavzu parse\").first().json.test_rejim;}catch(x){}var e=function(s){return String(s==null?\"\":s).split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\");};return \"❌ <b>Noma'lum liniya kodi</b>\" + (v===true?\" [TEST]\":\"\") + \"\\n\\n\" + e(($json.liniya_xato || []).join(\", \")) + \"\\nRuxsat etilgan: AN, TT, RL, SH, YT, KR, TG, TH\\n0 ish boshlandi. Buyruq: \" + String($json.text || \"\").split(\"<\").join(\"&lt;\");})() }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · OR · Liniya xatosi",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ OR · Yetkazish": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "a479ccea-7bc3-4108-8e7d-08e24822563a",
+      "position": [
+        -280,
+        1570
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "-1004462774154",
+            "thread_id": "={{ Number($json.thread_id) || 427 }}",
+            "text": "={{ $json.xabar_html }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · OR · Yetkazish",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "creds": {}
+    },
+    "↺ OR · Bosqich taqiqi xabari": {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "id": "fb118c6e-8229-4117-bae2-a398c50db044",
+      "position": [
+        -1280,
+        1106
+      ],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "9T5qBY18KKfOeIvv",
+          "cachedResultName": "TG · Xavfsiz yuborish (zaxira)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "-1004462774154",
+            "thread_id": "={{ (function () { try { return $(\"OR · Mavzu parse\").first().json.test_rejim === true; } catch (e) { return false; } })() ? 427 : 13 }}",
+            "text": "={{ \"⛔ \" + $json.mavzu_kod + \" nashri to'xtatildi — bosqich qoidasi: \" + $json.bosqich_taqiq + \". Test rejimi ruxsat (/mavzu \" + $json.mavzu_kod + \" test).\" }}",
+            "xato": "={{ $json.error }}",
+            "manba": "turk kontent · OR · Bosqich taqiqi xabari",
+            "fayl": "false"
+          },
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "xato",
+              "displayName": "xato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "manba",
+              "displayName": "manba",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fayl",
+              "displayName": "fayl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
       "creds": {}
     }
   },
@@ -3514,6 +4908,13 @@
         [
           {
             "node": "Claude - Motion Tahlil",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "↺ Telegram - Motion Jarayonda",
             "type": "main",
             "index": 0
           }
@@ -3931,6 +5332,13 @@
         [
           {
             "node": "Bevosita yoki Claude?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "↺ Telegram - Tayyorlanmoqda",
             "type": "main",
             "index": 0
           }
@@ -4804,6 +6212,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "↺ OR · Yetkazish",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -4857,6 +6272,243 @@
           }
         ]
       ]
+    },
+    "↺ Telegram - Motion Jarayonda": {
+      "main": [
+        [
+          {
+            "node": "Claude - Motion Tahlil",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram - Xato": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ Telegram - Xato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ Telegram - Xato": {
+      "main": [
+        []
+      ]
+    },
+    "Telegram - Send Motion Video": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ Telegram - Send Motion Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ Telegram - Send Motion Video": {
+      "main": [
+        []
+      ]
+    },
+    "OR · T8 Eskalatsiya": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ OR · T8 Eskalatsiya",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ OR · T8 Eskalatsiya": {
+      "main": [
+        []
+      ]
+    },
+    "OR · General xabar": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ OR · General xabar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ OR · General xabar": {
+      "main": [
+        []
+      ]
+    },
+    "↺ Telegram - Tayyorlanmoqda": {
+      "main": [
+        [
+          {
+            "node": "Bevosita yoki Claude?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram - Overlay Link (Bev)": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ Telegram - Overlay Link (Bev)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ Telegram - Overlay Link (Bev)": {
+      "main": [
+        []
+      ]
+    },
+    "Telegram - Overlay Link (AI)": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ Telegram - Overlay Link (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ Telegram - Overlay Link (AI)": {
+      "main": [
+        []
+      ]
+    },
+    "Telegram - Crop Xato": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ Telegram - Crop Xato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ Telegram - Crop Xato": {
+      "main": [
+        []
+      ]
+    },
+    "Telegram - HeyGen boshlandi": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ Telegram - HeyGen boshlandi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ Telegram - HeyGen boshlandi": {
+      "main": [
+        []
+      ]
+    },
+    "OR · Band xabari": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ OR · Band xabari",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ OR · Band xabari": {
+      "main": [
+        []
+      ]
+    },
+    "OR · Yakun xabari": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ OR · Yakun xabari",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ OR · Yakun xabari": {
+      "main": [
+        []
+      ]
+    },
+    "OR · Liniya xatosi": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ OR · Liniya xatosi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ OR · Liniya xatosi": {
+      "main": [
+        []
+      ]
+    },
+    "↺ OR · Yetkazish": {
+      "main": [
+        [
+          {
+            "node": "OR · Xulosa tiklash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OR · Bosqich taqiqi xabari": {
+      "main": [
+        [],
+        [
+          {
+            "node": "↺ OR · Bosqich taqiqi xabari",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↺ OR · Bosqich taqiqi xabari": {
+      "main": [
+        []
+      ]
     }
   },
   "nodeGroups": [
@@ -4892,7 +6544,14 @@
         "46c6a698-4ae0-4a98-83fe-515a9c322b13",
         "87178705-3be2-4c0e-9911-604b236d495a",
         "c8ad8e92-269b-4192-9094-8cb1e82483d4",
-        "3861886d-123a-4b38-aaa7-8757bff78178"
+        "3861886d-123a-4b38-aaa7-8757bff78178",
+        "f70fa79a-6c4f-47b0-8aab-9bdf650b5d11",
+        "33773375-ffde-4cd9-8a67-f0d97a130980",
+        "a57ce8f1-0f37-46b4-9d93-89f9cdc8437b",
+        "607e9711-92b2-4af8-9993-0494ad21d86d",
+        "60c99051-e761-4f94-a243-382fffe7063b",
+        "a479ccea-7bc3-4108-8e7d-08e24822563a",
+        "fb118c6e-8229-4117-bae2-a398c50db044"
       ],
       "description": "/mavzu T1 → brif → 13 ish parallel tarqatish → General xabar"
     },
@@ -4970,7 +6629,7 @@
     "errorWorkflow": "CtOE5AWwKoi18CaL",
     "saveExecutionProgress": false
   },
-  "versionId": "5553c484-b570-4da0-ac33-0add63671dd0",
-  "updatedAt": "2026-09-27T23:51:23.749Z",
-  "vaqt": "2026-09-27T23:52:01.099Z"
+  "versionId": "9b75c157-c0b2-42be-a862-265e73ae39f4",
+  "updatedAt": "2026-09-28T00:29:31.442Z",
+  "vaqt": "2026-09-28T00:33:32.915Z"
 }
